@@ -50,3 +50,7 @@
 // App Resource
 100		ICON	"Icon.ico"
 101		FILE	"Engine/Splash.png"
+
+
+// IndistinQuest
+200    FILE    "Asset/スタートラフ.png"

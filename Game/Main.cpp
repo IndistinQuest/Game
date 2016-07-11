@@ -1,19 +1,31 @@
 ﻿
 # include <Siv3D.hpp>
-#include"ButtonManager.h"
-#include"SimpleButton.h"
+#include<HamFramework.hpp>
+#include"Scene\GameData.h"
+#include"Button/ButtonManager.h"
+#include"Scene\Title\Title.h"
+
+using Manager = SceneManager<String, GameData>;
+
 void Main()
 {
-	const Font font(30);
-    std::shared_ptr<SimpleButton> button = std::make_shared<SimpleButton>(RoundRect(50, 50, 100, 50, 5), 0, L"Jumpaku", Palette::White);
-    ButtonManager::add(button);
+	Manager manager;
+
+	// フェードイン・アウト時の色
+	manager.setFadeColor(Palette::White);
+
+	// シーンを設定
+	manager.add<scene::title::Title>(L"Title");
+
+    // ウィンドウを設定
+    Window::SetStyle(WindowStyle::NonFrame);
+    Window::Resize({ 1280, 720 });
+    Window::Centering();
 
 	while (System::Update())
 	{
         ButtonManager::update();
-        button->draw();
-		font(L"ようこそ、Siv3D の世界へ！").draw();
-
-		//Circle(Mouse::Pos(), 50).draw({ 255, 0, 0, 127 });
+        if (!manager.updateAndDraw())
+			break;
 	}
 }
