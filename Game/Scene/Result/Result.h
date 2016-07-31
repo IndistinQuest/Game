@@ -16,6 +16,7 @@ class Result : public Scene, public std::enable_shared_from_this<Result>
 {
 private:
     DrawableList drawables_m;
+    Effect effect_m;
 public:
     void init() override;
     void update() override;

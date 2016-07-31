@@ -1,6 +1,7 @@
 #include "Result.h"
 #include "ResultButton.h"
 #include "ResultText.h"
+#include "MonsterFadeInEffect.h"
 #include "../../Button/ButtonManager.h"
 
 using namespace scene::result;
@@ -22,6 +23,11 @@ void Result::init()
 
 void Result::update()
 {
+    // エフェクト
+    if(Input::MouseL.clicked) {
+        effect_m.add<MonsterFadeInEffect>();
+    }
+    effect_m.update();
 }
 
 void Result::draw() const
