@@ -1,5 +1,5 @@
 ﻿
-# include <Siv3D.hpp>
+#include<Siv3D.hpp>
 #include<HamFramework.hpp>
 #include"Scene\GameData.h"
 #include"Button/ButtonManager.h"
