@@ -1,27 +1,20 @@
-#include"TitleButton.h"
-#include"Title.h"
+#include "RoundRectButton.h"
 
-using namespace scene::title;
-
-String const TitleButton::FONT_NAME = L"TitleFont";
-
-double const TitleButton::SCALE = 1.03;
-
-TitleButton::TitleButton(double color, String text, Point point, std::function<void(void)> handler)
-    :RemovedOnClickedButton(Shape(getRoundRectAt(point)), handler),
-    colorH_m(color),
+double const RoundRectTextButton::SCALE = 1.03;
+String const RoundRectTextButton::FONT_NAME = L"ButtonFont";
+RoundRectTextButton::RoundRectTextButton(int x, int y, int w, int h, double colorH, String text, std::function<void(void)> handler)
+    :LambdaButton(Shape(RoundRect(x, y, w, h, 5)), handler),
+    rect_m(RoundRect(x, y, w, h, 5)),
+    colorH_m(colorH),
     text_m(text),
-    rect_m(getRoundRectAt(point))
-{
-    if (!FontAsset::IsRegistered(FONT_NAME)) {
-        FontAsset::Register(FONT_NAME, FontAssetData(20));
-    }
-}
+    width_m(w),
+    height_m(h)
+{}
 
-void TitleButton::draw() const
+void RoundRectTextButton::draw()const
 {
-    int const W = getWidth();
-    int const H = getHeight();
+    int const W = width_m;
+    int const H = height_m;
     switch (getState()) {
     case State::LEFT:
         rect_m.draw(HSV(colorH_m, 0.5, 0.9));
