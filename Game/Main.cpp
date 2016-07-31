@@ -4,6 +4,7 @@
 #include"Scene\GameData.h"
 #include"Button/ButtonManager.h"
 #include"Scene\Title\Title.h"
+#include"Scene\Rule\Rule.h"
 
 using Manager = SceneManager<String, GameData>;
 
@@ -15,6 +16,7 @@ void Main()
 	manager.setFadeColor(Palette::White);
 
 	// シーンを設定
+    manager.add<scene::rule::Rule>(L"Rule");
 	manager.add<scene::title::Title>(L"Title");
 
     // ウィンドウを設定

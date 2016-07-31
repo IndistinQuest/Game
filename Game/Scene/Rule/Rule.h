@@ -2,6 +2,7 @@
 
 #include<Siv3D.hpp>
 #include<HamFramework.hpp>
+
 #include"../../Drawable/DrawableList.h"
 
 class GameData;
@@ -9,9 +10,9 @@ class GameData;
 using Scene = SceneManager<String, GameData>::Scene;
 
 namespace scene {
-namespace title {
+namespace rule {
 
-class Title : public Scene
+class Rule : public Scene
 {
 private:
     DrawableList drawables;
