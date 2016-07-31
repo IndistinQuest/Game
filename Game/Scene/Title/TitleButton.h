@@ -1,59 +1,38 @@
 #pragma once
 
 #include<Siv3D.hpp>
-#include"../../Button/BasicButton.h"
+#include"../../Button/RemovedOnClickedButton.h"
 #include"../../Drawable/Drawable.h"
 
 namespace scene {
 namespace title {
 
-class Title;
-
-
-class TitleButton : public BasicButton, public Drawable
+class TitleButton : public RemovedOnClickedButton, public Drawable
 {
 protected:
-    double const rectColorH_m;
+    double const colorH_m;
     String const text_m;
     RoundRect const rect_m;
-    std::shared_ptr<Title> const title_m;
 
     static String const FONT_NAME;
-    static int const W;
-    static int const H;
+public:
+    static int getWidth()
+    {
+        return 300;
+    }
+    static int getHeight()
+    {
+        return 80;
+    }
+    static RoundRect getRoundRectAt(Point point)
+    {
+        return RoundRect(point, { getWidth(), getHeight() }, 5);
+    }
     static double const SCALE;
 public:
-    TitleButton(double colorH, String text, Point center, std::shared_ptr<Title> title);
+    TitleButton(double colorH, String text, Point center, std::function<void(void)> handler);
     void draw()const;
     virtual ~TitleButton() = default;
-};
-
-class StartGame : public TitleButton
-{
-public:
-    StartGame(std::shared_ptr<Title> title);
-    void onClicked()override;
-};
-
-class GoToRule : public TitleButton
-{
-public:
-    GoToRule(std::shared_ptr<Title> title);
-    void onClicked()override;
-};
-
-class DefeatedEnemies : public TitleButton
-{
-public:
-    DefeatedEnemies(std::shared_ptr<Title> title);
-    void onClicked()override;
-};
-
-class QuitGame : public TitleButton
-{
-public:
-    QuitGame(std::shared_ptr<Title> title);
-    void onClicked()override;
 };
 
 }
