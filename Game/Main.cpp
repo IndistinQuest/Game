@@ -4,8 +4,18 @@
 #include"Scene\GameData.h"
 #include"Button/ButtonManager.h"
 #include"Scene\Title\Title.h"
+#include"Scene\Battle\Battle.h"
 
 using Manager = SceneManager<String, GameData>;
+
+class GameOver : public Manager::Scene{
+	Font font;
+public:
+	GameOver() :font(50) {}
+	void init()override {}
+	void update()override { if (Input::MouseL.clicked)changeScene(L"Battle"); }
+	void draw()const override { font.drawCenter(L"GameOver", Window::Center()); }
+};
 
 void Main()
 {
@@ -15,7 +25,9 @@ void Main()
 	manager.setFadeColor(Palette::White);
 
 	// シーンを設定
-	manager.add<scene::title::Title>(L"Title");
+	//manager.add<scene::title::Title>(L"Title");
+	manager.add<Battle>(L"Battle");
+	manager.add<GameOver>(L"GameOver");
 
     // ウィンドウを設定
     Window::SetStyle(WindowStyle::NonFrame);
