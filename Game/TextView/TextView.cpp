@@ -1,6 +1,6 @@
 #include "TextView.h"
 
-TextView::TextView(const String& text, const Point& pos, const int width, const int lines, const Font& font, int IntervalIncrease = 3)
+TextView::TextView(const String& text, const Point& pos, const int width, const int lines, const Font& font, int IntervalIncrease )
 	:str_m(text), font_m(font), pos_m(pos), IntervalIncrease_m(IntervalIncrease),
 	maxLines_m(lines),lines_m(1),
 	PositionToBreak_m(pos.x + width), isAutomaticLineBreak(true){
