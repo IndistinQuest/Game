@@ -10,6 +10,9 @@
 #include"..\..\Data\EnemyData.h"
 #include"..\..\Data\DataManager.h"
 
+namespace scene{
+namespace battle{
+
 class BattleSceneObject;
 class BattleSceneButton;
 class PictureObject;
@@ -49,3 +52,8 @@ private:
 	enum BattleState { win, lose, select };
 	BattleState state_m;
 };
+
+};
+
+};
+

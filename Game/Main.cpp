@@ -8,16 +8,26 @@
 #include"Scene\Rule\Rule.h"
 #include "Scene\Result\Result.h"
 
-
 using Manager = SceneManager<String, GameData>;
 
-class GameOver : public Manager::Scene{
-	Font font;
-public:
-	GameOver() :font(50) {}
-	void init()override { ButtonManager::clearAll(); }
-	void update()override { if (Input::MouseL.clicked)changeScene(L"Battle"); }
-	void draw()const override { font.drawCenter(L"GameOver", Window::Center()); }
+// ↓後で消す
+namespace scene {
+	namespace debug {
+		class GameOver : public SceneManager<String, GameData>::Scene {
+			Font font;
+		public:
+			GameOver() :font(50) {}
+			void init()override { ButtonManager::clearAll(); }
+			void update()override { if (Input::MouseL.clicked)changeScene(L"Battle"); }
+			void draw()const override {
+				ClearPrint();
+				for (int v : m_data->defeatedEnemyList) {
+					Println(Format(v));
+				}
+				font.drawCenter(L"GameOver", Window::Center());
+			}
+		};
+	};
 };
 
 void Main()
@@ -32,15 +42,15 @@ void Main()
 	// フェードイン・アウト時の色
 	manager.setFadeColor(Palette::White);
 
-	// シーンを設定
+	// シーンを設定	
 	
-	manager.add<Battle>(L"Battle");
-	manager.add<GameOver>(L"GameOver");
 	manager.add<scene::title::Title>(L"Title");
     manager.add<scene::rule::Rule>(L"Rule");
 	manager.add<scene::result::Result>(L"Result");
+	manager.add<scene::battle::Battle>(L"Battle");
+	manager.add<scene::debug::GameOver>(L"GameOver");	//後で消す
 
-	manager.init(L"Result");
+	manager.init(L"Battle");
 
 	while (System::Update())
 	{

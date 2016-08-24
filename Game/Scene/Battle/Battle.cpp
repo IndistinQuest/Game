@@ -6,6 +6,11 @@
 #include"../../Data/DataManager.h"
 
 using namespace std;
+using namespace scene;
+using namespace battle;
+
+namespace scene {
+namespace battle {
 
 // ’l‚ğİ’è
 namespace BattleSceneNums {
@@ -219,6 +224,9 @@ public:
 	}
 };
 
+}
+}
+
 /***********************************************************************************************************************/
 
 Battle::Battle() {};
@@ -229,6 +237,8 @@ void Battle::init(){
 
 	ButtonManager::clearAll();
 	ButtonManager::update();
+
+	m_data->resetEnemyList();
 
 	const int tx = 5;
 	const int ty = 5;
@@ -308,6 +318,9 @@ void Battle::update(){
 				message_m->setNewText(enemy_m.messages_m.onPlayerWon_m);
 				enemyPic_m->setFadeOut();
 				time_m += BattleSceneNums::timeRecovery;
+
+				dataManager_m.setSaveData(enemy_m.id_m, true);
+				m_data->addEnemy(enemy_m.id_m);
 				
 			}
 			else if (ans == Answers::incorrect) {
@@ -331,7 +344,6 @@ void Battle::update(){
 	case BattleState::win:
 		//Println(L"³‰ğ");
 		if (message_m->isPlotAll() && !enemyPic_m->isDraw()) {
-			dataManager_m.setSaveData(enemy_m.id_m, true);
 			newEnemy();
 			state_m = BattleState::select;
 			round_m++;
@@ -359,15 +371,16 @@ void Battle::addObject(std::shared_ptr<BattleSceneObject> obj, String  name, int
 
 // —vC³€–Ú‚ ‚è
 void Battle::newEnemy() {
-
-	//int rand = Random(1, dataManager_m.getNumOfEnemies() );
-	//enemy_m = dataManager_m.getEnemy(rand);
+	/*int rand;
+	do{
+		rand = Random(1, dataManager_m.getNumOfEnemies() );
+		enemy_m = dataManager_m.getEnemy(rand);
+	} while (enemy_m.id_m == rand && dataManager_m.getNumOfEnemies() != 1);*/
 
 	int rand = Random(1,20);				//// —vC³
 	enemy_m = dataManager_m.getEnemy(0);	//   —vC³
-
-	AnswerManager::setCorectAnswer(L"LaTeX");							// —vC³
 	
+	AnswerManager::setCorectAnswer(enemy_m.collectAnswer_m);	
 	objects.find(L"enemy")->second->setText(Format(L"EnemyGraphics/", rand, L".png"));
 
 	message_m->setNewText(enemy_m.name_m + L"‚ª‚ ‚ç‚í‚ê‚½ \n" + enemy_m.messages_m.onContact_m);		// C³‰Â”\«‚ ‚è
