@@ -14,7 +14,7 @@ private:
 public:
     void draw()const;
     void onClicked()override;
-    SimpleButton(RoundRect rect, double const rectColor, String text, Color const fontColor = Palette::Black);
+    SimpleButton(RoundRect rect, double const rectColorH, String text, Color const fontColor = Palette::Black);
     ~SimpleButton();
 };
 
