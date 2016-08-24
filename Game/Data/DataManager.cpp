@@ -21,8 +21,8 @@ DataManager::~DataManager()
 void DataManager::initSaveData()
 {
 	saveDataWriter_m.open(CSVPath);
-	for (auto data : enemies_m) {
-		saveDataWriter_m.writeRow(data.id_m, false);
+	for (int i = 0; i < 30;++i) {
+		saveDataWriter_m.writeRow(i, false);
 	}
 	saveDataWriter_m.close();
 }
