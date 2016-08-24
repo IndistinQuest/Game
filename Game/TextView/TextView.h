@@ -16,7 +16,7 @@ public:
 	/// <param name='lines'> 最大行数 </param>
 	/// <param name='font'> フォント </param>
 	/// <param name='Interval'> 文字を追加する間隔 </param>
-	TextView(const String& text, const Point& pos, const int width, const int lines, const Font& font, int IntervalIncrease);
+	TextView(const String& text, const Point& pos, const int width, const int lines, const Font& font, int IntervalIncrease=3);
 
 	~TextView();
 

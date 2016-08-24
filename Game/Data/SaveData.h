@@ -1,7 +1,9 @@
 #pragma once
+#include <Siv3D.hpp>
+#include "EnemyData.h"
 class SaveData
 {
-private:
+public:
 	int id_m;
 	bool isDefeated_m;
 public:
