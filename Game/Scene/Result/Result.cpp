@@ -12,6 +12,8 @@ scene::result::Result::Result()
 
 void Result::init()
 {
+    ButtonManager::clearAll();
+    ButtonManager::update();
     // ƒ{ƒ^ƒ“‚Ì‰Šú‰»
     std::shared_ptr<ResultButton> button;
     button = std::make_shared<OneMoreGame>(shared_from_this());
