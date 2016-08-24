@@ -5,11 +5,17 @@
 #include"Button/ButtonManager.h"
 #include"Scene\Title\Title.h"
 #include"Scene\Rule\Rule.h"
+#include "Scene\Result\Result.h"
 
 using Manager = SceneManager<String, GameData>;
 
 void Main()
 {
+    // ウィンドウを設定
+    Window::SetStyle(WindowStyle::NonFrame);
+    Window::Resize({ 1280, 720 });
+    Window::Centering();
+
 	Manager manager;
 
 	// フェードイン・アウト時の色
@@ -18,11 +24,9 @@ void Main()
 	// シーンを設定
     manager.add<scene::rule::Rule>(L"Rule");
 	manager.add<scene::title::Title>(L"Title");
+	manager.add<scene::result::Result>(L"Result");
 
-    // ウィンドウを設定
-    Window::SetStyle(WindowStyle::NonFrame);
-    Window::Resize({ 1280, 720 });
-    Window::Centering();
+	manager.init(L"Result");
 
 	while (System::Update())
 	{
