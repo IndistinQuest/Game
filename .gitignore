@@ -258,3 +258,4 @@ paket-files/
 *_log.html
 *.sln
 */stdafx.*
+CSVData/SaveData.csv
