@@ -6,6 +6,7 @@
 #include"Scene\Title\Title.h"
 #include"Scene\Battle\Battle.h"
 #include"Scene\Rule\Rule.h"
+#include "Scene\Result\Result.h"
 
 
 using Manager = SceneManager<String, GameData>;
@@ -21,6 +22,11 @@ public:
 
 void Main()
 {
+    // ウィンドウを設定
+    Window::SetStyle(WindowStyle::NonFrame);
+    Window::Resize({ 1280, 720 });
+    Window::Centering();
+
 	Manager manager;
 
 	// フェードイン・アウト時の色
@@ -32,11 +38,9 @@ void Main()
 	manager.add<GameOver>(L"GameOver");
 	manager.add<scene::title::Title>(L"Title");
     manager.add<scene::rule::Rule>(L"Rule");
+	manager.add<scene::result::Result>(L"Result");
 
-    // ウィンドウを設定
-    Window::SetStyle(WindowStyle::NonFrame);
-    Window::Resize({ 1280, 720 });
-    Window::Centering();
+	manager.init(L"Result");
 
 	while (System::Update())
 	{
