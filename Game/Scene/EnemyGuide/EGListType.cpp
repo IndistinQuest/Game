@@ -36,7 +36,7 @@ void EGListType::init()
 	ButtonManager::add(homeButton_m);
 	for (int i = 0; i < KIND_OF_ENEMIES; ++i) {
 		jumpaku::DrawableTxture icon();
-		icons_m.add(std::make_shared<jumpaku::DrawableTxture>(Format(L"../../Asset/EnemyGraphics/", i, L".png"), Point(iconX(i), iconY(i))), i);
+		icons_m.add(std::make_shared<jumpaku::DrawableTxture>(Format(L"./Asset/EnemyGraphics/", i, L".png"), Point(iconX(i), iconY(i))), i);
 	}
 }
 
