@@ -2,6 +2,7 @@
 
 #include <Siv3D.hpp>
 #include <HamFramework.hpp>
+#include "ResultText.h"
 #include "../GameData.h"
 #include "../../Drawable/DrawableList.h"
 
@@ -15,8 +16,13 @@ namespace result
 class Result : public Scene, public std::enable_shared_from_this<Result>
 {
 private:
+    Stopwatch stopwatch_m;
     DrawableList drawables_m;
     Effect effect_m;
+    std::shared_ptr<ResultText> enemyNum_m;
+    std::shared_ptr<ResultText> score_m;
+public:
+    Result();
 public:
     void init() override;
     void update() override;

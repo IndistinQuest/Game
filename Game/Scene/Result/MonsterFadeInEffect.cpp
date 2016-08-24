@@ -2,8 +2,7 @@
 
 using namespace scene::result;
 
-//const Vec2 MonsterFadeInEffect::BEGIN_POS = {100, 100};
-const Vec2 MonsterFadeInEffect::END_POS = {100, 150};
+const Vec2 MonsterFadeInEffect::END_POS = {740, 260};
 
 MonsterFadeInEffect::MonsterFadeInEffect()
     : beginPos_m(RandomVec2(100) + END_POS)
