@@ -64,6 +64,7 @@ void DataManager::readEnemyData()
 		enemy.messages_m.onPlayerWon_m = object.second[L"messages"][L"onPlayerWon"].get<String>();
 		enemy.messages_m.onPlayerLost_m = object.second[L"messages"][L"onPlayerLost"].get<String>();
 
+		enemy.collectAnswer_m = object.second[L"collectAnswer"].get<String>();
 
 		for (const auto& weapon : object.second[L"Answers"][L"weapon"].getArray())
 		{
@@ -75,7 +76,7 @@ void DataManager::readEnemyData()
 		}
 		for (const auto& special : object.second[L"Answers"][L"special"].getArray())
 		{
-			enemy.answers_m.weapon_m.push_back(special.get<String>());
+			enemy.answers_m.special_m.push_back(special.get<String>());
 		}
 
 		enemy.description_m = object.second[L"description"].get<String>();
