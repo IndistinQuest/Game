@@ -1,7 +1,7 @@
 #include "Title.h"
 #include "../../Drawable/DrawableTxture.h"
 #include"../../Button/ButtonManager.h"
-#include"../../Button/RoundRectButton.h"
+#include"../../Button/TextureButton.h"
 
 using namespace scene::title;
 using namespace jumpaku;
@@ -9,43 +9,44 @@ using namespace jumpaku;
 void Title::init()
 {
     drawables.add(std::make_shared<DrawableTxture>(L"/200", Window::Center()), 0);
+    drawables.add(std::make_shared<DrawableTxture>(L"/201", Window::Center().movedBy(0, -160)), 0);
 
-    Point const center = Window::Center();
-    int const W = 300;
-    int const H = 80;
-    auto makeButton = [=](int deltaCenterY, String text, double colorH, std::function<void(void)> handler) {
-        return std::make_shared<RoundRectTextButton>(center.x - 150, center.y-40+deltaCenterY, W, H, colorH, text, handler);
-    };
     auto changeScene = [this](String sceneName) {
         (this->*&Scene::changeScene)(sceneName, 500, false);
         ButtonManager::clearAll();
     };
     
-    std::shared_ptr<RoundRectTextButton> button;
-
-    button = makeButton(40, L"Start Game", 0, [changeScene]() {
-        changeScene(L"Game");
-    });
-    ButtonManager::add(button);
-    drawables.add(button, 1);
+    std::shared_ptr<TextureButton> button;
     
-    button = makeButton(130, L"Go to Rule", 90, [changeScene]() {
+    button = std::make_shared<TextureButton>(Vec2{ 200, 430 }, L"/203", [changeScene]() {
         changeScene(L"Rule");
     });
     ButtonManager::add(button);
     drawables.add(button, 2);
     
-    button = makeButton(220, L"Enemies", 180, [changeScene]() {
+    button = std::make_shared<TextureButton>(Vec2{ 220, 510 }, L"/204", [changeScene]() {
         changeScene(L"DefeatedEnemies");
     });
     ButtonManager::add(button);
     drawables.add(button, 3);
     
-    button = makeButton(310, L"Quit Game", 270, []() {
-        System::Exit();
+    button = std::make_shared<TextureButton>(Vec2{ 240, 590 }, L"/205", [changeScene]() {
+        changeScene(L"Creddit");
     });
     ButtonManager::add(button);
     drawables.add(button, 4);
+
+    button = std::make_shared<TextureButton>(Vec2{ 260, 670 }, L"/206", []() {
+        System::Exit();
+    });
+    ButtonManager::add(button);
+    drawables.add(button, 5);
+
+    button = std::make_shared<TextureButton>(Vec2{640, 550}, L"/207", [changeScene]() {
+        changeScene(L"Game");
+    });
+    ButtonManager::add(button);
+    drawables.add(button, 1);
 
 }
 
