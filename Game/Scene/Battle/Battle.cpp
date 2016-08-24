@@ -16,30 +16,39 @@ namespace battle {
 namespace BattleSceneNums {
 
 	// 制限時間の初期値
-	const int timeLimit = 1000;
+	const int timeLimit = 2000;
 
 	// 正解した時の制限時間の増加量
-	const int timeRecovery = 300;
+	const int timeRecovery = 50;
 
 	// Enemy画像の拡大率
 	const double scale = 0.7;
 
 	// Enemyのフェードイン/アウトの早さ
 	const double fadeIn = 10;
-	const double fadeOut = 5;
+	const double fadeOut = 3;
 
 	// 敗北時のEnemyの最大拡大率
 	const double maxScale = 2.0;
 
 	// 背景画像の名前
-	const String backPicName  = L"title_graphic.JPG";
+	const String backPicName = L"title_graphic.JPG";
+
+	// 次のシーン
+	const String nextScene = L"GameOver";
+
+	// 敗北時のメッセージ
+	const String loseMessage = L"にやられた！";
+
+	// メッセージ表示速度
+	const int mesSpeed = 3;
 }
 
 //回答
 enum Answers { correct, incorrect, not };
 namespace AnswerManager {
 
-	static String corectAnswer;
+	static String corectAnswer = L"";
 	static Answers playersAnswer;
 	static bool isAnswered;
 
@@ -105,12 +114,11 @@ public:
 class BattleSceneButton : public BasicButton , public BattleSceneObject{
 private:
 	const Size size;
+	const Size def = {2,2 };
 	const Point pos;
 	const Point center;
 	const int r = 5;
-	const Color color = Palette::Blue;
 	const int Alpha = 120;
-
 	String text_m;
 public:
 	BattleSceneButton(Point pos,Size size)
@@ -123,13 +131,12 @@ public:
 	void draw() const
 	{
 		switch (getState()) {
-		case State::LEFT:		
+		case State::LEFT:
 		case State::MOUSE_OVER:		
 		case State::PRESSED:
 		case State::RELEASED:
-			RoundRect(pos, size, r).draw(Color(color).setAlpha(Alpha)).drawFrame(0.3, 0.0, Palette::Black);
-			break;
 		default:
+			RoundRect(pos, size, r).draw(Color(Palette::Blue).setAlpha(Alpha)).drawFrame(0.3, 0.0, Palette::Black);
 			break;
 		}
 		FontAsset(L"CommandFont").drawCenter(text_m, center);
@@ -194,7 +201,7 @@ public:
 	}
 	void draw()const override {
 		Point drawPos = pos + Point(Math::Cos(System::FrameCount()), 0);
-		texture.scale(scale).rotate(rad).drawAt(drawPos,Color(Palette::White).setAlpha(alpha));
+		texture.scale(scale).rotate(rad).drawAt(drawPos,Color(Palette::White).setAlpha(static_cast<int>(alpha)));
 	}
 	void init() {
 		scale = defaultScale;
@@ -255,9 +262,9 @@ void Battle::init(){
 	auto r = WindowAndText({ tx, ty }, { roundWidth,bWindowHeight }, 10);
 	r.setText(L"1戦目");
 	addObject(make_shared<WindowAndText>(r), L"RoundWindow", 10);	
-		
+	
 	// message
-	message_m = make_shared<TextView>(L"testMessage", Point(roundWidth + tx*4, ty*2), mesWidth-tx, 3, Font(20, Typeface::Black));
+	message_m = make_shared<TextView>(L"testMessage", Point(roundWidth + tx*4, ty*2), mesWidth-tx, 3, Font(20, Typeface::Black),BattleSceneNums::mesSpeed);
 	drawList_m.add(message_m,11);
 
 	auto m = WindowAndText({ tx * 2 + roundWidth ,ty }, { mesWidth,bWindowHeight }, 10);
@@ -315,19 +322,17 @@ void Battle::update(){
 			//if (ans == Answers::not) { Println(L"未回答"); }
 			if (ans == Answers::correct) {
 				state_m = BattleState::win;
-				message_m->setNewText(enemy_m.messages_m.onPlayerWon_m);
+				message_m->setNewText(enemy_m->messages_m.onPlayerWon_m);
 				enemyPic_m->setFadeOut();
 				time_m += BattleSceneNums::timeRecovery;
 
-				dataManager_m.setSaveData(enemy_m.id_m, true);
-				m_data->addEnemy(enemy_m.id_m);
+				dataManager_m.setSaveData(enemy_m->id_m, true);
+				m_data->addEnemy(enemy_m->id_m);
 				
 			}
 			else if (ans == Answers::incorrect) {
-				// 不正解の時は何もしない
-				/*state_m = BattleState::lose;
-				message_m->setNewText(enemy_m.messages_m.onPlayerLost_m);
-				enemyPic_m->setExpansion();*/
+				message_m->setNewText(enemy_m->messages_m.onPlayerLost_m);
+				AnswerManager::init();
 			}
 		}
 		// タイマー
@@ -336,7 +341,7 @@ void Battle::update(){
 			objects.find(L"timeWindow")->second->setText(Format(time_m));
 			if (time_m <= 0) {
 				state_m = BattleState::lose;
-				message_m->setNewText(enemy_m.messages_m.onPlayerLost_m);
+				message_m->setNewText(enemy_m->name_m+BattleSceneNums::loseMessage);
 				enemyPic_m->setExpansion();
 			}
 		}
@@ -354,7 +359,7 @@ void Battle::update(){
 		//Println(L"不正解");
 		if (message_m->isPlotAll()) {
 			dataManager_m.writeSaveData();
-			changeScene(L"GameOver");				///書き換える
+			changeScene(BattleSceneNums::nextScene);
 		}		
 		break;
 	}	
@@ -371,19 +376,13 @@ void Battle::addObject(std::shared_ptr<BattleSceneObject> obj, String  name, int
 
 // 要修正項目あり
 void Battle::newEnemy() {
-	/*int rand;
-	do{
-		rand = Random(1, dataManager_m.getNumOfEnemies() );
-		enemy_m = dataManager_m.getEnemy(rand);
-	} while (enemy_m.id_m == rand && dataManager_m.getNumOfEnemies() != 1);*/
-
-	int rand = Random(1,20);				//// 要修正
-	enemy_m = dataManager_m.getEnemy(0);	//   要修正
+	int rand = Random(1, dataManager_m.getNumOfEnemies() );
+	enemy_m = make_shared<EnemyData>(dataManager_m.getEnemy(rand));
 	
-	AnswerManager::setCorectAnswer(enemy_m.collectAnswer_m);	
-	objects.find(L"enemy")->second->setText(Format(L"EnemyGraphics/", rand, L".png"));
+	AnswerManager::setCorectAnswer(enemy_m->collectAnswer_m);	
+	objects.find(L"enemy")->second->setText(Format(L"EnemyGraphics/", enemy_m->id_m, L".png"));
 
-	message_m->setNewText(enemy_m.name_m + L"があらわれた \n" + enemy_m.messages_m.onContact_m);		// 修正可能性あり
+	message_m->setNewText(enemy_m->messages_m.onContact_m);
 
 	const Array<String> buttonName = { L"weapon", L"magic",L"special" };
 	for (int i = 0; i < 3; i++) {
@@ -392,13 +391,13 @@ void Battle::newEnemy() {
 			switch (i)
 			{
 			case 0:
-				b->setText(enemy_m.answers_m.weapon_m[j]);
+				b->setText(enemy_m->answers_m.weapon_m[j]);
 				break;
 			case 1:
-				b->setText(enemy_m.answers_m.magic_m[j]);
+				b->setText(enemy_m->answers_m.magic_m[j]);
 				break;
 			case 2:
-				b->setText(enemy_m.answers_m.special_m[j]);	
+				b->setText(enemy_m->answers_m.special_m[j]);	
 				break;
 			default:				
 				break;
