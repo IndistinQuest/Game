@@ -52,7 +52,7 @@ void Main()
 	manager.add<scene::battle::Battle>(L"Battle");
 	manager.add<scene::debug::GameOver>(L"GameOver");	//後で消す
 
-	manager.init(L"Battle");
+	manager.init(L"Title");
 
 	while (System::Update())
 	{
