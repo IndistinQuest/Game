@@ -69,6 +69,7 @@ artifacts/
 *.svclog
 *.scc
 
+
 # Chutzpah Test files
 _Chutzpah*
 
@@ -258,3 +259,5 @@ paket-files/
 *_log.html
 *.sln
 */stdafx.*
+CSVData/SaveData.csv
+
