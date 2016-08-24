@@ -8,6 +8,7 @@
 #include"Scene\Rule\Rule.h"
 #include"Scene\EnemyGuide\EGListType.h"
 #include"Scene\EnemyGuide\EGDetailType.h"
+#include"Scene\Result\Result.h"
 
 using Manager = SceneManager<String, GameData>;
 
@@ -47,7 +48,9 @@ void Main()
 	manager.add<scene::enemyGuide::EGListType>(L"EGListType");
     manager.add<scene::rule::Rule>(L"Rule");
 	manager.add<scene::title::Title>(L"Title");
-	
+	manager.add<scene::result::Result>(L"Result");
+	manager.add<scene::battle::Battle>(L"Battle");
+	manager.add<scene::debug::GameOver>(L"GameOver");	//後で消す
 
 	manager.init(L"Battle");
 

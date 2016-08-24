@@ -16,7 +16,7 @@ namespace battle {
 namespace BattleSceneNums {
 
 	// 制限時間の初期値
-	const int timeLimit = 2000;
+	const int timeLimit = 1000;
 
 	// 正解した時の制限時間の増加量
 	const int timeRecovery = 50;
@@ -35,7 +35,7 @@ namespace BattleSceneNums {
 	const String backPicName = L"title_graphic.JPG";
 
 	// 次のシーン
-	const String nextScene = L"GameOver";
+	const String nextScene = L"Result";//L"GameOver";
 
 	// 敗北時のメッセージ
 	const String loseMessage = L"にやられた！";
