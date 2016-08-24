@@ -48,11 +48,4 @@ private:
 	// state
 	enum BattleState { win, lose, select };
 	BattleState state_m;
-
-	//const int tx = 5;
-	//const int ty = 5;
-
-	//const int roundWidth = 200;
-	//const int timeWidth = 200;
-	//const int mesWidth = Window::Width() - (tx * 4) - roundWidth - timeWidth;
 };

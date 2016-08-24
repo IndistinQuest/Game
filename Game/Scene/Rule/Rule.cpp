@@ -1,12 +1,12 @@
-#include "Title.h"
+#include "Rule.h"
 #include "../../Drawable/DrawableTxture.h"
 #include"../../Button/ButtonManager.h"
 #include"../../Button/RoundRectButton.h"
 
-using namespace scene::title;
+using namespace scene::rule;
 using namespace jumpaku;
 
-void Title::init()
+void Rule::init()
 {
     drawables.add(std::make_shared<DrawableTxture>(L"/200", Window::Center()), 0);
 
@@ -17,43 +17,24 @@ void Title::init()
         return std::make_shared<RoundRectTextButton>(center.x - 150, center.y-40+deltaCenterY, W, H, colorH, text, handler);
     };
     auto changeScene = [this](String sceneName) {
-        (this->*&Scene::changeScene)(sceneName, 500, false);
+        (this->*&Scene::changeScene)(sceneName, 1000, false);
         ButtonManager::clearAll();
     };
-    
     std::shared_ptr<RoundRectTextButton> button;
 
-    button = makeButton(40, L"Start Game", 0, [changeScene]() {
-        changeScene(L"Game");
-    });
-    ButtonManager::add(button);
-    drawables.add(button, 1);
-    
-    button = makeButton(130, L"Go to Rule", 90, [changeScene]() {
-        changeScene(L"Rule");
-    });
-    ButtonManager::add(button);
-    drawables.add(button, 2);
-    
-    button = makeButton(220, L"Enemies", 180, [changeScene]() {
-        changeScene(L"DefeatedEnemies");
-    });
-    ButtonManager::add(button);
-    drawables.add(button, 3);
-    
-    button = makeButton(310, L"Quit Game", 270, []() {
-        System::Exit();
+    button = makeButton(40, L"Return to Title", 270, [this]() {
+        (this->*&Scene::changeScene)(L"Title", 500, false);
+        ButtonManager::clearAll();
     });
     ButtonManager::add(button);
     drawables.add(button, 4);
-
 }
 
-void Title::update()
+void Rule::update()
 {
 }
 
-void Title::draw() const
+void Rule::draw() const
 {
     drawables.drawAll();
 }

@@ -10,9 +10,6 @@ using namespace std;
 // ’l‚ğİ’è
 namespace BattleSceneNums {
 
-	// “G‚Ìí—Ş
-	const int enemyKinds = 20;
-
 	// §ŒÀŠÔ‚Ì‰Šú’l
 	const int timeLimit = 1000;
 
@@ -28,6 +25,9 @@ namespace BattleSceneNums {
 
 	// ”s–k‚ÌEnemy‚ÌÅ‘åŠg‘å—¦
 	const double maxScale = 2.0;
+
+	// ”wŒi‰æ‘œ‚Ì–¼‘O
+	const String backPicName  = L"title_graphic.JPG";
 }
 
 //‰ñ“š
@@ -154,7 +154,7 @@ private:
 	bool isExpansion;
 	double rad;
 public:
-	PictureObject(String picName,double scale):pos(Window::Center()),defaultScale(scale) {
+	PictureObject(String picName,double scale,Point pos):pos(pos),defaultScale(scale) {
 		setText(picName);
 		init();
 	}
@@ -227,30 +227,37 @@ Battle::~Battle(){};
 
 void Battle::init(){
 
+	ButtonManager::clearAll();
+	ButtonManager::update();
+
 	const int tx = 5;
 	const int ty = 5;
 
-	const int roundWidth = 200;
-	const int timeWidth = 200;
+	const int roundWidth = 190;
+	const int timeWidth = 190;
 	const int mesWidth = Window::Width() - (tx * 4) - roundWidth - timeWidth;
 
 	// Window
-	const int bWindowHeight = 100;
+	const int bWindowHeight = 130;
 
+	// round
+	round_m = 1;
 	auto r = WindowAndText({ tx, ty }, { roundWidth,bWindowHeight }, 10);
 	r.setText(L"1í–Ú");
-	auto m = WindowAndText({ tx * 2 + roundWidth ,ty }, { mesWidth,bWindowHeight }, 10);
-	//m.setText(L"message");
-	auto t = WindowAndText({ tx * 3 + roundWidth + mesWidth ,ty }, { timeWidth,bWindowHeight }, 10);
-	t.setText(L"c‚èŠÔ");
-
-	addObject(make_shared<WindowAndText>(r), L"RoundWindow", 10);
-	addObject(make_shared<WindowAndText>(m), L"messageWindow", 10);
-	addObject(make_shared<WindowAndText>(t), L"timeWindow", 10);
-	
+	addObject(make_shared<WindowAndText>(r), L"RoundWindow", 10);	
+		
 	// message
-	message_m = make_shared<TextView>(L"testMessage", Point(roundWidth + tx*2, ty), mesWidth, 3, Font(20, Typeface::Black));
+	message_m = make_shared<TextView>(L"testMessage", Point(roundWidth + tx*4, ty*2), mesWidth-tx, 3, Font(20, Typeface::Black));
 	drawList_m.add(message_m,11);
+
+	auto m = WindowAndText({ tx * 2 + roundWidth ,ty }, { mesWidth,bWindowHeight }, 10);
+	addObject(make_shared<WindowAndText>(m), L"messageWindow", 10);
+
+	// timer
+	time_m = BattleSceneNums::timeLimit;
+	auto t = WindowAndText({ tx * 3 + roundWidth + mesWidth ,ty }, { timeWidth,bWindowHeight }, 10);
+	t.setText(Format(time_m));
+	addObject(make_shared<WindowAndText>(t), L"timeWindow", 10);
 
 	// Button
 	const int width = (Window::Width() - tx * 4) / 3;
@@ -270,26 +277,20 @@ void Battle::init(){
 	AnswerManager::init();
 
 	//back
-	auto back = PictureObject(L"title_graphic.JPG",1.0);				// —vC³
-	addObject(make_shared<PictureObject>(back), L"background", 1);	// —vC³ ?
+	auto back = PictureObject(BattleSceneNums::backPicName,1.0,Window::Center());
+	addObject(make_shared<PictureObject>(back), L"background", 1);	
 
 	//enemyData
-	dataManager_m.read();
-	auto enemy = make_shared<PictureObject>(L"null",BattleSceneNums::scale);
+	auto enemy = make_shared<PictureObject>(L"null",BattleSceneNums::scale,Point(Window::Width()/2,330));
 	addObject(enemy, L"enemy",5);
 	enemyPic_m = enemy;
 	newEnemy();
 
 	//state
-	state_m = BattleState::select;
-
-	// round
-	round_m = 1;
-
-	// timer
-	time_m = BattleSceneNums::timeLimit;
+	state_m = BattleState::select;	
 };
 
+// —vC³€–Ú‚ ‚è
 void Battle::update(){
 	ClearPrint();
 	for_each(objects.begin(), objects.end(), [](auto pare) {pare.second->update(); });
@@ -310,9 +311,10 @@ void Battle::update(){
 				
 			}
 			else if (ans == Answers::incorrect) {
-				state_m = BattleState::lose;
+				// •s³‰ğ‚Ì‚Í‰½‚à‚µ‚È‚¢
+				/*state_m = BattleState::lose;
 				message_m->setNewText(enemy_m.messages_m.onPlayerLost_m);
-				enemyPic_m->setExpansion();
+				enemyPic_m->setExpansion();*/
 			}
 		}
 		// ƒ^ƒCƒ}[
@@ -328,7 +330,8 @@ void Battle::update(){
 		break;
 	case BattleState::win:
 		//Println(L"³‰ğ");
-		if (message_m->isPlotAll() && !enemyPic_m->isDraw()) {			
+		if (message_m->isPlotAll() && !enemyPic_m->isDraw()) {
+			dataManager_m.setSaveData(enemy_m.id_m, true);
 			newEnemy();
 			state_m = BattleState::select;
 			round_m++;
@@ -337,10 +340,9 @@ void Battle::update(){
 		break;
 	case BattleState::lose:
 		//Println(L"•s³‰ğ");
-		if (message_m->isPlotAll()) {			
-			//newEnemy();
-			//state_m = BattleState::select;
-			changeScene(L"GameOver");
+		if (message_m->isPlotAll()) {
+			dataManager_m.writeSaveData();
+			changeScene(L"GameOver");				///‘‚«Š·‚¦‚é
 		}		
 		break;
 	}	
@@ -348,7 +350,6 @@ void Battle::update(){
 
 void Battle::draw()const{
 	drawList_m.drawAll();
-	//message_m->debugDraw();
 };
 
 void Battle::addObject(std::shared_ptr<BattleSceneObject> obj, String  name, int layer) {
@@ -356,9 +357,19 @@ void Battle::addObject(std::shared_ptr<BattleSceneObject> obj, String  name, int
 	drawList_m.add(obj, layer);
 }
 
+// —vC³€–Ú‚ ‚è
 void Battle::newEnemy() {
-	int rand = Random(1,BattleSceneNums::enemyKinds);
-	enemy_m = dataManager_m.getEnemy(0);	// —vC³
+
+	//int rand = Random(1, dataManager_m.getNumOfEnemies() );
+	//enemy_m = dataManager_m.getEnemy(rand);
+
+	int rand = Random(1,20);				//// —vC³
+	enemy_m = dataManager_m.getEnemy(0);	//   —vC³
+
+	AnswerManager::setCorectAnswer(L"LaTeX");							// —vC³
+	
+	objects.find(L"enemy")->second->setText(Format(L"EnemyGraphics/", rand, L".png"));
+
 	message_m->setNewText(enemy_m.name_m + L"‚ª‚ ‚ç‚í‚ê‚½ \n" + enemy_m.messages_m.onContact_m);		// C³‰Â”\«‚ ‚è
 
 	const Array<String> buttonName = { L"weapon", L"magic",L"special" };
@@ -374,17 +385,12 @@ void Battle::newEnemy() {
 				b->setText(enemy_m.answers_m.magic_m[j]);
 				break;
 			case 2:
-				//b->setText(enemy_m.answers_m.special_m[j]);				// —vC³
-				b->setText(L"‚»‚Ì‘¼‚ÍƒoƒO‚Á‚Ä‚é‚æ");
+				b->setText(enemy_m.answers_m.special_m[j]);	
 				break;
 			default:				
 				break;
 			}
 		}
 	}
-	
-	AnswerManager::setCorectAnswer(L"LaTeX");							// —vC³
 
-	//objects.find(L"enemy")->second->setText(Format(enemy_m.id_m, L".png"));
-	objects.find(L"enemy")->second->setText(Format(L"EnemyGraphics/", rand, L".png"));		// —vC³
 }

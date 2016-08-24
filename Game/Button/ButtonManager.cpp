@@ -2,16 +2,9 @@
 #include"ButtonInterface.h"
 #include<algorithm>
 
-ButtonManager::ButtonManager()
-{}
-
-
-ButtonManager::~ButtonManager()
-{}
-
 std::list<std::shared_ptr<ButtonInterface>> ButtonManager::buttons_m;
 
-
+bool ButtonManager::isClearing_m = false;
 
 void ButtonManager::add(std::shared_ptr<ButtonInterface> const &button)
 {
@@ -33,4 +26,13 @@ void ButtonManager::update()
             }
         }
     });
+    if (isClearing_m) {
+        buttons_m.erase(buttons_m.begin(), buttons_m.end());
+        isClearing_m = false;
+    }
+}
+
+void ButtonManager::clearAll()
+{
+    isClearing_m = true;
 }
