@@ -7,6 +7,7 @@
 #include "../../Drawable/DrawableTxture.h"
 #include "../../Button/ButtonManager.h"
 #include "../../Button/RoundRectButton.h"
+#include "MyDrawableTexture.h"
 
 class GameData;
 
@@ -40,8 +41,6 @@ namespace scene {
 			std::shared_ptr<RoundRectTextButton> homeButton_m;
 
 		public:
-			//EGListType();
-			//~EGListType();
 			void init() override;
 			void update() override;
 			void draw() const override;
