@@ -12,6 +12,7 @@ class DrawableTxture : public Drawable
 public:
     void draw()const override;
     DrawableTxture(String fileNumber, Point center);
+    DrawableTxture(Texture textue, Point center);
     ~DrawableTxture() = default;
 };
 

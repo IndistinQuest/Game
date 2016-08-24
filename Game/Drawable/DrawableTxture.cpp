@@ -3,9 +3,14 @@
 using namespace jumpaku;
 
 DrawableTxture::DrawableTxture(String fileNumber, Point center)
-    :texture_m(Texture(fileNumber)),
+    :DrawableTxture(Texture(fileNumber), center)
+{}
+
+DrawableTxture::DrawableTxture(Texture texture, Point center)
+    :texture_m(texture),
     center_m(center)
 {}
+
 
 
 void DrawableTxture::draw() const
