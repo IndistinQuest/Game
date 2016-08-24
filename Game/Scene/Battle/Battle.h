@@ -35,7 +35,7 @@ private:
 	int time_m;
 
 	//enemy
-	EnemyData enemy_m;
+	std::shared_ptr<EnemyData> enemy_m;
 	DataManager dataManager_m;
 	std::shared_ptr<PictureObject> enemyPic_m;
 
