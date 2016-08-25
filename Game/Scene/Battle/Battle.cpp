@@ -19,10 +19,10 @@ namespace BattleSceneNums {
 	const int timeLimit = 1000;
 
 	// 正解した時の制限時間の増加量
-	const int timeRecovery = 50;
+	const int timeRecovery = 200;
 
 	// Enemy画像の拡大率
-	const double scale = 0.7;
+	const double scale = 0.4;
 
 	// Enemyのフェードイン/アウトの早さ
 	const double fadeIn = 10;
@@ -32,7 +32,7 @@ namespace BattleSceneNums {
 	const double maxScale = 2.0;
 
 	// 背景画像の名前
-	const String backPicName = L"title_graphic.JPG";
+	const String backPicName = L"background.png";
 
 	// 次のシーン
 	const String nextScene = L"Result";//L"GameOver";
@@ -42,6 +42,19 @@ namespace BattleSceneNums {
 
 	// メッセージ表示速度
 	const int mesSpeed = 3;
+
+	// ボタンのファイル名
+	const String buttonName = L"CommandButton.png";
+
+	// 戦闘数のウィンドウのファイル名
+	const String rWindowName = L"roundWindow.png";
+
+	// メッセージウィンドウのファイル名
+	const String mWindowName = L"messageWindow.png";
+
+	// 制限時間のウィンドウのファイル名
+	const String tWindowName = L"timeWindow.png";
+
 }
 
 //回答
@@ -85,14 +98,15 @@ private:
 	const Size size;
 	const Point pos;
 	const Point center;
-	const int r = 10;
+	/*const int r = 10;
 	const Color color = Palette::Blue;
-	const int Alpha = 120;
+	const int Alpha = 120;*/
+	const Texture texture_m;
 protected:
 	String str_m;
 public:
-	WindowAndText(Point pos, Size size, int r = 0, Color color = Palette::Blue)
-		:pos(pos), size(size), r(r), color(color), center(pos + size / 2)
+	WindowAndText(Point pos, Size size,FilePath path)
+		:pos(pos), size(size),center(pos + size / 2),texture_m(path)
 	{
 		if (!FontAsset::IsRegistered(L"BattleSceneFont")) {
 			FontAsset::Register(L"BattleSceneFont", 20, Typeface::Black);
@@ -105,7 +119,8 @@ public:
 		str_m = text;
 	}
 	void draw()const override {
-		RoundRect(pos, size, r).draw(Color(color).setAlpha(Alpha)).drawFrame(0.3, 0.0, Palette::Black);
+		//RoundRect(pos, size, r).draw(Color(color).setAlpha(Alpha)).drawFrame(0.3, 0.0, Palette::Black);
+		texture_m.drawAt(center);
 		FontAsset(L"BattleSceneFont").drawCenter(str_m, center);
 	}
 };
@@ -114,32 +129,42 @@ public:
 class BattleSceneButton : public BasicButton , public BattleSceneObject{
 private:
 	const Size size;
-	const Size def = {2,2 };
+	const Size def = {2,2};
 	const Point pos;
 	const Point center;
 	const int r = 5;
 	const int Alpha = 120;
 	String text_m;
+	const Texture texture_m;
 public:
-	BattleSceneButton(Point pos,Size size)
+	BattleSceneButton(Point pos,Size size,String filepath)
 		:BasicButton(Shape(RoundRect(pos, size,r)))//,text_m(text)
-		, size(size), pos(pos), center(pos + size / 2) {
+		, size(size), pos(pos), center(pos + size / 2)
+		,texture_m(filepath)
+	{
 		if (!FontAsset::IsRegistered(L"CommandFont")) {
 			FontAsset::Register(L"CommandFont", 20, Typeface::Black);
 		}
 	};
 	void draw() const
 	{
+		Point bPos = center;
+		double mag = 1.0;
 		switch (getState()) {
 		case State::LEFT:
-		case State::MOUSE_OVER:		
+			break;
+		case State::MOUSE_OVER:
+			bPos.moveBy({0,-2});
+			mag = 1.01;
+			break;
 		case State::PRESSED:
 		case State::RELEASED:
 		default:
-			RoundRect(pos, size, r).draw(Color(Palette::Blue).setAlpha(Alpha)).drawFrame(0.3, 0.0, Palette::Black);
+			//RoundRect(pos, size, r).draw(Color(Palette::Blue).setAlpha(Alpha)).drawFrame(0.3, 0.0, Palette::Black);
 			break;
 		}
-		FontAsset(L"CommandFont").drawCenter(text_m, center);
+		texture_m.scale(mag).drawAt(bPos);
+		FontAsset(L"CommandFont").drawCenter(text_m, bPos);
 	}
 	void setText(String text)override {
 		text_m = text;
@@ -165,8 +190,9 @@ private:
 	bool isFadeIn;
 	bool isExpansion;
 	double rad;
+	Size picSize;
 public:
-	PictureObject(String picName,double scale,Point pos):pos(pos),defaultScale(scale) {
+	PictureObject(String picName,double scale,Point pos):pos(pos),defaultScale(scale){
 		setText(picName);
 		init();
 	}
@@ -201,7 +227,7 @@ public:
 	}
 	void draw()const override {
 		Point drawPos = pos + Point(Math::Cos(System::FrameCount()), 0);
-		texture.scale(scale).rotate(rad).drawAt(drawPos,Color(Palette::White).setAlpha(static_cast<int>(alpha)));
+		texture.scale(scale).rotate(rad).drawAt(drawPos, Color(Palette::White).setAlpha(static_cast<int>(alpha)));
 	}
 	void init() {
 		scale = defaultScale;
@@ -259,7 +285,7 @@ void Battle::init(){
 
 	// round
 	round_m = 1;
-	auto r = WindowAndText({ tx, ty }, { roundWidth,bWindowHeight }, 10);
+	auto r = WindowAndText({ tx, ty }, { roundWidth,bWindowHeight },assetPath + BattleSceneNums::rWindowName);
 	r.setText(L"1戦目");
 	addObject(make_shared<WindowAndText>(r), L"RoundWindow", 10);	
 	
@@ -267,12 +293,13 @@ void Battle::init(){
 	message_m = make_shared<TextView>(L"testMessage", Point(roundWidth + tx*4, ty*2), mesWidth-tx, 3, Font(20, Typeface::Black),BattleSceneNums::mesSpeed);
 	drawList_m.add(message_m,11);
 
-	auto m = WindowAndText({ tx * 2 + roundWidth ,ty }, { mesWidth,bWindowHeight }, 10);
+	auto m = WindowAndText({ tx * 2 + roundWidth ,ty }, { mesWidth,bWindowHeight }, assetPath + BattleSceneNums::mWindowName);
 	addObject(make_shared<WindowAndText>(m), L"messageWindow", 10);
 
 	// timer
 	time_m = BattleSceneNums::timeLimit;
-	auto t = WindowAndText({ tx * 3 + roundWidth + mesWidth ,ty }, { timeWidth,bWindowHeight }, 10);
+	maxTime_m = BattleSceneNums::timeLimit;
+	auto t = WindowAndText({ tx * 3 + roundWidth + mesWidth ,ty }, { timeWidth,bWindowHeight },assetPath + BattleSceneNums::tWindowName);
 	t.setText(Format(time_m));
 	addObject(make_shared<WindowAndText>(t), L"timeWindow", 10);
 
@@ -283,7 +310,7 @@ void Battle::init(){
 	const Array<String> buttonName = { L"weapon", L"magic",L"special" };
 	for (int i = 0; i < 3;i++) {
 		for (int j = 0; j < 3; j++) {
-			auto b = std::make_shared<BattleSceneButton>(BattleSceneButton({ Window::Width() / 2 -width/2  + (width+tx) * (i - 1), Window::Height() - (height+ty) * (3-j) },Size(width,height)));
+			auto b = std::make_shared<BattleSceneButton>(BattleSceneButton({ Window::Width() / 2 -width/2  + (width+tx) * (i - 1), Window::Height() - (height+ty) * (3-j) },Size(width,height),assetPath + BattleSceneNums::buttonName));
 			b->setText(Format(Window::Width() / 2 + 500 * (i - 1)));
 			ButtonManager::add(b);
 			addObject(b, Format(buttonName[i],j), 10);
@@ -298,7 +325,7 @@ void Battle::init(){
 	addObject(make_shared<PictureObject>(back), L"background", 1);	
 
 	//enemyData
-	auto enemy = make_shared<PictureObject>(L"null",BattleSceneNums::scale,Point(Window::Width()/2,330));
+	auto enemy = make_shared<PictureObject>(L"null", BattleSceneNums::scale, Point(Window::Width() / 2, 330));
 	addObject(enemy, L"enemy",5);
 	enemyPic_m = enemy;
 	newEnemy();
@@ -324,7 +351,10 @@ void Battle::update(){
 				state_m = BattleState::win;
 				message_m->setNewText(enemy_m->messages_m.onPlayerWon_m);
 				enemyPic_m->setFadeOut();
+
 				time_m += BattleSceneNums::timeRecovery;
+				if (time_m > maxTime_m) { time_m = maxTime_m; }
+				maxTime_m = time_m;
 
 				dataManager_m.setSaveData(enemy_m->id_m, true);
 				m_data->addEnemy(enemy_m->id_m);
