@@ -13,7 +13,10 @@ Heading::~Heading()
 {
 }
 
-void Heading::draw(Point position, Color color) const
+void Heading::draw(Point center, Color color) const
 {
-	headingSentence_m.draw(sentence_m, position, color);
+
+	Point edgePos = { center.x - sentence_m.length * 30 / 2, center.y - headingSentence_m.height / 2 };
+
+	headingSentence_m.draw(sentence_m, edgePos, color);
 }
