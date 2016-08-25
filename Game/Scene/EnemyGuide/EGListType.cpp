@@ -14,16 +14,6 @@ const int EGListType::LIST_COL = 5;
 const double EGListType::ICON_W = (W - (LIST_ROW+1)*LIST_MARGIN) / LIST_ROW;
 const double EGListType::ICON_H = (H - LIST_BORDER - (LIST_COL + 1) * LIST_MARGIN) / LIST_COL;
 
-/*
-EGListType::EGListType()
-{
-	init();
-}
-
-
-EGListType::~EGListType()
-{
-}*/
 
 void EGListType::init()
 {
@@ -32,11 +22,13 @@ void EGListType::init()
 	
 	backToTitle_m = [this]() {(this->*&Scene::changeScene)(L"Title", 500, false); };
 	homeButton_m = std::make_shared<RoundRectTextButton>(POS_HOME_BUTTON.x, POS_HOME_BUTTON.y, 0.1*W, 0.1*H, 176, L"ƒ^ƒCƒgƒ‹‚É–ß‚é", backToTitle_m);
+	background_m = std::make_shared<jumpaku::DrawableTxture>(L"./Asset/title_graphicM.png", Point(0.5*W, 0.5*H));
 
 	ButtonManager::add(homeButton_m);
-	for (int i = 0; i < KIND_OF_ENEMIES; ++i) {
-		jumpaku::DrawableTxture icon();
-		icons_m.add(std::make_shared<jumpaku::DrawableTxture>(Format(L"./Asset/EnemyGraphics/", i, L".png"), Point(iconX(i), iconY(i))), i);
+	graphics_m.add(background_m, 0);
+	for (int i = 1; i <= KIND_OF_ENEMIES; ++i) {
+		std::shared_ptr<Drawable> icon = std::make_shared<uhhyoi::DrawableTexture>(Texture(Format(L"./Asset/EnemyGraphics/", i, L".png")).scale(0.1), Point(iconX(i), iconY(i)));
+		graphics_m.add(icon, i);
 	}
 }
 
@@ -47,19 +39,19 @@ void EGListType::update()
 
 void EGListType::draw() const
 {
+	graphics_m.drawAll();
 	title_m.draw(POS_HEADING, Palette::Orange);
-	icons_m.drawAll();
 	homeButton_m->draw();
 }
 
 double EGListType::iconX(int i)
 {
-	int currentRow = (i + 1) % (LIST_ROW + 1) + 1;
+	int currentRow = (i-1) % LIST_ROW + 1;
 	return currentRow * LIST_MARGIN + ((double)currentRow - 0.5) * ICON_W;
 }
 
 double EGListType::iconY(int i)
 {
-	int currentCol = i / LIST_ROW + 1;
+	int currentCol = (i-1) / LIST_ROW + 1;
 	return currentCol * LIST_MARGIN + ((double)currentCol - 0.5) * ICON_H + LIST_BORDER;
 }

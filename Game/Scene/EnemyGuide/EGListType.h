@@ -7,6 +7,7 @@
 #include "../../Drawable/DrawableTxture.h"
 #include "../../Button/ButtonManager.h"
 #include "../../Button/RoundRectButton.h"
+#include "DrawableTexture.h"
 
 class GameData;
 
@@ -35,13 +36,12 @@ namespace scene {
 
 			DataManager dataManager_m;
 			const Heading title_m;
-			DrawableList icons_m;
+			DrawableList graphics_m;
 			std::function<void(void)> backToTitle_m;
 			std::shared_ptr<RoundRectTextButton> homeButton_m;
+			std::shared_ptr<jumpaku::DrawableTxture> background_m;
 
 		public:
-			//EGListType();
-			//~EGListType();
 			void init() override;
 			void update() override;
 			void draw() const override;
