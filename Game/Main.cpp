@@ -44,6 +44,7 @@ void Main()
 	manager.setFadeColor(Palette::White);
 
 	// シーンを設定
+	manager.add<scene::enemyGuide::EGDetailType>(L"EGDetailType");
 	manager.add<scene::enemyGuide::EGListType>(L"EGListType");
     manager.add<scene::rule::Rule>(L"Rule");
 	manager.add<scene::title::Title>(L"Title");
