@@ -21,7 +21,7 @@ void EGListType::init()
 	ButtonManager::update();
 	
 	backToTitle_m = [this]() {(this->*&Scene::changeScene)(L"Title", 500, false); };
-	homeButton_m = std::make_shared<RoundRectTextButton>(POS_HOME_BUTTON.x, POS_HOME_BUTTON.y, 0.1*W, 0.1*H, 176, L"タイトルに戻る", backToTitle_m);
+	homeButton_m = std::make_shared<RoundRectTextButton>(POS_HOME_BUTTON.x, POS_HOME_BUTTON.y, HOME_BUTTON_WIDTH, HOME_BUTTON_HEIGHT, 176, L"タイトルに戻る", backToTitle_m);
 	backGround_m = std::make_shared<RollBackGround>(L"./Asset/enemies_graphic.jpg");
 
 	ButtonManager::add(homeButton_m);

@@ -17,6 +17,8 @@ class EnemyGuide
 protected:
 	static const double W;
 	static const double H;
+	static const double HOME_BUTTON_WIDTH;
+	static const double HOME_BUTTON_HEIGHT;
 	static const Point POS_HEADING;
 	static const Point POS_HOME_BUTTON;
 	static const int KIND_OF_ENEMIES;
