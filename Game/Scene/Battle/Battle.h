@@ -40,6 +40,8 @@ private:
 	DataManager dataManager_m;
 	std::shared_ptr<PictureObject> enemyPic_m;
 
+	int enemy_ID_List_m[31];
+
 	// objects
 	std::multimap<String, std::shared_ptr<BattleSceneObject>> objects;
 	std::multimap<String, std::shared_ptr<BattleSceneButton>> buttons;
