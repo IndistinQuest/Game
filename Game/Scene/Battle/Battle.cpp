@@ -5,6 +5,8 @@
 
 #include"../../Data/DataManager.h"
 
+
+
 using namespace std;
 using namespace scene;
 using namespace battle;
@@ -31,52 +33,23 @@ namespace BattleSceneNums {
 	// 敗北時のEnemyの最大拡大率
 	const double maxScale = 2.0;
 
-	// 背景画像の名前
-	const String backPicName = L"background.png";
-
 	// 次のシーン
-	const String nextScene = L"Result";//L"GameOver";
+	const String nextScene = L"Result";
 
 	// 敗北時のメッセージ
 	const String loseMessage = L"にやられた！";
 
 	// メッセージ表示速度
 	const int mesSpeed = 3;
-
-	// ボタンのファイル名
-	const String buttonName = L"window_graphic.png";
-
-	// 戦闘数のウィンドウのファイル名
-	const String rWindowName = L"small_message_graphic.png";
-
-	// メッセージウィンドウのファイル名
-	const String mWindowName = L"message_graphic.png";
-
-	// 制限時間のウィンドウのファイル名
-	const String tWindowName = L"small_message_graphic.png";
-
-	// 正解時のSE
-	const String seCorect = L"crrect_answer3.mp3";
-
-	// 不正解時のSE
-	const String seInCorect = L"powerdown07.mp3";
-
-	// 敗北時SE
-	const String seLose = L"damage7.mp3";
-
-	// BGM
-	const String bgm = L"bgm_maoudamashii_neorock49.ogg";
 }
 
 //回答
 enum Answers { correct, incorrect, not };
-namespace AnswerManager {
-
+namespace AnswerManager{
 	static String corectAnswer = L"";
 	static Answers playersAnswer;
 	static bool isAnswered;
-
-	void init() {
+	static void init() {
 		isAnswered = false;
 	}
 	static void setCorectAnswer(String corect){
@@ -84,8 +57,7 @@ namespace AnswerManager {
 		isAnswered = false;
 	}
 	static void answer(String ans) {
-		if (ans == corectAnswer) { playersAnswer = Answers::correct; }
-		else { playersAnswer = Answers::incorrect; }
+		playersAnswer = (ans == corectAnswer) ? Answers::correct : Answers::incorrect;
 		isAnswered = true;
 	}
 	static Answers checkAnswer() {
@@ -106,35 +78,19 @@ public:
 class WindowAndText	: public BattleSceneObject
 {
 private:
-	const Size size;
-	const Point pos;
-	const Point center;
-	/*const int r = 10;
-	const Color color = Palette::Blue;
-	const int Alpha = 120;*/
-	const Texture texture_m;
+	const Point center_m;
+	const String textureAssetName_m;
 	const Color strColor_m;
-protected:
 	String str_m;
 public:
-	WindowAndText(Point pos, Size size,FilePath path,Color c = Palette::Black)
-		:pos(pos), size(size),center(pos + size / 2),texture_m(path),
-		strColor_m(c)
-	{
-		if (!FontAsset::IsRegistered(L"BattleSceneFont")) {
-			FontAsset::Register(L"BattleSceneFont", 20, Typeface::Black);
-		}
-	};
-	void update()override {
-		//Println(L"TextWindow->OK!");
-	};
-	void setText(String text)override {
+	WindowAndText(Point center,String textureAssetName,Color c = Palette::Black) : center_m(center), textureAssetName_m(textureAssetName), strColor_m(c){};
+	void update()override {};
+	void setText(String text)override {	
 		str_m = text;
 	}
 	void draw()const override {
-		//RoundRect(pos, size, r).draw(Color(color).setAlpha(Alpha)).drawFrame(0.3, 0.0, Palette::Black);
-		texture_m.drawAt(center);
-		FontAsset(L"BattleSceneFont").drawCenter(str_m, center,strColor_m);
+		TextureAsset(textureAssetName_m).drawAt(center_m);
+		FontAsset(L"BattleSceneFont").drawCenter(str_m, center_m,strColor_m);
 	}
 };
 
@@ -142,42 +98,35 @@ public:
 class BattleSceneButton : public BasicButton , public BattleSceneObject{
 private:
 	const Size size;
-	const Size def = {2,2};
 	const Point pos;
 	const Point center;
-	const int r = 5;
-	const int Alpha = 120;
 	String text_m;
-	const Texture texture_m;
+	//const Texture texture_m;
+	const String textureAssetName_m;
 	Color color_m;	//文字色
 public:
-	BattleSceneButton(Point pos,Size size,String filepath,Color c = Palette::White)
-		:BasicButton(Shape(RoundRect(pos, size,r)))//,text_m(text)
+	BattleSceneButton(Point pos,Size size,String textureAssetName,Color c = Palette::White)
+		:BasicButton(Shape(Rect(pos, size)))//,text_m(text)
 		, size(size), pos(pos), center(pos + size / 2)
-		,texture_m(filepath),color_m(c)
+		,textureAssetName_m(textureAssetName),color_m(c)
 	{
-		if (!FontAsset::IsRegistered(L"CommandFont")) {
-			FontAsset::Register(L"CommandFont", 20, Typeface::Black);
-		}
 	};
 	void draw() const
 	{
 		Point bPos = center;
 		double mag = 1.0;
 		switch (getState()) {
-		case State::LEFT:
-			break;
 		case State::MOUSE_OVER:
 			bPos.moveBy({0,-2});
 			mag = 1.01;
 			break;
+		case State::LEFT:
 		case State::PRESSED:
 		case State::RELEASED:
 		default:
-			//RoundRect(pos, size, r).draw(Color(Palette::Blue).setAlpha(Alpha)).drawFrame(0.3, 0.0, Palette::Black);
 			break;
 		}
-		texture_m.scale(mag).drawAt(bPos);
+		TextureAsset(textureAssetName_m).scale(mag).drawAt(bPos);
 		FontAsset(L"CommandFont").drawCenter(text_m, bPos,color_m);
 	}
 	void setText(String text)override {
@@ -186,9 +135,7 @@ public:
 	void onClicked()override {
 		AnswerManager::answer(text_m);
 	}
-	void update()override {
-		//Println(L"Button is Update");
-	}
+	void update()override {}
 	void setStrColor(Color c) {
 		color_m = c;
 	}
@@ -304,78 +251,84 @@ Battle::Battle() {};
 Battle::~Battle(){};
 
 void Battle::init(){
+	//各種定数
+	const String assetPath = L"Asset/";
+	const int tx = 5;
+	const int ty = 5;	
 
+	// 背景色変更
 	Graphics::SetBackground(Palette::Lightslategray);
 
+	// ボタンマネージャのクリア
 	ButtonManager::clearAll();
 	ButtonManager::update();
 
+	// GameData 初期化
 	m_data->resetEnemyList();
 	m_data->time = 0;
 
-	// font
-	if (!FontAsset::IsRegistered(L"CommandFont")) {
-		FontAsset::Register(L"CommandFont", 20);
-	}
-	if (!FontAsset::IsRegistered(L"BattleSceneFont")) {
-		FontAsset::Register(L"BattleSceneFont", 20);
-	}
+	// フォントアセット登録
+	if (!FontAsset::IsRegistered(L"CommandFont")) {	FontAsset::Register(L"CommandFont", 20);}
+	if (!FontAsset::IsRegistered(L"BattleSceneFont")) {	FontAsset::Register(L"BattleSceneFont", 20);}
 
-	const int tx = 5;
-	const int ty = 5;
+	// テクスチャアセット登録
+	TextureAsset::Register(L"mesWindow", assetPath + L"message_graphic.png");
+	TextureAsset::Register(L"miniMesWindow", assetPath + L"small_message_graphic.png");
+	TextureAsset::Register(L"battleButton", assetPath + L"window_graphic.png");
+	/*for (int i = 1; i <= 5; i++) {
+		TextureAsset::Register(Format(L"battleBack",i), Format(assetPath,"BackGround/battle_graphic",i,L".jpg"));
+	}*/
 
-	const int roundWidth = 190;
-	const int timeWidth = 190;
-	const int mesWidth = Window::Width() - (tx * 4) - roundWidth - timeWidth;
+	// サウンドアセット登録
+	SoundAsset::Register(L"battle_corect", assetPath + L"crrect_answer3.mp3");
+	SoundAsset::Register(L"battle_incorect", assetPath + L"powerdown07.mp3");
+	SoundAsset::Register(L"battle_bgm", assetPath + L"bgm_maoudamashii_neorock49.ogg");
+	SoundAsset::Register(L"bettle_GameOver", assetPath + L"damage7.mp3");
+
+	// BGM再生
+	SoundAsset(L"battle_bgm").setLoop(true);
+	SoundAsset(L"battle_bgm").play();
+	
+	// 各種初期化
+	round_m = 1;
+	time_m = BattleSceneNums::timeLimit;
+	state_m = BattleState::select;
+	AnswerManager::init();
 
 	// Window
-	const int bWindowHeight = 130;
-
-	// round
-	round_m = 1;
-	auto r = WindowAndText({ tx, ty*3 }, { roundWidth,bWindowHeight },assetPath + BattleSceneNums::rWindowName);
+	const int windowPosY = 80;
+	auto r = WindowAndText({ 100,windowPosY }, L"miniMesWindow");
 	r.setText(L"1戦目");
-	addObject(make_shared<WindowAndText>(r), L"RoundWindow", 10);	
-	
-	// message
-	message_m = make_shared<TextView>(L"testMessage", Point(roundWidth + tx*4, ty*4), mesWidth-tx, 3, Font(20),BattleSceneNums::mesSpeed,Palette::Black);
-	drawList_m.add(message_m,11);
-
-	auto m = WindowAndText({ tx * 2 + roundWidth ,ty*3 }, { mesWidth,bWindowHeight }, assetPath + BattleSceneNums::mWindowName);
+	addObject(make_shared<WindowAndText>(r), L"RoundWindow", 10);
+	auto m = WindowAndText({ Window::Width() / 2,windowPosY }, L"mesWindow");
 	addObject(make_shared<WindowAndText>(m), L"messageWindow", 10);
-
-	// timer
-	time_m = BattleSceneNums::timeLimit;
-	maxTime_m = BattleSceneNums::timeLimit;
-	auto t = WindowAndText({ tx * 3 + roundWidth + mesWidth ,ty*3 }, { timeWidth,bWindowHeight },assetPath + BattleSceneNums::tWindowName);
-	t.setText(Format(time_m));
+	auto t = WindowAndText({ Window::Width() - 100,windowPosY }, L"miniMesWindow");
 	addObject(make_shared<WindowAndText>(t), L"timeWindow", 10);
 
+	// message
+	message_m = make_shared<TextView>(L"testMessage", Point(Window::Width() / 2 - 455 + 20,windowPosY-60) , Window::Width() / 2 + 455 - 20, 3, Font(20), BattleSceneNums::mesSpeed, Palette::Black);
+	drawList_m.add(message_m,11);
+
 	// Button
-	const int width = (Window::Width() - tx * 4) / 3;
+	const int width = 420;
 	const int height = 60;
 
 	const Array<String> buttonName = { L"weapon", L"magic",L"special" };
 	for (int i = 0; i < 3;i++) {
 		for (int j = 0; j < 3; j++) {
-			auto b = std::make_shared<BattleSceneButton>(BattleSceneButton({ Window::Width() / 2 -width/2  + (width+tx) * (i - 1), Window::Height() - (height+ty) * (3-j) },Size(width,height),assetPath + BattleSceneNums::buttonName));
-			b->setText(Format(Window::Width() / 2 + 500 * (i - 1)));
+			auto b = std::make_shared<BattleSceneButton>(BattleSceneButton({ Window::Width() / 2 -width/2  + (width+tx) * (i - 1), Window::Height() - (height+ty) * (3-j) },Size(width,height),L"battleButton"));
 			b->setStrColor(Palette::Black);
 			ButtonManager::add(b);
 			addObject(b, Format(buttonName[i],j), 10);
 		}
 	}
 
-	// AnswerManager
-	AnswerManager::init();
-
-	//back
-	auto back = make_shared<PictureObject>(BattleSceneNums::backPicName,1.0,Window::Center());
-	backPic_m = back;
-	addObject(back, L"background", 1);	
+	// 背景画像
+	backPic_m = make_shared<PictureObject>(L"",1.0,Window::Center());
+	addObject(backPic_m, L"background", 1);
 
 	// Enemy ID List
-	// 16 22 29 が特殊
+	// 16 22 29 30が特殊
 	for (int i = 1; i <= 30; i++)enemy_ID_List_m[i]=i;
 	swap(enemy_ID_List_m[16], enemy_ID_List_m[27]);
 	swap(enemy_ID_List_m[22], enemy_ID_List_m[28]);
@@ -387,23 +340,9 @@ void Battle::init(){
 	swap(enemy_ID_List_m[29], enemy_ID_List_m[Random(15, 29)]);
 
 	//enemyData
-	auto enemy = make_shared<PictureObject>(L"null", BattleSceneNums::scale, Point(Window::Width() / 2, 330));
-	addObject(enemy, L"enemy",5);
-	enemyPic_m = enemy;
+	enemyPic_m = make_shared<PictureObject>(L"null", BattleSceneNums::scale, Point(Window::Width() / 2, 330));
+	addObject(enemyPic_m, L"enemy",5);
 	newEnemy();
-
-	//state
-	state_m = BattleState::select;	
-
-	// sound
-	SoundAsset::Register(L"battle_corect", assetPath + BattleSceneNums::seCorect);
-	SoundAsset::Register(L"battle_incorect", assetPath + BattleSceneNums::seInCorect);
-	SoundAsset::Register(L"battle_bgm", assetPath + BattleSceneNums::bgm);
-	SoundAsset::Register(L"bettle_GameOver", assetPath + BattleSceneNums::seLose);
-
-	SoundAsset(L"battle_bgm").setPosSec(1.0s);
-	SoundAsset(L"battle_bgm").setLoop(true);
-	SoundAsset(L"battle_bgm").play();
 
 };
 
@@ -420,6 +359,8 @@ void Battle::update(){
 		{
 			auto ans = AnswerManager::checkAnswer();
 			//if (ans == Answers::not) { Println(L"未回答"); }
+
+			// 正解時
 			if (ans == Answers::correct) {
 				state_m = BattleState::win;
 				message_m->setNewText(enemy_m->messages_m.onPlayerWon_m);
@@ -428,14 +369,15 @@ void Battle::update(){
 				backPic_m->setFadeOut();
 
 				time_m += BattleSceneNums::timeRecovery;
-				if (time_m > maxTime_m) { time_m = maxTime_m; }
-				maxTime_m = time_m;
+				//if (time_m > maxTime_m) { time_m = maxTime_m; }
+				//maxTime_m = time_m;
 
 				dataManager_m.setSaveData(enemy_m->id_m, true);
 				m_data->addEnemy(enemy_m->id_m);
 				
 				SoundAsset(L"battle_corect").play();
 			}
+			// 不正解時
 			else if (ans == Answers::incorrect) {
 				message_m->setNewText(enemy_m->messages_m.onPlayerLost_m);
 				AnswerManager::init();
@@ -492,128 +434,86 @@ void Battle::addObject(std::shared_ptr<BattleSceneObject> obj, String  name, int
 	drawList_m.add(obj, layer);
 }
 
-// 要修正項目あり
 void Battle::newEnemy() {
-	int rand = enemy_ID_List_m[round_m];
-	enemy_m = make_shared<EnemyData>(dataManager_m.getEnemy(rand));
-	
-	// モンタージュファントム
+
+	// 次の敵のデータを取得
+	enemy_m = make_shared<EnemyData>(dataManager_m.getEnemy(enemy_ID_List_m[round_m]));
+
+	// 特殊モンスター　モンタージュファントム
 	if (enemy_m->id_m == 16) {
-		int rand2;
+		int rand;
 		do {		
-			rand2 = RandomSelect(m_data->defeatedEnemyList);
-		} while (rand2 == 16 || rand==22 || rand2 == 29);
-		auto monta = make_shared<EnemyData>(dataManager_m.getEnemy(rand2));
-		AnswerManager::setCorectAnswer(monta->collectAnswer_m);
+			rand = RandomSelect(m_data->defeatedEnemyList);
+		} while (rand == 16 || rand == 22 || rand == 29);		//特殊モンスターはコピーしない
 
-		enemyPic_m->setText(Format(L"EnemyGraphics/", enemy_m->id_m, L".png"));
-		enemyPic_m->setBigger();
+		// コピーするモンスターのデータを取得
+		auto monta = make_shared<EnemyData>(dataManager_m.getEnemy(rand));
 
+		// 登場メッセージを設定
 		enemy_m->messages_m.onContact_m = L"モンタージュファントムが現れた！\nモンタージュファントムは" + monta->name_m + L"に変化した！";
+
+		// 攻撃失敗時のメッセージを設定
 		enemy_m->messages_m.onPlayerLost_m = monta->name_m + L"に攻撃を仕掛けた！\nだが倒しきれなかった！";
 
-		message_m->setNewText(enemy_m->messages_m.onContact_m);
+		// 正解をコピー
+		enemy_m->collectAnswer_m = monta->collectAnswer_m;
 
-		backPic_m->setText(Format(L"BackGround/battle_graphic", Random(1, 5), L".jpg")); // 要修正 enemy_m.bgid
-
-		const Array<String> buttonName = { L"weapon", L"magic",L"special" };
+		// 選択肢をコピー
 		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				auto b = objects.find(Format(buttonName[i], j))->second;
-				switch (i)
-				{
-				case 0:
-					b->setText(monta->answers_m.weapon_m[j]);
-					break;
-				case 1:
-					b->setText(monta->answers_m.magic_m[j]);
-					break;
-				case 2:
-					b->setText(monta->answers_m.special_m[j]);
-					break;
-				default:
-					break;
-				}
-			}
+			enemy_m->answers_m.weapon_m[i] = monta->answers_m.weapon_m[i];
+			enemy_m->answers_m.magic_m[i] = monta->answers_m.magic_m[i];
+			enemy_m->answers_m.special_m[i] = monta->answers_m.special_m[i];
 		}
 	}
-	// カリキョン
+
+	// 特殊モンスター　カリキョン
 	else if (enemy_m->id_m == 29) {
 		
+		// 式と答えを設定
 		int a = Random(10,99);
 		int b = Random(1,a);
 		String ope = (Random(1) == 0) ? L"+" : L"-";
 		int ans = (ope == L"+") ? a + b : a - b;
 
-		AnswerManager::setCorectAnswer(Format(ans));
+		// 正解を設定
+		enemy_m->collectAnswer_m = Format(ans);
 
-		enemyPic_m->setText(Format(L"EnemyGraphics/", enemy_m->id_m, L".png"));
-		enemyPic_m->setBigger();
-
+		// 登場メッセージを設定
 		enemy_m->messages_m.onContact_m = Format(L"計算兵器カリキョンが現れた！\n「",a,ope,b,L"は？」");
+
+		// 攻撃失敗時のメッセージを設定
 		enemy_m->messages_m.onPlayerLost_m = Format(L"「この程度の問題を間違えるな」\n計算兵器カリキョンを倒しきれなかった！\n「",a,ope,b,L"は？」");
 
-		message_m->setNewText(enemy_m->messages_m.onContact_m);
-
-		backPic_m->setText(Format(L"BackGround/battle_graphic", Random(1, 5), L".jpg")); // 要修正 enemy_m.bgid
-
-		const Array<String> buttonName = { L"weapon", L"magic",L"special" };
+		// 選択肢をランダムに用意
 		int nums[9];
 		for (int i = 0; i < 9; i++) nums[i] = Random(1, 100);
-		nums[Random(8)] = ans + 10;
-		nums[Random(8)] = ans;
+		nums[Random(8)] = ans + 10;		// 正解より10大きい選択肢を用意
+		nums[Random(8)] = ans;			// 正解を用意
+		
 		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				auto bt = objects.find(Format(buttonName[i], j))->second;
-				switch (i)
-				{
-				case 0:
-					bt->setText(Format(nums[i * 3 + j]));
-					break;
-				case 1:
-					bt->setText(Format(nums[i * 3 + j]));
-					break;
-				case 2:
-					bt->setText(Format(nums[i * 3 + j]));
-					break;
-				default:
-					break;
-				}
-			}
+			enemy_m->answers_m.weapon_m[i] = Format(nums[i]);
+			enemy_m->answers_m.magic_m[i] = Format(nums[3+i]);
+			enemy_m->answers_m.special_m[i] = Format(nums[6+i]);
 		}
-
 	}
-	// 一般的な敵
-	else {
-		AnswerManager::setCorectAnswer(enemy_m->collectAnswer_m);
 
-		enemyPic_m->setText(Format(L"EnemyGraphics/", enemy_m->id_m, L".png"));
-		enemyPic_m->setBigger();
+	// Enemy画像設定
+	enemyPic_m->setText(Format(L"EnemyGraphics/", enemy_m->id_m, L".png"));						// 後でAssetに変更
+	enemyPic_m->setBigger();
 
-		message_m->setNewText(enemy_m->messages_m.onContact_m);
+	// 背景画像設定
+	backPic_m->setText(Format(L"BackGround/battle_graphic", enemy_m->bgid_m, L".jpg"));			//後でAssetに変更
 
-		backPic_m->setText(Format(L"BackGround/battle_graphic", Random(1, 5), L".jpg")); // 要修正 enemy_m.bgid
+	// 正解を登録
+	AnswerManager::setCorectAnswer(enemy_m->collectAnswer_m);
 
-		const Array<String> buttonName = { L"weapon", L"magic",L"special" };
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				auto b = objects.find(Format(buttonName[i], j))->second;
-				switch (i)
-				{
-				case 0:
-					b->setText(enemy_m->answers_m.weapon_m[j]);
-					break;
-				case 1:
-					b->setText(enemy_m->answers_m.magic_m[j]);
-					break;
-				case 2:
-					b->setText(enemy_m->answers_m.special_m[j]);
-					break;
-				default:
-					break;
-				}
-			}
-		}
+	// 登場メッセージを設定
+	message_m->setNewText(enemy_m->messages_m.onContact_m);
 
+	// ボタンに選択しを設定
+	for (int i = 0; i < 3; i++) {
+		objects.find(Format(L"weapon", i))->second->setText(enemy_m->answers_m.weapon_m[i]);
+		objects.find(Format(L"magic",i))->second->setText(enemy_m->answers_m.magic_m[i]);
+		objects.find(Format(L"special",i))->second->setText(enemy_m->answers_m.special_m[i]);
 	}
 }

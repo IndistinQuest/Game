@@ -33,7 +33,7 @@ void Main()
 	manager.add<scene::battle::Battle>(L"Battle");
 
 	manager.init(L"Title");
-
+	
 	while (System::Update())
 	{
         ButtonManager::update();

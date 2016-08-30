@@ -33,7 +33,6 @@ private:
 private:
 	int round_m;
 	int time_m;
-	int maxTime_m;
 
 	//enemy
 	std::shared_ptr<EnemyData> enemy_m;
@@ -47,9 +46,9 @@ private:
 	std::multimap<String, std::shared_ptr<BattleSceneButton>> buttons;
 	DrawableList drawList_m;
 
-	std::shared_ptr<TextView> message_m;
+	std::shared_ptr<BattleSceneButton> titleButton;
 
-	const String assetPath = L"Asset/";
+	std::shared_ptr<TextView> message_m;
 
 	// state
 	enum BattleState { win, lose, select };
