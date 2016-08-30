@@ -23,7 +23,6 @@ public:
 	};
 	Answers answers_m;
 	String description_m;
-	String class_m;
 	int bgid_m;
 public:
 	EnemyData();

@@ -7,6 +7,7 @@ const double EGDetailType::PREVIOUS_BUTTON_WIDTH = 0.1*W;
 const double EGDetailType::PREVIOUS_BUTTON_HEIGHT = 0.1*H;
 const double EGDetailType::LIST_BUTTON_WIDTH = 0.1*W;
 const double EGDetailType::LIST_BUTTON_HEIGHT = 0.1*H;
+const double EGDetailType::TARGET_INFORMATION_WIDTH = 0.3*W;
 
 const double EGDetailType::TARGET_SCALE = 0.3;
 
@@ -26,11 +27,8 @@ void EGDetailType::init()
 
 	cursorID_m = 1;
 
-	targetName_m = Font(20);
-	targetMessage_m = Font(20);
-	collectAnswer_m = Font(20);
-	description_m = Font(20);
-	
+	targetFont_m = Font(20);
+
 	backGround_m = std::make_shared<RollBackGround>(L"./Asset/enemies_graphic.jpg");
 	for (int i = 1; i < KIND_OF_ENEMIES; ++i)
 	{
@@ -38,8 +36,8 @@ void EGDetailType::init()
 		targetGraphics_m.add(targetGraphic, i);
 	}
 
-	goToNext_m = [this]() { };
-	backToPrevious_m = [this]() {this->previousTarget(&(this->cursorID_m)); };
+	goToNext_m = [this]() {this->nextTarget(); };
+	backToPrevious_m = [this]() {this->previousTarget(); };
 	backToList_m = [this]() {(this->*&Scene::changeScene)(L"EGListType", 500, false); };
 	backToTitle_m = [this]() {(this->*&Scene::changeScene)(L"Title", 500, false); };
 
@@ -54,11 +52,14 @@ void EGDetailType::init()
 	ButtonManager::add(previousButton_m);
 	ButtonManager::add(backToListButton_m);
 
+	textView_m = std::make_shared<TextView>(L"", POS_TARGET_NAME, TARGET_INFORMATION_WIDTH, 100, targetFont_m);
+
 }
 void EGDetailType::update()
 {
-	target_m = dataManager_m.getEnemy(cursorID_m);
+	textView_m->update();
 	backGround_m->update();
+	
 }
 void EGDetailType::draw() const 
 {
@@ -72,19 +73,22 @@ void EGDetailType::draw() const
 	backToListButton_m->draw();
 
 	targetGraphics_m.drawLayer(cursorID_m);
-
-	targetName_m(target_m.name_m).draw(POS_TARGET_NAME, Palette::Darkturquoise);
-	targetMessage_m(target_m.messages_m.onPlayerWon_m).draw(POS_TARGET_MESSAGE, Palette::Darkmagenta);
-	collectAnswer_m(target_m.collectAnswer_m).draw(POS_COLLECT_ANSWER, Palette::Crimson);
-	description_m(target_m.description_m).draw(POS_DESCRIPTION, Palette::Firebrick);
+	
+	textView_m->draw();
 }
 
-void EGDetailType::nextTarget(int* address)
+void EGDetailType::nextTarget()
 {
-	(*address)++;
+	cursorID_m++;
+	target_m = dataManager_m.getEnemy(cursorID_m);
+	String newText = target_m.name_m + L"\n" + target_m.messages_m.onPlayerWon_m + L"\n" + target_m.collectAnswer_m + L"\n" + target_m.description_m;
+	textView_m->setNewText(newText);
 }
 
-void EGDetailType::previousTarget(int* address)
+void EGDetailType::previousTarget()
 {
-	(*address)--;
+	cursorID_m--;
+	target_m = dataManager_m.getEnemy(cursorID_m);
+	String newText = target_m.name_m + L"\n" + target_m.messages_m.onPlayerWon_m + L"\n" + target_m.collectAnswer_m + L"\n" + target_m.description_m;
+	textView_m->setNewText(newText);
 }

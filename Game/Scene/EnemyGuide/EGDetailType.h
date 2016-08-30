@@ -5,6 +5,7 @@
 #include "../../Data/EnemyData.h"
 #include "MyDrawableList.h"
 #include "EnemyGuide.h"
+#include "../../TextView/TextView.h"
 
 
 class GameData;
@@ -22,6 +23,7 @@ namespace scene {
 			static const double PREVIOUS_BUTTON_HEIGHT;
 			static const double LIST_BUTTON_WIDTH;
 			static const double LIST_BUTTON_HEIGHT;
+			static const double TARGET_INFORMATION_WIDTH;
 			
 			static const double TARGET_SCALE ;
 
@@ -49,16 +51,15 @@ namespace scene {
 
 			int cursorID_m;
 
-			Font targetName_m;
-			Font targetMessage_m;
-			Font collectAnswer_m;
-			Font description_m;
+			Font targetFont_m;
 
 			MyDrawableList targetGraphics_m;
 
+			std::shared_ptr<TextView> textView_m;
+
 			void changeTarget();
-			void nextTarget(int* address);
-			void previousTarget(int* address);
+			void nextTarget();
+			void previousTarget();
 		public:
 			void init() override;
 			void update() override;
