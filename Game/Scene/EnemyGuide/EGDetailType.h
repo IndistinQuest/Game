@@ -6,6 +6,7 @@
 #include "MyDrawableList.h"
 #include "EnemyGuide.h"
 #include "../../TextView/TextView.h"
+#include "../../Button/TextureButton.h"
 
 
 class GameData;
@@ -26,6 +27,9 @@ namespace scene {
 			static const double TARGET_INFORMATION_WIDTH;
 			
 			static const double TARGET_SCALE ;
+			static const int FONT_SIZE;
+
+			static const int TEXT_SPEED;
 
 			static const Point POS_NEXT_BUTTON;
 			static const Point POS_PREVIOUS_BUTTON;
@@ -45,17 +49,23 @@ namespace scene {
 			std::function<void(void)> backToPrevious_m;
 			std::function<void(void)> backToList_m;
 
-			std::shared_ptr<RoundRectTextButton> nextButton_m;
-			std::shared_ptr<RoundRectTextButton> previousButton_m;
-			std::shared_ptr<RoundRectTextButton> backToListButton_m;
+			std::shared_ptr<TextureButton> nextButton_m;
+			std::shared_ptr<TextureButton> previousButton_m;
+			std::shared_ptr<TextureButton> backToListButton_m;
 
 			int cursorID_m;
 
-			Font targetFont_m;
+			Font targetNameFont_m;
+			Font targetMessageFont_m;
+			Font collectAnswerFont_m;
+			Font descriptionFont_m;
 
 			MyDrawableList targetGraphics_m;
 
-			std::shared_ptr<TextView> textView_m;
+			std::shared_ptr<TextView> nameTextView_m;
+			std::shared_ptr<TextView> messageTextView_m;
+			std::shared_ptr<TextView> answerTextView_m;
+			std::shared_ptr<TextView> descriptionTextView_m;
 
 			void changeTarget();
 			void nextTarget();

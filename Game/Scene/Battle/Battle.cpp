@@ -464,7 +464,7 @@ void Battle::nextScene(String sceneName) {
 void Battle::newEnemy() {
 
 	// 次の敵のデータを取得
-	enemy_m = make_shared<EnemyData>(dataManager_m.getEnemy(2));// enemy_ID_List_m[round_m]));
+	enemy_m = make_shared<EnemyData>(dataManager_m.getEnemy(enemy_ID_List_m[round_m]));
 
 	// 特殊モンスター　モンタージュファントム
 	if (enemy_m->id_m == 16) {
