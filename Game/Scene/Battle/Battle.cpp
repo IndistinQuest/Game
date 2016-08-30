@@ -47,13 +47,13 @@ namespace BattleSceneNums {
 	const String buttonName = L"window_graphic.png";
 
 	// 戦闘数のウィンドウのファイル名
-	const String rWindowName = L"roundWindow.png";
+	const String rWindowName = L"small_message_graphic.png";
 
 	// メッセージウィンドウのファイル名
-	const String mWindowName = L"messageWindow.png";
+	const String mWindowName = L"message_graphic.png";
 
 	// 制限時間のウィンドウのファイル名
-	const String tWindowName = L"timeWindow.png";
+	const String tWindowName = L"small_message_graphic.png";
 
 	// 正解時のSE
 	const String seCorect = L"crrect_answer3.mp3";
@@ -113,11 +113,13 @@ private:
 	const Color color = Palette::Blue;
 	const int Alpha = 120;*/
 	const Texture texture_m;
+	const Color strColor_m;
 protected:
 	String str_m;
 public:
-	WindowAndText(Point pos, Size size,FilePath path)
-		:pos(pos), size(size),center(pos + size / 2),texture_m(path)
+	WindowAndText(Point pos, Size size,FilePath path,Color c = Palette::Black)
+		:pos(pos), size(size),center(pos + size / 2),texture_m(path),
+		strColor_m(c)
 	{
 		if (!FontAsset::IsRegistered(L"BattleSceneFont")) {
 			FontAsset::Register(L"BattleSceneFont", 20, Typeface::Black);
@@ -132,7 +134,7 @@ public:
 	void draw()const override {
 		//RoundRect(pos, size, r).draw(Color(color).setAlpha(Alpha)).drawFrame(0.3, 0.0, Palette::Black);
 		texture_m.drawAt(center);
-		FontAsset(L"BattleSceneFont").drawCenter(str_m, center);
+		FontAsset(L"BattleSceneFont").drawCenter(str_m, center,strColor_m);
 	}
 };
 
@@ -147,11 +149,12 @@ private:
 	const int Alpha = 120;
 	String text_m;
 	const Texture texture_m;
+	Color color_m;	//文字色
 public:
-	BattleSceneButton(Point pos,Size size,String filepath)
+	BattleSceneButton(Point pos,Size size,String filepath,Color c = Palette::White)
 		:BasicButton(Shape(RoundRect(pos, size,r)))//,text_m(text)
 		, size(size), pos(pos), center(pos + size / 2)
-		,texture_m(filepath)
+		,texture_m(filepath),color_m(c)
 	{
 		if (!FontAsset::IsRegistered(L"CommandFont")) {
 			FontAsset::Register(L"CommandFont", 20, Typeface::Black);
@@ -175,7 +178,7 @@ public:
 			break;
 		}
 		texture_m.scale(mag).drawAt(bPos);
-		FontAsset(L"CommandFont").drawCenter(text_m, bPos);
+		FontAsset(L"CommandFont").drawCenter(text_m, bPos,color_m);
 	}
 	void setText(String text)override {
 		text_m = text;
@@ -185,6 +188,9 @@ public:
 	}
 	void update()override {
 		//Println(L"Button is Update");
+	}
+	void setStrColor(Color c) {
+		color_m = c;
 	}
 };
 
@@ -282,6 +288,12 @@ public:
 	}
 };
 
+void swap(int& a, int& b) {
+	int tmp = a;
+	a = b;
+	b = tmp;
+}
+
 }
 }
 
@@ -299,6 +311,15 @@ void Battle::init(){
 	ButtonManager::update();
 
 	m_data->resetEnemyList();
+	m_data->time = 0;
+
+	// font
+	if (!FontAsset::IsRegistered(L"CommandFont")) {
+		FontAsset::Register(L"CommandFont", 20);
+	}
+	if (!FontAsset::IsRegistered(L"BattleSceneFont")) {
+		FontAsset::Register(L"BattleSceneFont", 20);
+	}
 
 	const int tx = 5;
 	const int ty = 5;
@@ -312,21 +333,21 @@ void Battle::init(){
 
 	// round
 	round_m = 1;
-	auto r = WindowAndText({ tx, ty }, { roundWidth,bWindowHeight },assetPath + BattleSceneNums::rWindowName);
+	auto r = WindowAndText({ tx, ty*3 }, { roundWidth,bWindowHeight },assetPath + BattleSceneNums::rWindowName);
 	r.setText(L"1戦目");
 	addObject(make_shared<WindowAndText>(r), L"RoundWindow", 10);	
 	
 	// message
-	message_m = make_shared<TextView>(L"testMessage", Point(roundWidth + tx*4, ty*2), mesWidth-tx, 3, Font(20, Typeface::Black),BattleSceneNums::mesSpeed);
+	message_m = make_shared<TextView>(L"testMessage", Point(roundWidth + tx*4, ty*4), mesWidth-tx, 3, Font(20),BattleSceneNums::mesSpeed,Palette::Black);
 	drawList_m.add(message_m,11);
 
-	auto m = WindowAndText({ tx * 2 + roundWidth ,ty }, { mesWidth,bWindowHeight }, assetPath + BattleSceneNums::mWindowName);
+	auto m = WindowAndText({ tx * 2 + roundWidth ,ty*3 }, { mesWidth,bWindowHeight }, assetPath + BattleSceneNums::mWindowName);
 	addObject(make_shared<WindowAndText>(m), L"messageWindow", 10);
 
 	// timer
 	time_m = BattleSceneNums::timeLimit;
 	maxTime_m = BattleSceneNums::timeLimit;
-	auto t = WindowAndText({ tx * 3 + roundWidth + mesWidth ,ty }, { timeWidth,bWindowHeight },assetPath + BattleSceneNums::tWindowName);
+	auto t = WindowAndText({ tx * 3 + roundWidth + mesWidth ,ty*3 }, { timeWidth,bWindowHeight },assetPath + BattleSceneNums::tWindowName);
 	t.setText(Format(time_m));
 	addObject(make_shared<WindowAndText>(t), L"timeWindow", 10);
 
@@ -339,6 +360,7 @@ void Battle::init(){
 		for (int j = 0; j < 3; j++) {
 			auto b = std::make_shared<BattleSceneButton>(BattleSceneButton({ Window::Width() / 2 -width/2  + (width+tx) * (i - 1), Window::Height() - (height+ty) * (3-j) },Size(width,height),assetPath + BattleSceneNums::buttonName));
 			b->setText(Format(Window::Width() / 2 + 500 * (i - 1)));
+			b->setStrColor(Palette::Black);
 			ButtonManager::add(b);
 			addObject(b, Format(buttonName[i],j), 10);
 		}
@@ -351,6 +373,18 @@ void Battle::init(){
 	auto back = make_shared<PictureObject>(BattleSceneNums::backPicName,1.0,Window::Center());
 	backPic_m = back;
 	addObject(back, L"background", 1);	
+
+	// Enemy ID List
+	// 16 22 29 が特殊
+	for (int i = 1; i <= 30; i++)enemy_ID_List_m[i]=i;
+	swap(enemy_ID_List_m[16], enemy_ID_List_m[27]);
+	swap(enemy_ID_List_m[22], enemy_ID_List_m[28]);
+	for (int i = 1; i <= 26; i++) {
+		swap(enemy_ID_List_m[i], enemy_ID_List_m[Random(1, 26)]);
+	}
+	swap(enemy_ID_List_m[27], enemy_ID_List_m[Random(15, 29)]);
+	swap(enemy_ID_List_m[28], enemy_ID_List_m[Random(15, 29)]);
+	swap(enemy_ID_List_m[29], enemy_ID_List_m[Random(15, 29)]);
 
 	//enemyData
 	auto enemy = make_shared<PictureObject>(L"null", BattleSceneNums::scale, Point(Window::Width() / 2, 330));
@@ -368,7 +402,9 @@ void Battle::init(){
 	SoundAsset::Register(L"bettle_GameOver", assetPath + BattleSceneNums::seLose);
 
 	SoundAsset(L"battle_bgm").setPosSec(1.0s);
+	SoundAsset(L"battle_bgm").setLoop(true);
 	SoundAsset(L"battle_bgm").play();
+
 };
 
 // 要修正項目あり
@@ -376,8 +412,6 @@ void Battle::update(){
 	ClearPrint();
 	for_each(objects.begin(), objects.end(), [](auto pare) {pare.second->update(); });
 	message_m->update();
-	
-
 
 	switch (state_m)
 	{
@@ -411,7 +445,7 @@ void Battle::update(){
 		// タイマー
 		{
 			time_m--;
-			objects.find(L"timeWindow")->second->setText(Format(time_m));
+			objects.find(L"timeWindow")->second->setText(Format(Pad(time_m / 60, { 2, L'0' }), L".", Pad(time_m%60, { 2, L'0' })));
 			if (time_m <= 0) {
 				state_m = BattleState::lose;
 				message_m->setNewText(enemy_m->name_m+BattleSceneNums::loseMessage);
@@ -424,16 +458,23 @@ void Battle::update(){
 	case BattleState::win:
 		//Println(L"正解");
 		if (message_m->isPlotAll() && !enemyPic_m->isDraw()) {
-			newEnemy();
-			state_m = BattleState::select;
-			round_m++;
-			objects.find(L"RoundWindow")->second->setText(Format(round_m,L"戦目"));
+			if (round_m == 30) {
+				m_data->time = time_m;
+				changeScene(BattleSceneNums::nextScene);
+			}
+			else {				
+				state_m = BattleState::select;
+				round_m++;
+				objects.find(L"RoundWindow")->second->setText(Format(round_m, L"戦目"));
+				newEnemy();
+			}
 		}
 		break;
 	case BattleState::lose:
 		//Println(L"不正解");
 		SoundAsset(L"battle_GameOver").play();
 		if (message_m->isPlotAll()) {
+			m_data->time = 0;
 			dataManager_m.writeSaveData();
 			SoundAsset(L"battle_bgm").stop();
 			changeScene(BattleSceneNums::nextScene);
@@ -453,15 +494,15 @@ void Battle::addObject(std::shared_ptr<BattleSceneObject> obj, String  name, int
 
 // 要修正項目あり
 void Battle::newEnemy() {
-	int rand = Random(1, dataManager_m.getNumOfEnemies());
+	int rand = enemy_ID_List_m[round_m];
 	enemy_m = make_shared<EnemyData>(dataManager_m.getEnemy(rand));
 	
 	// モンタージュファントム
 	if (enemy_m->id_m == 16) {
 		int rand2;
-		do {
-			rand2 = Random(1, dataManager_m.getNumOfEnemies());
-		} while (rand2 == 16);
+		do {		
+			rand2 = RandomSelect(m_data->defeatedEnemyList);
+		} while (rand2 == 16 || rand==22 || rand2 == 29);
 		auto monta = make_shared<EnemyData>(dataManager_m.getEnemy(rand2));
 		AnswerManager::setCorectAnswer(monta->collectAnswer_m);
 
@@ -517,25 +558,30 @@ void Battle::newEnemy() {
 		backPic_m->setText(Format(L"BackGround/battle_graphic", Random(1, 5), L".jpg")); // 要修正 enemy_m.bgid
 
 		const Array<String> buttonName = { L"weapon", L"magic",L"special" };
+		int nums[9];
+		for (int i = 0; i < 9; i++) nums[i] = Random(1, 100);
+		nums[Random(8)] = ans + 10;
+		nums[Random(8)] = ans;
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 				auto bt = objects.find(Format(buttonName[i], j))->second;
 				switch (i)
 				{
 				case 0:
-					bt->setText(Format(Random(1,100)));
+					bt->setText(Format(nums[i * 3 + j]));
 					break;
 				case 1:
-					bt->setText(Format(Random(1, 100)));
+					bt->setText(Format(nums[i * 3 + j]));
 					break;
 				case 2:
-					bt->setText(Format(Random(1, 100)));
+					bt->setText(Format(nums[i * 3 + j]));
 					break;
 				default:
 					break;
 				}
 			}
 		}
+
 	}
 	// 一般的な敵
 	else {
