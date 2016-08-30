@@ -5,7 +5,7 @@ using namespace scene::enemyGuide;
 const double EGListType::W = 1280;
 const double EGListType::H = 720;
 const Point EGListType::POS_HEADING = Point(0.5*W, 0.2*H);
-const Point EGListType::POS_HOME_BUTTON = Point(0.8*W, 0.8*H);
+const Point EGListType::POS_HOME_BUTTON = Point(0.8*W, 0.2*H);
 const int EGListType::KIND_OF_ENEMIES = 30;
 const double EGListType::LIST_MARGIN = 20;
 const double EGListType::LIST_BORDER = 0.3*H;
@@ -21,7 +21,7 @@ void EGListType::init()
 	ButtonManager::update();
 	
 	backToTitle_m = [this]() {(this->*&Scene::changeScene)(L"Title", 500, false); };
-	homeButton_m = std::make_shared<RoundRectTextButton>(POS_HOME_BUTTON.x, POS_HOME_BUTTON.y, HOME_BUTTON_WIDTH, HOME_BUTTON_HEIGHT, 176, L"ƒ^ƒCƒgƒ‹‚É–ß‚é", backToTitle_m);
+	homeButton_m = std::make_shared<TextureButton>(Vec2(POS_HOME_BUTTON.x, POS_HOME_BUTTON.y), L"./Asset/title_button_resize.png", backToTitle_m);
 	backGround_m = std::make_shared<RollBackGround>(L"./Asset/enemies_graphic.jpg");
 
 	ButtonManager::add(homeButton_m);
