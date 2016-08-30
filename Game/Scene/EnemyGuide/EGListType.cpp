@@ -21,11 +21,10 @@ void EGListType::init()
 	ButtonManager::update();
 	
 	backToTitle_m = [this]() {(this->*&Scene::changeScene)(L"Title", 500, false); };
-	homeButton_m = std::make_shared<RoundRectTextButton>(POS_HOME_BUTTON.x, POS_HOME_BUTTON.y, 0.1*W, 0.1*H, 176, L"タイトルに戻る", backToTitle_m);
-	background_m = std::make_shared<jumpaku::DrawableTxture>(L"./Asset/title_graphicM.png", Point(0.5*W, 0.5*H));
+	homeButton_m = std::make_shared<RoundRectTextButton>(POS_HOME_BUTTON.x, POS_HOME_BUTTON.y, HOME_BUTTON_WIDTH, HOME_BUTTON_HEIGHT, 176, L"タイトルに戻る", backToTitle_m);
+	backGround_m = std::make_shared<RollBackGround>(L"./Asset/enemies_graphic.jpg");
 
 	ButtonManager::add(homeButton_m);
-	graphics_m.add(background_m, 0);
 	for (int i = 1; i <= KIND_OF_ENEMIES; ++i) {
 		std::shared_ptr<Drawable> icon = std::make_shared<uhhyoi::DrawableTexture>(Texture(Format(L"./Asset/EnemyGraphics/", i, L".png")).scale(0.1), Point(iconX(i), iconY(i)));
 		graphics_m.add(icon, i);
@@ -34,11 +33,12 @@ void EGListType::init()
 
 void EGListType::update()
 {
-
+	backGround_m->update();
 }
 
 void EGListType::draw() const
 {
+	backGround_m->draw();
 	graphics_m.drawAll();
 	title_m.draw(POS_HEADING, Palette::Orange);
 	homeButton_m->draw();
