@@ -53,4 +53,12 @@
 
 
 // IndistinQuest
-200    FILE    "Asset/title_graphic.JPG"
+200    FILE    "Asset/title_graphicM.png"
+201    FILE    "Asset/title_logo2M.png"
+202    FILE    "Asset/StartButtonM.png"
+203    FILE    "Asset/RuleButtonM.png"
+204    FILE    "Asset/EnemiesButtonM.png"
+205    FILE    "Asset/CreditButtonM.png"
+206    FILE    "Asset/QuitButtonM.png"
+207    FILE    "Asset/StartButtonL.png"
+208    FILE    "Asset/back_button_resize.png"

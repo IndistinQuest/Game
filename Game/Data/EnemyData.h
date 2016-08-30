@@ -13,6 +13,7 @@ public:
 		String onPlayerLost_m;
 	};
 	Messages messages_m;
+	String collectAnswer_m;
 	class Answers
 	{
 	public:
@@ -22,7 +23,7 @@ public:
 	};
 	Answers answers_m;
 	String description_m;
-	String class_m;
+	int bgid_m;
 public:
 	EnemyData();
 	~EnemyData();
