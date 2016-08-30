@@ -12,26 +12,6 @@
 
 using Manager = SceneManager<String, GameData>;
 
-// ↓後で消す
-namespace scene {
-	namespace debug {
-		class GameOver : public SceneManager<String, GameData>::Scene {
-			Font font;
-		public:
-			GameOver() :font(50) {}
-			void init()override { ButtonManager::clearAll(); }
-			void update()override { if (Input::MouseL.clicked)changeScene(L"Battle"); }
-			void draw()const override {
-				ClearPrint();
-				for (int v : m_data->defeatedEnemyList) {
-					Println(Format(v));
-				}
-				font.drawCenter(L"GameOver", Window::Center());
-			}
-		};
-	};
-};
-
 void Main()
 {
     // ウィンドウを設定
@@ -45,14 +25,14 @@ void Main()
 	manager.setFadeColor(Palette::White);
 
 	// シーンを設定
+	manager.add<scene::enemyGuide::EGDetailType>(L"EGDetailType");
 	manager.add<scene::enemyGuide::EGListType>(L"EGListType");
     manager.add<scene::rule::Rule>(L"Rule");
 	manager.add<scene::title::Title>(L"Title");
 	manager.add<scene::result::Result>(L"Result");
 	manager.add<scene::battle::Battle>(L"Battle");
-	manager.add<scene::debug::GameOver>(L"GameOver");	//後で消す
 
-	manager.init(L"Title");
+	manager.init(L"EGDetailType");
 
 	while (System::Update())
 	{

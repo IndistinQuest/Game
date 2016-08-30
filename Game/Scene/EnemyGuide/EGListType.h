@@ -7,6 +7,8 @@
 #include "../../Drawable/DrawableTxture.h"
 #include "../../Button/ButtonManager.h"
 #include "../../Button/RoundRectButton.h"
+#include "DrawableTexture.h"
+#include "EnemyGuide.h"
 
 class GameData;
 
@@ -14,7 +16,7 @@ using Scene = SceneManager<String, GameData>::Scene;
 
 namespace scene {
 	namespace enemyGuide {
-		class EGListType :public Scene
+		class EGListType :public Scene, public EnemyGuide
 		{
 		private:
 			static const double W;
@@ -32,16 +34,7 @@ namespace scene {
 			double iconX(int i);
 			double iconY(int i);
 
-
-			DataManager dataManager_m;
-			const Heading title_m;
-			DrawableList icons_m;
-			std::function<void(void)> backToTitle_m;
-			std::shared_ptr<RoundRectTextButton> homeButton_m;
-
 		public:
-			//EGListType();
-			//~EGListType();
 			void init() override;
 			void update() override;
 			void draw() const override;

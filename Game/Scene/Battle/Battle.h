@@ -33,11 +33,14 @@ private:
 private:
 	int round_m;
 	int time_m;
+	int maxTime_m;
 
 	//enemy
 	std::shared_ptr<EnemyData> enemy_m;
 	DataManager dataManager_m;
 	std::shared_ptr<PictureObject> enemyPic_m;
+
+	int enemy_ID_List_m[31];
 
 	// objects
 	std::multimap<String, std::shared_ptr<BattleSceneObject>> objects;
@@ -46,11 +49,14 @@ private:
 
 	std::shared_ptr<TextView> message_m;
 
-	const String assetPath = L"../../Asset/";
+	const String assetPath = L"Asset/";
 
 	// state
 	enum BattleState { win, lose, select };
 	BattleState state_m;
+
+	// background
+	std::shared_ptr<PictureObject> backPic_m;
 };
 
 };

@@ -8,5 +8,6 @@ public:
 	std::vector<int> defeatedEnemyList;
 	void addEnemy(int id);
 	void resetEnemyList();
+	int time;
 };
 

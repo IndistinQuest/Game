@@ -1,9 +1,11 @@
 #include "TextView.h"
 
-TextView::TextView(const String& text, const Point& pos, const int width, const int lines, const Font& font, int IntervalIncrease )
+TextView::TextView(const String& text, const Point& pos, const int width, const int lines, const Font& font, int IntervalIncrease ,Color color)
 	:str_m(text), font_m(font), pos_m(pos), IntervalIncrease_m(IntervalIncrease),
 	maxLines_m(lines),lines_m(1),
-	PositionToBreak_m(pos.x + width), isAutomaticLineBreak(true){
+	PositionToBreak_m(pos.x + width), isAutomaticLineBreak(true),
+	color_m(color)
+{
 
 }
 
@@ -16,7 +18,7 @@ void TextView::update() {
 }
 
 void TextView::draw()const {
-	font_m.draw(str_m.substr(0, count_m), pos_m);
+	font_m.draw(str_m.substr(0, count_m), pos_m,color_m);
 }
 
 void TextView::setNewText(const String& text) {
