@@ -80,7 +80,7 @@ void DataManager::readEnemyData()
 		}
 
 		enemy.description_m = object.second[L"description"].get<String>();
-		//enemy.bgid_m = object.second[L"BGID"].get<int>();
+		enemy.bgid_m = object.second[L"BGID"].get<int>();
 
 		enemies_m.push_back(enemy);
 	}

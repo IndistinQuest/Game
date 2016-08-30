@@ -8,6 +8,7 @@
 #include "../../Drawable/DrawableTxture.h"
 #include "../../Button/ButtonManager.h"
 #include "../../Button/RoundRectButton.h"
+#include "../../Button/TextureButton.h"
 #include "DrawableTexture.h"
 #include "RollBackGround.h"
 
@@ -27,7 +28,7 @@ protected:
 
 	DrawableList graphics_m;
 	std::function<void(void)> backToTitle_m;
-	std::shared_ptr<RoundRectTextButton> homeButton_m;
+	std::shared_ptr<TextureButton> homeButton_m;
 	std::shared_ptr<RollBackGround> backGround_m;
 public:
 	EnemyGuide();
