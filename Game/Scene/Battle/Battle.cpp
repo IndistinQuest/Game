@@ -18,17 +18,17 @@ namespace battle {
 namespace BattleSceneNums {
 
 	// 制限時間の初期値
-	const int timeLimit = 1000;
+	const int timeLimit = 1800;
 
 	// 正解した時の制限時間の増加量
-	const int timeRecovery = 200;
+	const int timeRecovery = 420;
 
 	// Enemy画像の拡大率
 	const double scale = 0.4;
 
 	// Enemyのフェードイン/アウトの早さ
-	const double fadeIn = 10;
-	const double fadeOut = 3;
+	const double fadeIn = 6;
+	const double fadeOut = 2;
 
 	// 敗北時のEnemyの最大拡大率
 	const double maxScale = 2.0;
@@ -40,7 +40,7 @@ namespace BattleSceneNums {
 	const String loseMessage = L"にやられた！";
 
 	// メッセージ表示速度
-	const int mesSpeed = 3;
+	const int mesSpeed = 2;
 }
 
 //回答
@@ -65,6 +65,11 @@ namespace AnswerManager{
 		return playersAnswer;
 	}
 };
+
+bool isGoTitle;
+bool isGoToTitle() {
+	return isGoTitle;
+}
 
 // 基底クラス
 class BattleSceneObject : public Drawable
@@ -101,16 +106,11 @@ private:
 	const Point pos;
 	const Point center;
 	String text_m;
-	//const Texture texture_m;
 	const String textureAssetName_m;
 	Color color_m;	//文字色
 public:
-	BattleSceneButton(Point pos,Size size,String textureAssetName,Color c = Palette::White)
-		:BasicButton(Shape(Rect(pos, size)))//,text_m(text)
-		, size(size), pos(pos), center(pos + size / 2)
-		,textureAssetName_m(textureAssetName),color_m(c)
-	{
-	};
+	BattleSceneButton(Point pos,Size size,String textureAssetName,Color c = Palette::Black)
+		:BasicButton(Shape(Rect(pos, size))), size(size), pos(pos), center(pos + size / 2),textureAssetName_m(textureAssetName),color_m(c){};
 	void draw() const
 	{
 		Point bPos = center;
@@ -138,6 +138,14 @@ public:
 	void update()override {}
 	void setStrColor(Color c) {
 		color_m = c;
+	}
+};
+
+class TitleButton : public BattleSceneButton {
+public:
+	TitleButton(Point pos, Size size, String textureAssetName, Color c = Palette::Black):BattleSceneButton(pos,size,textureAssetName,c) {};
+	void onClicked() override{
+		isGoTitle = true;
 	}
 };
 
@@ -294,6 +302,8 @@ void Battle::init(){
 	time_m = BattleSceneNums::timeLimit;
 	state_m = BattleState::select;
 	AnswerManager::init();
+	isGoTitle = false;
+	incorect = false;
 
 	// Window
 	const int windowPosY = 80;
@@ -306,13 +316,13 @@ void Battle::init(){
 	addObject(make_shared<WindowAndText>(t), L"timeWindow", 10);
 
 	// message
-	message_m = make_shared<TextView>(L"testMessage", Point(Window::Width() / 2 - 455 + 20,windowPosY-60) , Window::Width() / 2 + 455 - 20, 3, Font(20), BattleSceneNums::mesSpeed, Palette::Black);
+	message_m = make_shared<TextView>(L"testMessage", Point(210,windowPosY-60) , 900, 3, Font(20), BattleSceneNums::mesSpeed, Palette::Black);
 	drawList_m.add(message_m,11);
+	message_m->setAllPlotTime(10);
 
 	// Button
 	const int width = 420;
 	const int height = 60;
-
 	const Array<String> buttonName = { L"weapon", L"magic",L"special" };
 	for (int i = 0; i < 3;i++) {
 		for (int j = 0; j < 3; j++) {
@@ -323,8 +333,13 @@ void Battle::init(){
 		}
 	}
 
+	titleButton = make_shared<TitleButton>(TitleButton({ Window::Width() / 2 - width / 2 + (width + tx), windowPosY*2 + ty }, Size(width, height), L"battleButton"));
+	titleButton->setText(L"タイトルにもどる");
+	addObject(titleButton,L"titleButton", 12);
+	ButtonManager::add(titleButton);
+
 	// 背景画像
-	backPic_m = make_shared<PictureObject>(L"",1.0,Window::Center());
+	backPic_m = make_shared<PictureObject>(L"null",1.0,Window::Center());
 	addObject(backPic_m, L"background", 1);
 
 	// Enemy ID List
@@ -352,14 +367,17 @@ void Battle::update(){
 	for_each(objects.begin(), objects.end(), [](auto pare) {pare.second->update(); });
 	message_m->update();
 
+	if (isGoTitle) {
+		nextScene(L"Title");
+	}
+
 	switch (state_m)
 	{
 	case BattleState::select:
 		// 回答
 		{
 			auto ans = AnswerManager::checkAnswer();
-			//if (ans == Answers::not) { Println(L"未回答"); }
-
+			
 			// 正解時
 			if (ans == Answers::correct) {
 				state_m = BattleState::win;
@@ -369,8 +387,6 @@ void Battle::update(){
 				backPic_m->setFadeOut();
 
 				time_m += BattleSceneNums::timeRecovery;
-				//if (time_m > maxTime_m) { time_m = maxTime_m; }
-				//maxTime_m = time_m;
 
 				dataManager_m.setSaveData(enemy_m->id_m, true);
 				m_data->addEnemy(enemy_m->id_m);
@@ -382,6 +398,7 @@ void Battle::update(){
 				message_m->setNewText(enemy_m->messages_m.onPlayerLost_m);
 				AnswerManager::init();
 				SoundAsset(L"battle_incorect").playMulti();
+				incorect = true;
 			}
 		}
 		// タイマー
@@ -392,17 +409,23 @@ void Battle::update(){
 				state_m = BattleState::lose;
 				message_m->setNewText(enemy_m->name_m+BattleSceneNums::loseMessage);
 				enemyPic_m->setExpansion();
-				SoundAsset(L"battle_bgm").pause(3.0s);
 			}
 			SoundAsset(L"battle_bgm").changeTempo((time_m < 300)?1.5:1.0);
 		}
+		if (incorect && message_m->isAllPoltAndOverTime()) {
+			//message_m->setIntervalIncrease(0);
+			message_m->setNewText(enemy_m->messages_m.onContact_m);
+			//message_m->setPlotAll();
+			incorect = false;
+		}
+
 		break;
+	// 正解時
 	case BattleState::win:
-		//Println(L"正解");
-		if (message_m->isPlotAll() && !enemyPic_m->isDraw()) {
+		if (message_m->isAllPoltAndOverTime() && !enemyPic_m->isDraw() ) {
+			incorect = false;
 			if (round_m == 30) {
-				m_data->time = time_m;
-				changeScene(BattleSceneNums::nextScene);
+				nextScene(BattleSceneNums::nextScene);
 			}
 			else {				
 				state_m = BattleState::select;
@@ -412,14 +435,12 @@ void Battle::update(){
 			}
 		}
 		break;
+
+	// GameOver
 	case BattleState::lose:
-		//Println(L"不正解");
 		SoundAsset(L"battle_GameOver").play();
-		if (message_m->isPlotAll()) {
-			m_data->time = 0;
-			dataManager_m.writeSaveData();
-			SoundAsset(L"battle_bgm").stop();
-			changeScene(BattleSceneNums::nextScene);
+		if (message_m->isAllPoltAndOverTime()) {
+			nextScene(BattleSceneNums::nextScene);
 		}		
 		break;
 	}	
@@ -432,6 +453,13 @@ void Battle::draw()const{
 void Battle::addObject(std::shared_ptr<BattleSceneObject> obj, String  name, int layer) {
 	objects.insert(std::make_pair(name, obj));
 	drawList_m.add(obj, layer);
+}
+
+void Battle::nextScene(String sceneName) {
+	m_data->time = time_m;
+	dataManager_m.writeSaveData();
+	SoundAsset(L"battle_bgm").stop();
+	changeScene(sceneName);
 }
 
 void Battle::newEnemy() {

@@ -6,7 +6,8 @@ TextView::TextView(const String& text, const Point& pos, const int width, const 
 	PositionToBreak_m(pos.x + width), isAutomaticLineBreak(true),
 	color_m(color)
 {
-
+	curentAllPlotTime = 0;
+	allPlotTime = 0;
 }
 
 TextView::~TextView() {};
@@ -14,6 +15,9 @@ TextView::~TextView() {};
 void TextView::update() {
 	if (!isPlotAll() && System::FrameCount() % IntervalIncrease_m == 0) {
 		addCharacter();
+	}
+	if (isPlotAll()) {
+		curentAllPlotTime++;
 	}
 }
 
@@ -26,6 +30,7 @@ void TextView::setNewText(const String& text) {
 	str_m = text;
 	count_m = 0;
 	lines_m = 1;
+	curentAllPlotTime = 0;
 }
 
 bool TextView::isPlotAll()const {
@@ -74,3 +79,10 @@ int TextView::getStrRigthPos() {
 	return (font_m.region(str_m.substr(0, count_m + 1), pos_m)).tr.x;
 }
 
+void TextView::setAllPlotTime(unsigned time) {
+	allPlotTime = time;
+}
+
+bool TextView::isAllPoltAndOverTime() {
+	return allPlotTime < curentAllPlotTime;
+}

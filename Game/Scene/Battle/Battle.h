@@ -27,12 +27,14 @@ public:
 
 private:
 	void Battle::addObject(std::shared_ptr<BattleSceneObject> obj, String  name, int layer);
-
+	void Battle::nextScene(String sceneName);
 	void Battle::newEnemy();	
 
 private:
 	int round_m;
 	int time_m;
+
+	bool incorect;
 
 	//enemy
 	std::shared_ptr<EnemyData> enemy_m;
