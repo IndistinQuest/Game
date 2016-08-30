@@ -52,6 +52,9 @@ private:
 	// state
 	enum BattleState { win, lose, select };
 	BattleState state_m;
+
+	// background
+	std::shared_ptr<PictureObject> backPic_m;
 };
 
 };
