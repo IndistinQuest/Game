@@ -316,7 +316,7 @@ void Battle::init(){
 	addObject(make_shared<WindowAndText>(t), L"timeWindow", 10);
 
 	// message
-	message_m = make_shared<TextView>(L"testMessage", Point(210,windowPosY-60) , 900, 3, Font(20), BattleSceneNums::mesSpeed, Palette::Black);
+	message_m = make_shared<TextView>(L"testMessage", Point(210,windowPosY-60) , 870, 3, Font(20), BattleSceneNums::mesSpeed, Palette::Black);
 	drawList_m.add(message_m,11);
 	message_m->setAllPlotTime(10);
 
@@ -361,7 +361,6 @@ void Battle::init(){
 
 };
 
-// 要修正項目あり
 void Battle::update(){
 	ClearPrint();
 	for_each(objects.begin(), objects.end(), [](auto pare) {pare.second->update(); });
@@ -438,7 +437,7 @@ void Battle::update(){
 
 	// GameOver
 	case BattleState::lose:
-		SoundAsset(L"battle_GameOver").play();
+		SoundAsset(L"bettle_GameOver").play();
 		if (message_m->isAllPoltAndOverTime()) {
 			nextScene(BattleSceneNums::nextScene);
 		}		
@@ -465,7 +464,7 @@ void Battle::nextScene(String sceneName) {
 void Battle::newEnemy() {
 
 	// 次の敵のデータを取得
-	enemy_m = make_shared<EnemyData>(dataManager_m.getEnemy(enemy_ID_List_m[round_m]));
+	enemy_m = make_shared<EnemyData>(dataManager_m.getEnemy(2));// enemy_ID_List_m[round_m]));
 
 	// 特殊モンスター　モンタージュファントム
 	if (enemy_m->id_m == 16) {
