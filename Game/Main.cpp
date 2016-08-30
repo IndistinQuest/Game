@@ -8,28 +8,9 @@
 #include"Scene\Rule\Rule.h"
 #include"Scene\EnemyGuide\EGListType.h"
 #include"Scene\EnemyGuide\EGDetailType.h"
+#include"Scene\Result\Result.h"
 
 using Manager = SceneManager<String, GameData>;
-
-// ↓後で消す
-namespace scene {
-	namespace debug {
-		class GameOver : public SceneManager<String, GameData>::Scene {
-			Font font;
-		public:
-			GameOver() :font(50) {}
-			void init()override { ButtonManager::clearAll(); }
-			void update()override { if (Input::MouseL.clicked)changeScene(L"Battle"); }
-			void draw()const override {
-				ClearPrint();
-				for (int v : m_data->defeatedEnemyList) {
-					Println(Format(v));
-				}
-				font.drawCenter(L"GameOver", Window::Center());
-			}
-		};
-	};
-};
 
 void Main()
 {
@@ -48,9 +29,10 @@ void Main()
 	manager.add<scene::enemyGuide::EGListType>(L"EGListType");
     manager.add<scene::rule::Rule>(L"Rule");
 	manager.add<scene::title::Title>(L"Title");
-	
+	manager.add<scene::result::Result>(L"Result");
+	manager.add<scene::battle::Battle>(L"Battle");
 
-	manager.init(L"Battle");
+	manager.init(L"Title");
 
 	while (System::Update())
 	{

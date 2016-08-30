@@ -8,6 +8,9 @@ using namespace jumpaku;
 
 void Title::init()
 {
+    ButtonManager::clearAll();
+    ButtonManager::update();
+
     drawables.add(std::make_shared<DrawableTxture>(L"/200", Window::Center()), 0);
     drawables.add(std::make_shared<DrawableTxture>(L"/201", Window::Center().movedBy(0, -160)), 0);
 
@@ -25,13 +28,13 @@ void Title::init()
     drawables.add(button, 2);
     
     button = std::make_shared<TextureButton>(Vec2{ 220, 510 }, L"/204", [changeScene]() {
-        changeScene(L"DefeatedEnemies");
+        changeScene(L"EGListType");
     });
     ButtonManager::add(button);
     drawables.add(button, 3);
     
     button = std::make_shared<TextureButton>(Vec2{ 240, 590 }, L"/205", [changeScene]() {
-        changeScene(L"Creddit");
+        //changeScene(L"Creddit");
     });
     ButtonManager::add(button);
     drawables.add(button, 4);
@@ -43,7 +46,7 @@ void Title::init()
     drawables.add(button, 5);
 
     button = std::make_shared<TextureButton>(Vec2{640, 550}, L"/207", [changeScene]() {
-        changeScene(L"Game");
+        changeScene(L"Battle");
     });
     ButtonManager::add(button);
     drawables.add(button, 1);

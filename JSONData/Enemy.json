@@ -3,6 +3,7 @@
     "草なツヨシ君": {
       "id": 1,
       "name": "草なツヨシ君",
+<<<<<<< HEAD
       "messages": {
         "onContact": "草なツヨシ君が現れた！\n「どうも、草なツヨシです」",
         "onPlayerWon": "「このたびはご迷惑をお掛けして申し訳ありませんでした」\n草なツヨシ君を倒した！",
@@ -884,36 +885,6 @@
       },
       "description": "LaTeXと乱数が大好きっヒョイ！",
       "class": "",
-      "BGID": 0
-    },
-    "テストエネミー": {
-      "id": 1,
-      "name": "テストー",
-      "messages": {
-        "onContact": "うっひょい！",
-        "onPlayerWon": "やられたっひょい！",
-        "onPlayerLost": "倒したっひょい！"
-      },
-      "collectAnswer": "LaTeX",
-      "Answers": {
-        "weapon": [
-          "うんこ",
-          "うんこ",
-          "うんこ"
-        ],
-        "magic": [
-          "うんこ",
-          "うんこ",
-          "うんこ"
-        ],
-        "special": [
-          "うんこ",
-          "うんこ",
-          "うんこ"
-        ]
-      },
-      "description": "LaTeXと乱数が大好きっヒョイ！",
-      "class": "大学生",
       "BGID": 0
     }
   }
