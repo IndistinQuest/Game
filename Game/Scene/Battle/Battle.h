@@ -17,6 +17,7 @@ class BattleSceneObject;
 class BattleSceneButton;
 class PictureObject;
 class CutIn;
+enum BattleState { Start, EnemyEntry, Answer, CanNotAnswer, Incorect, Corect, ExitEnemy, AcceptedClick, TimeOver, GameOver };
 
 class Battle : public SceneManager<String, GameData>::Scene {
 public:
@@ -61,7 +62,7 @@ private:
 	Effect effect_m;
 
 	// state
-	enum BattleState { start, win, lose, select };
+	
 	BattleState state_m;
 
 	// background

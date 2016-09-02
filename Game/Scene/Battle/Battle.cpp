@@ -74,6 +74,17 @@ bool isGoToTitle() {
 	return isGoTitle;
 }
 
+namespace StateManager {
+	bool isGoTitle;
+	bool isGameClear;
+
+	BattleState curentState_m;
+	BattleState update() {
+		return curentState_m;
+	}
+	void setGameOver(){}
+}
+
 // 基底クラス
 class BattleSceneObject : public Drawable
 {
@@ -82,13 +93,13 @@ public:
 	virtual void setText(String text) = 0;
 };
 
-//ウィンドウ
+//テキスト付きウィンドウ
 class WindowAndText	: public BattleSceneObject
 {
-private:
+protected:
 	const Point center_m;
 	const String textureAssetName_m;
-	const Color strColor_m;
+	Color strColor_m;
 	String str_m;
 public:
 	WindowAndText(Point center,String textureAssetName,Color c = Palette::Black) : center_m(center), textureAssetName_m(textureAssetName), strColor_m(c){};
@@ -100,6 +111,59 @@ public:
 		TextureAsset(textureAssetName_m).drawAt(center_m);
 		FontAsset(L"BattleSceneFont").drawCenter(str_m, center_m,strColor_m);
 	}
+};
+
+// タイマー
+class Timer : public WindowAndText {
+private:
+	int time_m;
+	int TIME_RECOVERY;
+	bool isUpdate;
+public:
+	void init() {
+		time_m = BattleSceneNums::timeLimit;
+		TIME_RECOVERY = BattleSceneNums::timeRecovery;
+		isUpdate = false;
+	}
+	void update() override {
+		if (!isUpdate)return;
+		{
+			time_m--;
+			setText(Format(Pad(time_m / 60, { 2, L'0' }), L".", Pad(time_m % 60, { 2, L'0' })));
+			if (time_m <= 0) { StateManager::setGameOver();	}
+			SoundAsset(L"battle_bgm").changeTempo((time_m < 300) ? 1.5 : 1.0);
+			strColor_m = ((time_m < 300) ? Palette::Red : Palette::Black);
+		}
+	}
+	void recovery() {
+		time_m += TIME_RECOVERY;
+	}
+	void stop() {
+		isUpdate = false;
+	}
+	void start() {
+		isUpdate = true;
+	}
+	int getTime() {
+		return time_m;
+	}
+};
+
+// 戦闘数
+class RoundCounter : public WindowAndText{
+private:
+	int round_m;
+public:
+	void next() {
+		round_m++;
+		setText(Format(round_m,L"戦目"));
+	}
+	void update()override {
+		if (round_m == 30) {
+			StateManager::isGameClear = true;
+		}
+	}
+
 };
 
 //ボタン
@@ -318,6 +382,34 @@ public:
 	}
 };
 
+// アセット登録
+void assetRegistration() {
+
+	// フォントアセット登録
+	//if (!FontAsset::IsRegistered(L"CommandFont")) {	FontAsset::Register(L"CommandFont", 20);}
+	if (!FontAsset::IsRegistered(L"BattleSceneFont")) { FontAsset::Register(L"BattleSceneFont", 20); }
+
+	// テクスチャアセット登録
+	if (!TextureAsset::IsRegistered(L"mesWindow")) { TextureAsset::Register(L"mesWindow", L"/501"); }
+	if (!TextureAsset::IsRegistered(L"miniMesWindow")) { TextureAsset::Register(L"miniMesWindow", L"/502"); }
+	if (!TextureAsset::IsRegistered(L"battleButton")) { TextureAsset::Register(L"battleButton", L"/500"); }
+	if (!TextureAsset::IsRegistered(L"CutInEffect")) { TextureAsset::Register(L"CutInEffect", L"/503"); }
+	for (int i = 1; i <= 5; i++) {
+		TextureAsset::Register(Format(L"battleBack", i), Format(L"/", (510 + i)));
+	}
+
+	// サウンドアセット登録
+	SoundAsset::Register(L"battle_corect", L"/521");
+	SoundAsset::Register(L"battle_incorect", L"/522");
+	SoundAsset::Register(L"battle_bgm", L"/520");
+	SoundAsset::Register(L"bettle_GameOver", L"/523");
+	SoundAsset::Register(L"bettle_entry", L"/524");
+}
+
+class EnemyIdList {
+
+};
+
 }
 }
 
@@ -344,25 +436,8 @@ void Battle::init(){
 	m_data->resetEnemyList();
 	m_data->time = 0;
 
-	// フォントアセット登録
-	//if (!FontAsset::IsRegistered(L"CommandFont")) {	FontAsset::Register(L"CommandFont", 20);}
-	if (!FontAsset::IsRegistered(L"BattleSceneFont")) {	FontAsset::Register(L"BattleSceneFont", 20);}
-
-	// テクスチャアセット登録
-	if (!TextureAsset::IsRegistered(L"mesWindow")) { TextureAsset::Register(L"mesWindow", L"/501"); }
-	if (!TextureAsset::IsRegistered(L"miniMesWindow")) { TextureAsset::Register(L"miniMesWindow", L"/502"); }
-	if (!TextureAsset::IsRegistered(L"battleButton")) { TextureAsset::Register(L"battleButton", L"/500"); }
-	if (!TextureAsset::IsRegistered(L"CutInEffect")) { TextureAsset::Register(L"CutInEffect", L"/503"); }
-	for (int i = 1; i <= 5; i++) {
-		TextureAsset::Register(Format(L"battleBack",i), Format(L"/",(510 + i)));
-	}	
-
-	// サウンドアセット登録
-	SoundAsset::Register(L"battle_corect", L"/521");
-	SoundAsset::Register(L"battle_incorect", L"/522");
-	SoundAsset::Register(L"battle_bgm", L"/520");
-	SoundAsset::Register(L"bettle_GameOver", L"/523");
-	SoundAsset::Register(L"bettle_entry", L"/524");
+	// アセット登録
+	assetRegistration();
 
 	// BGM再生
 	SoundAsset(L"battle_bgm").setLoop(true);
@@ -371,7 +446,7 @@ void Battle::init(){
 	// 各種初期化
 	round_m = 0;
 	time_m = BattleSceneNums::timeLimit;
-	state_m = BattleState::start;
+	state_m = BattleState::Start;
 	AnswerManager::init();
 	isGoTitle = false;
 	incorect = false;
@@ -455,115 +530,143 @@ void Battle::update(){
 	// フェードアウト速度変更
 	BattleSceneNums::fadeOut = (Input::MouseL.pressed) ? 4 : 2;
 
+	if(state_m == BattleState::Answer || state_m == BattleState::CanNotAnswer){
+		time_m--;
+		objects.find(L"timeWindow")->second->setText(Format(Pad(time_m / 60, { 2, L'0' }), L".", Pad(time_m % 60, { 2, L'0' })));
+		if (time_m <= 0) {
+			state_m = BattleState::TimeOver;
+			SoundAsset(L"bettle_GameOver").play();
+			message_m->setNewText(enemy_m->name_m + BattleSceneNums::loseMessage);
+			enemyPic_m->setExpansion();
+		}
+		SoundAsset(L"battle_bgm").changeTempo((time_m < 300) ? 1.5 : 1.0);
+	}
+
 	switch (state_m)
 	{
-	case BattleState::start:
-	{
-		auto ans = AnswerManager::checkAnswer();
-		if (ans == Answers::correct) {
-			state_m = BattleState::select;
-			canAnswer = false;
-			round_m++;
-			objects.find(L"RoundWindow")->second->setText(Format(round_m, L"戦目"));
-			newEnemy();
-
-			canAnswer = true;
-		}
-	}
-	break;
-	case BattleState::select:
-			// タイマー
-		{
-			time_m--;
-			objects.find(L"timeWindow")->second->setText(Format(Pad(time_m / 60, { 2, L'0' }), L".", Pad(time_m % 60, { 2, L'0' })));
-			if (time_m <= 0) {
-				state_m = BattleState::lose;
-				SoundAsset(L"bettle_GameOver").play();
-				message_m->setNewText(enemy_m->name_m + BattleSceneNums::loseMessage);
-				enemyPic_m->setExpansion();
-			}
-			SoundAsset(L"battle_bgm").changeTempo((time_m < 300) ? 1.5 : 1.0);
-
-		}
-		// 回答
+	case BattleState::Start:
 		{
 			auto ans = AnswerManager::checkAnswer();
-
-			// ボタンの誤動作防止
-			if (!canAnswer) {
-				if (Input::MouseL.released) {
-					canAnswer = true;
-				}
-				AnswerManager::init();				
-				break;
-			}
-			
-			// ペナルティ
-			if (penalty_m > 0) {
-				penalty_m--;				
-				if (penalty_m == 0) {
-					for (auto& b : CommantButton_m) { b->setStrColor(Palette::Black); }
-					AnswerManager::init();
-				}
-				break;
-			}
-
-			// 正解時
 			if (ans == Answers::correct) {
-				state_m = BattleState::win;
-				message_m->setNewText(enemy_m->messages_m.onPlayerWon_m);
-				enemyPic_m->setFadeOut();
-				enemyPic_m->setRoolAndSmall();
-				//backPic_m->setFadeOut();
+				state_m = BattleState::EnemyEntry;
+				canAnswer = false;
+				round_m++;
+				objects.find(L"RoundWindow")->second->setText(Format(round_m, L"戦目"));
+				newEnemy();
 
-				time_m += BattleSceneNums::timeRecovery;
-
-				dataManager_m.setSaveData(enemy_m->id_m, true);
-				m_data->addEnemy(enemy_m->id_m);
-				
-				SoundAsset(L"battle_corect").playMulti();
+				canAnswer = true;
 			}
-			// 不正解時
-			else if (ans == Answers::incorrect) {
-				message_m->setNewText(enemy_m->messages_m.onPlayerLost_m);
-				AnswerManager::init();
-				SoundAsset(L"battle_incorect").playMulti();
-				incorect = true;
-
-				penalty_m = BattleSceneNums::penaltyTime;
-				for (auto& b : CommantButton_m) { b->setStrColor(Palette::Red); }
-			}
-		}		
-		if (incorect && message_m->isAllPoltAndOverTime()) {
-			message_m->setNewText(enemy_m->messages_m.onContact_m);
-			incorect = false;		
 		}
 		break;
-	// 正解時
-	case BattleState::win:
-		if (message_m->isPlotAll() && !enemyPic_m->isDraw() && Input::MouseL.pressed ) {
+
+	case BattleState::EnemyEntry:
+		canAnswer = false;
+		round_m++;
+		objects.find(L"RoundWindow")->second->setText(Format(round_m, L"戦目"));
+		newEnemy();
+		state_m = BattleState::Answer;
+		break;
+
+	case BattleState::Answer:
+			// 回答
+			{
+				// ボタンの誤動作防止
+				if (!canAnswer) {
+					if (Input::MouseL.released) {
+						canAnswer = true;
+					}
+					AnswerManager::init();				
+					break;
+				}
+
+				auto ans = AnswerManager::checkAnswer();
+				// 正解時
+				if (ans == Answers::correct) {
+					state_m = BattleState::Corect;
+				}				
+				// 不正解時
+				else if (ans == Answers::incorrect) {
+					state_m = BattleState::Incorect;
+				}
+			}		
+			if (incorect && message_m->isAllPoltAndOverTime()) {
+				message_m->setNewText(enemy_m->messages_m.onContact_m);
+				incorect = false;		
+			}
+			break;
+	// 不正解を選んで選択できなくなっている間の処理
+	case BattleState::CanNotAnswer:
+		penalty_m--;
+		if (penalty_m == 0) {
+			for (auto& b : CommantButton_m) { b->setStrColor(Palette::Black); }
+			AnswerManager::init();
+			state_m = BattleState::Answer;
+		}
+		break;
+
+	// 不正解を選んだ瞬間の処理
+	case BattleState::Incorect:
+		message_m->setNewText(enemy_m->messages_m.onPlayerLost_m);
+		AnswerManager::init();
+		SoundAsset(L"battle_incorect").playMulti();
+		incorect = true;
+
+		penalty_m = BattleSceneNums::penaltyTime;
+		for (auto& b : CommantButton_m) { b->setStrColor(Palette::Red); }
+		state_m = BattleState::CanNotAnswer;
+		break;
+
+	//正解を選んだ瞬間の処理
+	case BattleState::Corect:
+	{
+		message_m->setNewText(enemy_m->messages_m.onPlayerWon_m);
+		enemyPic_m->setFadeOut();
+		enemyPic_m->setRoolAndSmall();
+		//backPic_m->setFadeOut();
+
+		time_m += BattleSceneNums::timeRecovery;
+
+		dataManager_m.setSaveData(enemy_m->id_m, true);
+		m_data->addEnemy(enemy_m->id_m);
+
+		SoundAsset(L"battle_corect").playMulti();
+		state_m = BattleState::ExitEnemy;
+		break;
+	}
+
+	// 正解して敵が消えていく間の処理
+	case BattleState::ExitEnemy:
+		if (message_m->isPlotAll() && !enemyPic_m->isDraw()) {
+			state_m = BattleState::AcceptedClick;
+		}
+		break;
+
+	// 敵が消えてからクリックを待つ処理
+	case BattleState::AcceptedClick:
+		if(Input::MouseL.pressed ) {
 			incorect = false;
 			if (round_m == 30) {
 				nextScene(BattleSceneNums::nextScene);
 			}
-			else {				
-				state_m = BattleState::select;
-				canAnswer = false;
-				round_m++;
-				objects.find(L"RoundWindow")->second->setText(Format(round_m, L"戦目"));
-				newEnemy();				
+			else {
+				state_m = BattleState::EnemyEntry;				
 			}
 		}
 		break;
 
-	// GameOver
-	case BattleState::lose:		
+	case BattleState::TimeOver:
+	case BattleState::GameOver:
+		// GameOver
 		if (message_m->isPlotAll() && Input::MouseL.pressed ) {
-			nextScene(BattleSceneNums::nextScene);
+				nextScene(BattleSceneNums::nextScene);
 		}		
 		break;
-	}	
+
+	default:
+		break;
+	}
 };
+
 void Battle::draw()const{
 	drawList_m.drawAll();
 	effect_m.update();

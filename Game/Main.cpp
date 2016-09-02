@@ -13,8 +13,6 @@
 using Manager = SceneManager<String, GameData>;
 
 
-
-
 void Main()
 {
     // ウィンドウを設定
