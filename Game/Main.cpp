@@ -12,6 +12,22 @@
 
 using Manager = SceneManager<String, GameData>;
 
+class TestScene : public Manager::Scene {
+public:
+	void init() override {
+		Println(L"time", m_data->time);
+		for (int i : m_data->defeatedEnemyList) {
+			Print(i, L" ");
+		}
+	};
+	void update()override {
+		if (Input::MouseL.clicked) {
+			changeScene(L"Battle");
+			ClearPrint();
+		}
+	}
+	void draw()const override {}
+};
 
 void Main()
 {
@@ -35,6 +51,7 @@ void Main()
 	manager.add<scene::title::Title>(L"Title");
 	manager.add<scene::result::Result>(L"Result");
 	manager.add<scene::battle::Battle>(L"Battle");
+	manager.add<TestScene>(L"Test");
 
 	manager.init(L"Title");
 	
