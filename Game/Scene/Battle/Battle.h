@@ -17,7 +17,14 @@ class BattleSceneObject;
 class BattleSceneButton;
 class PictureObject;
 class CutIn;
-enum BattleState { Start, EnemyEntry, Answer, CanNotAnswer, Incorect, Corect, ExitEnemy, AcceptedClick, TimeOver, GameOver };
+enum BattleState { Start, EnemyEntry, Answer, CanNotAnswer, Incorect, Corect, ExitEnemy, AcceptedClick, TimeOver, GameOver,GameClear };
+
+class RoundCounter;
+class MessageWindow;
+class Timer;
+
+class EnemyIdList;
+
 
 class Battle : public SceneManager<String, GameData>::Scene {
 public:
@@ -33,40 +40,39 @@ private:
 	void Battle::newEnemy();	
 
 private:
-	int round_m;
-	int time_m;
-
 	bool incorect;
 	bool canAnswer;
 	int	penalty_m;
 
 	//enemy
-	std::shared_ptr<EnemyData> enemy_m;
-	DataManager dataManager_m;
-	std::shared_ptr<PictureObject> enemyPic_m;
+	std::shared_ptr<EnemyData> enemy_m;				// Enemyデータ
+	DataManager dataManager_m;						//
+	std::shared_ptr<PictureObject> enemyPic_m;		// Enemy画像
 
-	int enemy_ID_List_m[31];
+	std::shared_ptr<EnemyIdList> enemyList_m;
 
 	// objects
 	std::multimap<String, std::shared_ptr<BattleSceneObject>> objects;
 	std::multimap<String, std::shared_ptr<BattleSceneButton>> buttons;
 	DrawableList drawList_m;
 
-	std::shared_ptr<BattleSceneButton> titleButton;
+	std::shared_ptr<BattleSceneButton> nextButton;
 	std::shared_ptr<BattleSceneButton> CommantButton_m[9];
 
-	std::shared_ptr<TextView> message_m;
 
-	std::shared_ptr<CutIn> cutIn_m;
+	std::shared_ptr<CutIn> cutIn_m;					// カットイン
 
 	Effect effect_m;
 
-	// state
-	
+	// state	
 	BattleState state_m;
 
-	// background
-	std::shared_ptr<PictureObject> backPic_m;
+
+	std::shared_ptr<PictureObject> backPic_m;		// 背景画像
+	
+	std::shared_ptr<RoundCounter> roundCounter_m;	// 戦闘数	
+	std::shared_ptr<MessageWindow> message_m;		// メッセージ	
+	std::shared_ptr<Timer> timer_m;					// タイマー
 };
 
 };
