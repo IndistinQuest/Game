@@ -863,37 +863,13 @@ namespace scene {
 			}
 		};
 
-		// アセット登録
-		void assetRegistration() {
-
-			// フォントアセット登録
-			if (!FontAsset::IsRegistered(L"BattleSceneFont")) { FontAsset::Register(L"BattleSceneFont", 20); }
-
-			// テクスチャアセット登録
-			TextureAsset::Register(L"logo", L"/201");
-			if (!TextureAsset::IsRegistered(L"mesWindow")) { TextureAsset::Register(L"mesWindow", L"/501"); }
-			if (!TextureAsset::IsRegistered(L"miniMesWindow")) { TextureAsset::Register(L"miniMesWindow", L"/502"); }
-			if (!TextureAsset::IsRegistered(L"battleButton")) { TextureAsset::Register(L"battleButton", L"/500"); }
-			if (!TextureAsset::IsRegistered(L"CutInEffect")) { TextureAsset::Register(L"CutInEffect", L"/503"); }
-			for (int i = 1; i <= 5; i++) {
-				TextureAsset::Register(Format(L"battleBack", i), Format(L"/", (510 + i)));
-			}
-
-			// サウンドアセット登録
-			SoundAsset::Register(L"battle_corect", L"/521");
-			SoundAsset::Register(L"battle_incorect", L"/522");
-			SoundAsset::Register(L"battle_bgm", L"/520");
-			SoundAsset::Register(L"bettle_GameOver", L"/523");
-			SoundAsset::Register(L"bettle_entry", L"/524");
-		}
-
 		// サウンド
 		class SoundPlayer : public BattleSceneObject {
 		public:
 			SoundPlayer() {
 				// BGMをループ再生
 				SoundAsset(L"battle_bgm").setLoop(true);
-				SoundAsset(L"battle_bgm").play();
+				SoundAsset(L"battle_bgm").play();;
 			}
 			~SoundPlayer() {
 				SoundAsset(L"battle_bgm").stop();
@@ -963,9 +939,6 @@ void Battle::init(){
 	AnswerManager::init();
 	StateManager::init();
 
-	// アセット登録
-	assetRegistration();
-
 	// BGM再生
 	addObject(std::make_shared<SoundPlayer>());	
 
@@ -987,7 +960,7 @@ void Battle::init(){
 	addObject(cutIn, 15);
 
 	// エネミー画像
-	auto enemyPic = make_shared<PictureObject>(L"logo", BattleSceneNums::scale, Point(Window::Width() / 2, 330));
+	auto enemyPic = make_shared<PictureObject>(L"title_logo", BattleSceneNums::scale, Point(Window::Width() / 2, 330));
 	addObject(enemyPic, 5);
 
 	// エネミーマネージャ

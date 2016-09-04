@@ -9,9 +9,12 @@
 #include"Scene\EnemyGuide\EGListType.h"
 #include"Scene\EnemyGuide\EGDetailType.h"
 #include"Scene\Result\Result.h"
+#include"RegisterAsset.h"
 
 using Manager = SceneManager<String, GameData>;
 
+// GameDataの内容を確認するシーン
+// あとで消す
 class TestScene : public Manager::Scene {
 public:
 	void init() override {
@@ -39,10 +42,13 @@ void Main()
 	// 展示の時はフルスクリーンがいいね
 	//Window::SetFullscreen(true, { 1280, 720 });
 
+	// 各アセットの登録
+	RegisterAsset registerAsset;
+
 	Manager manager;
 
 	// フェードイン・アウト時の色
-	manager.setFadeColor(Palette::White);
+	manager.setFadeColor(Palette::White);	
 
 	// シーンを設定
 	manager.add<scene::enemyGuide::EGDetailType>(L"EGDetailType");
@@ -53,12 +59,7 @@ void Main()
 	manager.add<scene::battle::Battle>(L"Battle");
 	manager.add<TestScene>(L"Test");
 
-	manager.init(L"Title");
-	
-	// EnemyのグラフィックをAsssetに登録
-	for (int i = 0; i <= 30; i++) {
-		TextureAsset::Register(Format(L"Enemy",i), Format(L"/", 600 + i));
-	}
+	manager.init(L"Battle");
 
 	while (System::Update())
 	{

@@ -62,6 +62,12 @@
 207    FILE    "Asset/StartButtonL.png"
 208    FILE    "Asset/back_button_resize.png"
 
+// IndistinQuest
+300	   FILE    "Asset/title_button_resize.png"
+301    FILE    "Asset/left_button_resize.png"
+302    FILE    "Asset/right_button_resize.png"
+303    FILE    "Asset/enemies_graphic.jpg"
+
 // IndistinQuest_BattleScene
 // Image
 500    FILE    "Asset/BattleScene/window_graphic.png"

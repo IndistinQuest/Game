@@ -10,12 +10,15 @@ class TextureButton :
 {
 private:
     Texture texture_m;
-    String text_m;
     Vec2 center_m;
-
+    double scale_m;
+protected:
+    static Shape textureRoundRect(Vec2 center, Texture texture, double scale);
 public:
     TextureButton(Vec2 center, String texture, std::function<void(void)> handler);
+    TextureButton(Vec2 center, String texture, double scale, std::function<void(void)> handler);
     TextureButton(Vec2 center, Texture texture, std::function<void(void)> handler);
+    TextureButton(Vec2 center, Texture texture, double scale, std::function<void(void)> handler);
     virtual ~TextureButton() = default;
     void draw()const override;
 };
