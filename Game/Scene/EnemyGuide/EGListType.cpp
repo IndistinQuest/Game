@@ -22,11 +22,12 @@ void EGListType::init()
 	
 	backToTitle_m = [this]() {(this->*&Scene::changeScene)(L"Title", 500, false); };
 	homeButton_m = std::make_shared<TextureButton>(Vec2(POS_HOME_BUTTON.x, POS_HOME_BUTTON.y), L"./Asset/title_button_resize.png", backToTitle_m);
-	backGround_m = std::make_shared<RollBackGround>(L"./Asset/enemies_graphic.jpg");
+
+	backGround_m = std::make_shared<RollBackGround>(L"firstEnemiesBackGround", L"secondEnemiesBackGround");
 
 	ButtonManager::add(homeButton_m);
 	for (int i = 1; i <= KIND_OF_ENEMIES; ++i) {
-		std::shared_ptr<Drawable> icon = std::make_shared<uhhyoi::DrawableTexture>(Texture(Format(L"./Asset/EnemyGraphics/", i, L".png")).scale(0.1), Point(iconX(i), iconY(i)));
+		std::shared_ptr<Drawable> icon = std::make_shared<uhhyoi::DrawableTexture>(Format(L"Enemy", i), Point(iconX(i), iconY(i)), 0.1);
 		graphics_m.add(icon, i);
 	}
 }

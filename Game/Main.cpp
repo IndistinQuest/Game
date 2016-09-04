@@ -9,11 +9,9 @@
 #include"Scene\EnemyGuide\EGListType.h"
 #include"Scene\EnemyGuide\EGDetailType.h"
 #include"Scene\Result\Result.h"
+#include"RegisterAsset.h"
 
 using Manager = SceneManager<String, GameData>;
-
-
-
 
 void Main()
 {
@@ -41,9 +39,14 @@ void Main()
 	manager.init(L"Title");
 	
 	// EnemyのグラフィックをAsssetに登録
+	
+	/* RegisterAssetクラスに含まれる
 	for (int i = 0; i <= 30; i++) {
 		TextureAsset::Register(Format(L"Enemy",i), Format(L"/", 600 + i));
 	}
+	*/
+	// 各アセットの登録
+	RegisterAsset registerAsset;
 
 	while (System::Update())
 	{

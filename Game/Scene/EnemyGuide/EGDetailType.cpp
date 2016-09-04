@@ -37,10 +37,10 @@ void EGDetailType::init()
 	collectAnswerFont_m = Font(FONT_SIZE);
 	descriptionFont_m = Font(FONT_SIZE);
 
-	backGround_m = std::make_shared<RollBackGround>(L"./Asset/enemies_graphic.jpg");
+	backGround_m = std::make_shared<RollBackGround>(L"firstEnemiesBackGround", L"secondEnemiesBackGround");
 	for (int i = 1; i < KIND_OF_ENEMIES; ++i)
 	{
-		std::shared_ptr<uhhyoi::DrawableTexture> targetGraphic = std::make_shared<uhhyoi::DrawableTexture>(Texture(Format(L"./Asset/EnemyGraphics/", i, L".png")).scale(TARGET_SCALE), POS_TARGET);
+		std::shared_ptr<uhhyoi::DrawableTexture> targetGraphic = std::make_shared<uhhyoi::DrawableTexture>(Format(L"enemy", i), POS_TARGET, TARGET_SCALE);
 		targetGraphics_m.add(targetGraphic, i);
 	}
 
