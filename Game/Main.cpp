@@ -24,6 +24,7 @@ void Main()
 	//Window::SetFullscreen(true, { 1280, 720 });
 
 	Manager manager;
+	RegisterAsset registerAsset;
 
 	// フェードイン・アウト時の色
 	manager.setFadeColor(Palette::White);
@@ -46,12 +47,12 @@ void Main()
 	}
 	*/
 	// 各アセットの登録
-	RegisterAsset registerAsset;
 
 	while (System::Update())
 	{
         ButtonManager::update();
         if (!manager.updateAndDraw())
 			break;
+
 	}
 }

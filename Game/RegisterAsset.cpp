@@ -4,15 +4,15 @@
 
 RegisterAsset::RegisterAsset()
 {
-	TextureAsset::Register(L"title_graphic", L"/200");
-	TextureAsset::Register(L"title_logo", L"/201");
+	TextureAsset::Register(L"title_graphicM", L"/200");
+	TextureAsset::Register(L"title_logo2M", L"/201");
 	TextureAsset::Register(L"start_buttonM", L"/202");
-	TextureAsset::Register(L"rule_button", L"/203");
-	TextureAsset::Register(L"enemies_button", L"/204");
-	TextureAsset::Register(L"credit_button", L"/205");
-	TextureAsset::Register(L"quit_button", L"/206");
-	TextureAsset::Register(L"start_buttonL", L"/207");
-	TextureAsset::Register(L"back_button", L"/208");
+	TextureAsset::Register(L"RuleButtonM", L"/203");
+	TextureAsset::Register(L"EnemiesButtonM", L"/204");
+	TextureAsset::Register(L"CreditButtonM", L"/205");
+	TextureAsset::Register(L"QuitButtonM", L"/206");
+	TextureAsset::Register(L"StartButtonL", L"/207");
+	TextureAsset::Register(L"back_button_resize", L"/208");
 
 	TextureAsset::Register(L"title_button", L"/300");
 	TextureAsset::Register(L"left_button", L"/301");
