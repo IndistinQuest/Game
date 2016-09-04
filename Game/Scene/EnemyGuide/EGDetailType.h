@@ -6,7 +6,8 @@
 #include "MyDrawableList.h"
 #include "EnemyGuide.h"
 #include "../../TextView/TextView.h"
-#include "../../Button/TextureButton.h"
+#include "../../Button/TextureAssetButton.h"
+#include "../../Drawable/DrawableAssetTexture.h"
 
 
 class GameData;
@@ -40,9 +41,9 @@ namespace scene {
 			std::function<void(void)> backToPrevious_m;
 			std::function<void(void)> backToList_m;
 
-			std::shared_ptr<TextureButton> nextButton_m;
-			std::shared_ptr<TextureButton> previousButton_m;
-			std::shared_ptr<TextureButton> backToListButton_m;
+			std::shared_ptr<TextureAssetButton> nextButton_m;
+			std::shared_ptr<TextureAssetButton> previousButton_m;
+			std::shared_ptr<TextureAssetButton> backToListButton_m;
 
 			int cursorID_m;
 
