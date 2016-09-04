@@ -6,13 +6,14 @@ private:
 	const static double W;
 	const static double H;
 	const static double ROLL_SPEED;
-	Texture firstBackGround_m;
-	Texture secondBackGround_m;
 
 	Point fPoint_m;
 	Point sPoint_m;
+
+	String firstAssetName_m;
+	String secondAssetName_m;
 public:
-	RollBackGround(String backGroundURL);
+	RollBackGround(String firstAssetName, String secondAssetName);
 	~RollBackGround();
 
 	void update();

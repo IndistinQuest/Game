@@ -5,13 +5,13 @@ const double RollBackGround::H = 720;
 const double RollBackGround::ROLL_SPEED = 5;
 
 
-RollBackGround::RollBackGround(String backGroundURL)
+RollBackGround::RollBackGround(String firstAssetName, String secondAssetName)
 {
-	firstBackGround_m = Texture(backGroundURL);
-	secondBackGround_m = Texture(backGroundURL);
+	firstAssetName_m = firstAssetName;
+	secondAssetName_m = secondAssetName;
 
-	fPoint_m = Point(0, 0);
-	sPoint_m = Point(W, 0);
+	fPoint_m = Point(0.5*W, 0.5*H);
+	sPoint_m = Point(1.5*W, 0.5*H);
 }
 
 
@@ -24,18 +24,18 @@ void RollBackGround::update()
 	fPoint_m.x -= ROLL_SPEED;
 	sPoint_m.x -= ROLL_SPEED;
 
-	if (fPoint_m.x <= -W)
+	if (fPoint_m.x <= -0.5*W)
 	{
-		fPoint_m.x = W;
+		fPoint_m.x = 1.5*W;
 	}
-	if (sPoint_m.x <= -W)
+	if (sPoint_m.x <= -0.5*W)
 	{
-		sPoint_m.x = W;
+		sPoint_m.x = 1.5*W;
 	}
 }
 
 void RollBackGround::draw() const
 {
-	firstBackGround_m.draw(fPoint_m);
-	secondBackGround_m.draw(sPoint_m);
+	TextureAsset(firstAssetName_m).drawAt(fPoint_m);
+	TextureAsset(secondAssetName_m).drawAt(sPoint_m);
 }
