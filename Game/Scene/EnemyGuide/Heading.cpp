@@ -1,11 +1,8 @@
 #include "Heading.h"
 
-const String Heading::sentence_m = L"ÉÇÉìÉXÉ^Å[ê}ä”";
-
-
 Heading::Heading()
 {
-	headingSentence_m = Font(30);
+	headingAssetName_m = L"enemies_logo";
 }
 
 
@@ -13,10 +10,9 @@ Heading::~Heading()
 {
 }
 
-void Heading::draw(Point center, Color color) const
+void Heading::draw(Point center) const
 {
 
-	Point edgePos = { center.x - sentence_m.length * 30 / 2, center.y - headingSentence_m.height / 2 };
-
-	headingSentence_m.draw(sentence_m, edgePos, color);
+//	Point edgePos = { center.x - sentence_m.length * 30 / 2, center.y - headingSentence_m.height / 2 };
+	TextureAsset(headingAssetName_m).drawAt(center);
 }

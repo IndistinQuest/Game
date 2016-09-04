@@ -11,6 +11,7 @@
 #include "../../Button/TextureButton.h"
 #include "DrawableTexture.h"
 #include "RollBackGround.h"
+#include "../../Data/DataManager.h"
 
 
 class EnemyGuide
@@ -25,6 +26,8 @@ protected:
 	static const int KIND_OF_ENEMIES;
 
 	const Heading title_m;
+
+	DataManager dataManager_m;
 
 	DrawableList graphics_m;
 	std::function<void(void)> backToTitle_m;

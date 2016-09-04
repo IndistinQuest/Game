@@ -4,11 +4,10 @@
 class Heading
 {
 private:
-	Font headingSentence_m;
-	static const String sentence_m;
+	String headingAssetName_m;
 public:
 	Heading();
 	~Heading();
-	void draw(Point position, Color color) const;
+	void draw(Point position) const;
 };
 
