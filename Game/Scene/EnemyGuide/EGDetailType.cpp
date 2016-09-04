@@ -1,17 +1,9 @@
 #include "EGDetailType.h"
 using namespace scene::enemyGuide;
 
-/*
-const double EGDetailType::NEXT_BUTTON_WIDTH = 0.1*W;
-const double EGDetailType::NEXT_BUTTON_HEIGHT = 0.1*H;
-const double EGDetailType::PREVIOUS_BUTTON_WIDTH = 0.1*W;
-const double EGDetailType::PREVIOUS_BUTTON_HEIGHT = 0.1*H;
-const double EGDetailType::LIST_BUTTON_WIDTH = 0.1*W;
-const double EGDetailType::LIST_BUTTON_HEIGHT = 0.1*H;
-*/
-const double EGDetailType::TARGET_INFORMATION_WIDTH = 0.6*W;
+const int EGDetailType::TARGET_INFORMATION_WIDTH = static_cast<const int>(0.6*W);
 
-const double EGDetailType::TARGET_SCALE = 0.3;
+const double EGDetailType::TARGET_SCALE = 0.25;
 const int EGDetailType::FONT_SIZE = 16;
 
 const int EGDetailType::TEXT_SPEED = 1;
@@ -19,7 +11,7 @@ const int EGDetailType::TEXT_SPEED = 1;
 const Point EGDetailType::POS_NEXT_BUTTON = Point(W - 150, 0.5*H);
 const Point EGDetailType::POS_PREVIOUS_BUTTON = Point(150, 0.5*H);
 const Point EGDetailType::POS_LIST_BUTTON = Point(POS_HOME_BUTTON.x, POS_HOME_BUTTON.y - 150);
-const Point EGDetailType::POS_TARGET = Point(0.2*W, 0.2*H);
+const Point EGDetailType::POS_TARGET = Point(0.2*W, 0.22*H);
 const Point EGDetailType::POS_TARGET_NAME = Point(POS_PREVIOUS_BUTTON.x + 100, POS_PREVIOUS_BUTTON.y - 60);
 const Point EGDetailType::POS_TARGET_MESSAGE = Point(POS_TARGET_NAME.x, POS_TARGET_NAME.y + 60);
 const Point EGDetailType::POS_COLLECT_ANSWER = Point(POS_TARGET_NAME.x, POS_TARGET_MESSAGE.y + 120);
@@ -38,9 +30,9 @@ void EGDetailType::init()
 	descriptionFont_m = Font(FONT_SIZE);
 
 	backGround_m = std::make_shared<RollBackGround>(L"firstEnemiesBackGround", L"secondEnemiesBackGround");
-	for (int i = 1; i < KIND_OF_ENEMIES; ++i)
+	for (int i = 1; i <= KIND_OF_ENEMIES; ++i)
 	{
-		std::shared_ptr<uhhyoi::DrawableTexture> targetGraphic = std::make_shared<uhhyoi::DrawableTexture>(Format(L"enemy", i), POS_TARGET, TARGET_SCALE);
+		std::shared_ptr<uhhyoi::DrawableTexture> targetGraphic = std::make_shared<uhhyoi::DrawableTexture>(Format(L"Enemy", i), POS_TARGET, TARGET_SCALE);
 		targetGraphics_m.add(targetGraphic, i);
 	}
 
@@ -65,6 +57,14 @@ void EGDetailType::init()
 	answerTextView_m = std::make_shared<TextView>(L"", POS_COLLECT_ANSWER, TARGET_INFORMATION_WIDTH, 2, collectAnswerFont_m, TEXT_SPEED, Palette::Black);
 	descriptionTextView_m = std::make_shared<TextView>(L"", POS_DESCRIPTION, TARGET_INFORMATION_WIDTH, 4, descriptionFont_m, TEXT_SPEED, Palette::Black);
 
+	target_m = dataManager_m.getEnemy(cursorID_m);
+
+	nameTextView_m->setNewText(L"モンスター名\n" + target_m.name_m);
+	messageTextView_m->setNewText(L"倒れた時のセリフ\n" + target_m.messages_m.onPlayerWon_m);
+	answerTextView_m->setNewText(L"正解\n" + target_m.collectAnswer_m);
+	descriptionTextView_m->setNewText(L"モンスターの説明\n" + target_m.description_m);
+
+
 }
 void EGDetailType::update()
 {
@@ -79,7 +79,7 @@ void EGDetailType::draw() const
 {
 	backGround_m->draw();
 	graphics_m.drawAll();
-	title_m.draw(POS_HEADING, Palette::Orange);
+	title_m.draw(POS_HEADING);
 	
 	homeButton_m->draw();
 	nextButton_m->draw();
@@ -96,7 +96,7 @@ void EGDetailType::draw() const
 
 void EGDetailType::nextTarget()
 {
-	cursorID_m = (cursorID_m+1)%(KIND_OF_ENEMIES+1);
+	cursorID_m = (cursorID_m >= 30) ? 1 : cursorID_m+1;
 	target_m = dataManager_m.getEnemy(cursorID_m);
 
 	nameTextView_m->setNewText(L"モンスター名\n" + target_m.name_m);
@@ -107,10 +107,15 @@ void EGDetailType::nextTarget()
 
 void EGDetailType::previousTarget()
 {
-	cursorID_m = (cursorID_m > 1) ? cursorID_m-1 : cursorID_m;
+	cursorID_m = (cursorID_m <= 1) ? 30 : cursorID_m-1;
 	target_m = dataManager_m.getEnemy(cursorID_m);
 	nameTextView_m->setNewText(L"モンスター名\n" + target_m.name_m);
 	messageTextView_m->setNewText(L"倒れた時のセリフ\n" + target_m.messages_m.onPlayerWon_m);
 	answerTextView_m->setNewText(L"正解\n" + target_m.collectAnswer_m);
 	descriptionTextView_m->setNewText(L"モンスターの説明\n" + target_m.description_m);
+}
+
+void EGDetailType::changeTarget(int ID)
+{
+	cursorID_m = ID;
 }
