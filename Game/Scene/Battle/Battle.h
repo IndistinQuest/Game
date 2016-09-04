@@ -16,6 +16,7 @@ namespace battle{
 class BattleSceneObject;
 class BattleSceneButton;
 class PictureObject;
+class CutIn;
 
 class Battle : public SceneManager<String, GameData>::Scene {
 public:
@@ -27,13 +28,16 @@ public:
 
 private:
 	void Battle::addObject(std::shared_ptr<BattleSceneObject> obj, String  name, int layer);
-
+	void Battle::nextScene(String sceneName);
 	void Battle::newEnemy();	
 
 private:
 	int round_m;
 	int time_m;
-	int maxTime_m;
+
+	bool incorect;
+	bool canAnswer;
+	int	penalty_m;
 
 	//enemy
 	std::shared_ptr<EnemyData> enemy_m;
@@ -47,12 +51,17 @@ private:
 	std::multimap<String, std::shared_ptr<BattleSceneButton>> buttons;
 	DrawableList drawList_m;
 
+	std::shared_ptr<BattleSceneButton> titleButton;
+	std::shared_ptr<BattleSceneButton> CommantButton_m[9];
+
 	std::shared_ptr<TextView> message_m;
 
-	const String assetPath = L"Asset/";
+	std::shared_ptr<CutIn> cutIn_m;
+
+	Effect effect_m;
 
 	// state
-	enum BattleState { win, lose, select };
+	enum BattleState { start, win, lose, select };
 	BattleState state_m;
 
 	// background

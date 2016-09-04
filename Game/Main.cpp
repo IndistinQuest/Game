@@ -12,12 +12,18 @@
 
 using Manager = SceneManager<String, GameData>;
 
+
+
+
 void Main()
 {
     // ウィンドウを設定
     Window::SetStyle(WindowStyle::NonFrame);
     Window::Resize({ 1280, 720 });
     Window::Centering();
+
+	// 展示の時はフルスクリーンがいいね
+	//Window::SetFullscreen(true, { 1280, 720 });
 
 	Manager manager;
 
@@ -32,7 +38,12 @@ void Main()
 	manager.add<scene::result::Result>(L"Result");
 	manager.add<scene::battle::Battle>(L"Battle");
 
-	manager.init(L"EGDetailType");
+	manager.init(L"Title");
+	
+	// EnemyのグラフィックをAsssetに登録
+	for (int i = 0; i <= 30; i++) {
+		TextureAsset::Register(Format(L"Enemy",i), Format(L"/", 600 + i));
+	}
 
 	while (System::Update())
 	{

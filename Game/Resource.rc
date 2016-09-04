@@ -51,7 +51,6 @@
 100		ICON	"Icon.ico"
 101		FILE	"Engine/Splash.png"
 
-
 // IndistinQuest
 200    FILE    "Asset/title_graphicM.png"
 201    FILE    "Asset/title_logo2M.png"
@@ -62,3 +61,54 @@
 206    FILE    "Asset/QuitButtonM.png"
 207    FILE    "Asset/StartButtonL.png"
 208    FILE    "Asset/back_button_resize.png"
+
+// IndistinQuest_BattleScene
+// Image
+500    FILE    "Asset/BattleScene/window_graphic.png"
+501    FILE    "Asset/BattleScene/message_graphic.png"
+502    FILE    "Asset/BattleScene/small_message_graphic.png"
+503    FILE    "Asset/BattleScene/Effect.png"
+// Image_BackGround
+511    FILE    "Asset/BattleScene/battle_graphic1.jpg"
+512    FILE    "Asset/BattleScene/battle_graphic2.jpg"
+513    FILE    "Asset/BattleScene/battle_graphic3.jpg"
+514    FILE    "Asset/BattleScene/battle_graphic4.jpg"
+515    FILE    "Asset/BattleScene/battle_graphic5.jpg"
+// Sound
+520    FILE    "Asset/BattleScene/bgm_maoudamashii_neorock49.ogg"
+521    FILE    "Asset/BattleScene/crrect_answer3.mp3"
+522    FILE    "Asset/BattleScene/powerdown07.mp3"
+523    FILE    "Asset/BattleScene/damage7.mp3"
+524    FILE    "Asset/BattleScene/jump10.mp3"
+
+// IndistinQuest_EnemyGraphic
+601    FILE    "Asset/EnemyGraphics/1.png"
+602    FILE    "Asset/EnemyGraphics/2.png"
+603    FILE    "Asset/EnemyGraphics/3.png"
+604    FILE    "Asset/EnemyGraphics/4.png"
+605    FILE    "Asset/EnemyGraphics/5.png"
+606    FILE    "Asset/EnemyGraphics/6.png"
+607    FILE    "Asset/EnemyGraphics/7.png"
+608    FILE    "Asset/EnemyGraphics/8.png"
+609    FILE    "Asset/EnemyGraphics/9.png"
+610    FILE    "Asset/EnemyGraphics/10.png"
+611    FILE    "Asset/EnemyGraphics/11.png"
+612    FILE    "Asset/EnemyGraphics/12.png"
+613    FILE    "Asset/EnemyGraphics/13.png"
+614    FILE    "Asset/EnemyGraphics/14.png"
+615    FILE    "Asset/EnemyGraphics/15.png"
+616    FILE    "Asset/EnemyGraphics/16.png"
+617    FILE    "Asset/EnemyGraphics/17.png"
+618    FILE    "Asset/EnemyGraphics/18.png"
+619    FILE    "Asset/EnemyGraphics/19.png"
+620    FILE    "Asset/EnemyGraphics/20.png"
+621    FILE    "Asset/EnemyGraphics/21.png"
+622    FILE    "Asset/EnemyGraphics/22.png"
+623    FILE    "Asset/EnemyGraphics/23.png"
+624    FILE    "Asset/EnemyGraphics/24.png"
+625    FILE    "Asset/EnemyGraphics/25.png"
+626    FILE    "Asset/EnemyGraphics/26.png"
+627    FILE    "Asset/EnemyGraphics/27.png"
+628    FILE    "Asset/EnemyGraphics/28.png"
+629    FILE    "Asset/EnemyGraphics/29.png"
+630    FILE    "Asset/EnemyGraphics/30.png"

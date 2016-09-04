@@ -58,6 +58,9 @@ public:
 	/// </summary>
 	void debugDraw()const;
 
+	void setAllPlotTime(unsigned time);
+	bool isAllPoltAndOverTime();
+
 private:
 	//１文字を追加
 	void addCharacter();
@@ -73,4 +76,6 @@ private:
 	bool isAutomaticLineBreak;		//自動改行するか
 	unsigned IntervalIncrease_m;	//文字を増やす間隔(フレーム)
 	Color color_m;					//文字色
+	unsigned allPlotTime;				//全文字を表示する時間
+	unsigned curentAllPlotTime;			//全文字を表示してどれくらいたったか
 };
