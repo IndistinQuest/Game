@@ -20,6 +20,18 @@ RegisterAsset::RegisterAsset()
 	TextureAsset::Register(L"firstEnemiesBackGround", L"/303");
 	TextureAsset::Register(L"secondEnemiesBackGround", L"/303");
 
+	FontAsset::Register(L"BattleSceneFont", 20);
+	TextureAsset::Register(L"mesWindow", L"/501");
+	TextureAsset::Register(L"miniMesWindow", L"/502");
+	TextureAsset::Register(L"battleButton", L"/500");
+	TextureAsset::Register(L"CutInEffect", L"/503");
+	for (int i = 1; i <= 5; i++) { TextureAsset::Register(Format(L"battleBack", i), Format(L"/", (510 + i))); }
+	SoundAsset::Register(L"battle_bgm", L"/520");
+	SoundAsset::Register(L"battle_corect", L"/521");
+	SoundAsset::Register(L"battle_incorect", L"/522");	
+	SoundAsset::Register(L"bettle_GameOver", L"/523");
+	SoundAsset::Register(L"bettle_entry", L"/524");
+
 	TextureAsset::Register(L"Enemy1", L"/601");
 	TextureAsset::Register(L"Enemy2", L"/602");
 	TextureAsset::Register(L"Enemy3", L"/603");
@@ -50,6 +62,7 @@ RegisterAsset::RegisterAsset()
 	TextureAsset::Register(L"Enemy28", L"/628");
 	TextureAsset::Register(L"Enemy29", L"/629");
 	TextureAsset::Register(L"Enemy30", L"/630");
+
 
 }
 

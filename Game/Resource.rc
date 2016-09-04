@@ -73,7 +73,7 @@
 500    FILE    "Asset/BattleScene/window_graphic.png"
 501    FILE    "Asset/BattleScene/message_graphic.png"
 502    FILE    "Asset/BattleScene/small_message_graphic.png"
-503    FILE    "Asset/BattleScene/Effect.png"
+503    FILE    "Asset/BattleScene/cutin_logo.png"
 // Image_BackGround
 511    FILE    "Asset/BattleScene/battle_graphic1.jpg"
 512    FILE    "Asset/BattleScene/battle_graphic2.jpg"
