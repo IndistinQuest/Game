@@ -29,7 +29,7 @@ void DataManager::initSaveData()
 
 int DataManager::getNumOfEnemies()
 {
-	return enemies_m.size();
+	return static_cast<int>(enemies_m.size());
 }
 
 EnemyData const DataManager::getEnemy(int id)

@@ -67,6 +67,7 @@
 301    FILE    "Asset/left_button_resize.png"
 302    FILE    "Asset/right_button_resize.png"
 303    FILE    "Asset/enemies_graphic.jpg"
+304    FILE    "Asset/enemies_guide_logo.png"
 
 // IndistinQuest_BattleScene
 // Image

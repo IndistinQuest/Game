@@ -36,7 +36,7 @@ void Main()
 	manager.add<scene::result::Result>(L"Result");
 	manager.add<scene::battle::Battle>(L"Battle");
 
-	manager.init(L"Title");
+	manager.init(L"EGDetailType");
 	
 	// EnemyのグラフィックをAsssetに登録
 	

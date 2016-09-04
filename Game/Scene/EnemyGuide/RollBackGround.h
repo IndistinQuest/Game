@@ -5,7 +5,7 @@ class RollBackGround
 private:
 	const static double W;
 	const static double H;
-	const static double ROLL_SPEED;
+	const static int ROLL_SPEED;
 
 	Point fPoint_m;
 	Point sPoint_m;

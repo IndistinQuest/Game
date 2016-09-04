@@ -19,6 +19,7 @@ RegisterAsset::RegisterAsset()
 	TextureAsset::Register(L"right_button", L"/302");
 	TextureAsset::Register(L"firstEnemiesBackGround", L"/303");
 	TextureAsset::Register(L"secondEnemiesBackGround", L"/303");
+	TextureAsset::Register(L"enemies_logo", L"/304");
 
 	TextureAsset::Register(L"Enemy1", L"/601");
 	TextureAsset::Register(L"Enemy2", L"/602");

@@ -18,13 +18,7 @@ namespace scene {
 		class EGDetailType : public EnemyGuide, public Scene
 		{
 		private:
-			static const double NEXT_BUTTON_WIDTH;
-			static const double NEXT_BUTTON_HEIGHT;
-			static const double PREVIOUS_BUTTON_WIDTH;
-			static const double PREVIOUS_BUTTON_HEIGHT;
-			static const double LIST_BUTTON_WIDTH;
-			static const double LIST_BUTTON_HEIGHT;
-			static const double TARGET_INFORMATION_WIDTH;
+			static const int TARGET_INFORMATION_WIDTH;
 			
 			static const double TARGET_SCALE ;
 			static const int FONT_SIZE;
@@ -67,7 +61,7 @@ namespace scene {
 			std::shared_ptr<TextView> answerTextView_m;
 			std::shared_ptr<TextView> descriptionTextView_m;
 
-			void changeTarget();
+			void changeTarget(int ID);
 			void nextTarget();
 			void previousTarget();
 		public:

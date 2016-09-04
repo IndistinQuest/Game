@@ -4,7 +4,7 @@ using namespace scene::enemyGuide;
 
 const double EGListType::W = 1280;
 const double EGListType::H = 720;
-const Point EGListType::POS_HEADING = Point(0.5*W, 0.2*H);
+const Point EGListType::POS_HEADING = Point(0.45*W, 0.2*H);
 const Point EGListType::POS_HOME_BUTTON = Point(0.8*W, 0.2*H);
 const int EGListType::KIND_OF_ENEMIES = 30;
 const double EGListType::LIST_MARGIN = 20;
@@ -41,7 +41,7 @@ void EGListType::draw() const
 {
 	backGround_m->draw();
 	graphics_m.drawAll();
-	title_m.draw(POS_HEADING, Palette::Orange);
+	title_m.draw(POS_HEADING);
 	homeButton_m->draw();
 }
 
