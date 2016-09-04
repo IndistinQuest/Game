@@ -23,23 +23,27 @@ void EGListType::init()
 	defeatedList_m = Array<bool>(KIND_OF_ENEMIES, false);
 	
 	backToTitle_m = [this]() {(this->*&Scene::changeScene)(L"Title", 500, false); };
-	homeButton_m = std::make_shared<TextureButton>(Vec2(POS_HOME_BUTTON.x, POS_HOME_BUTTON.y), L"./Asset/title_button_resize.png", backToTitle_m);
+	homeButton_m = std::make_shared<TextureAssetButton>(Vec2(POS_HOME_BUTTON.x, POS_HOME_BUTTON.y), L"title_button", backToTitle_m);
+	jumpToDetail_m = [this](){(this->*&Scene::changeScene)(L"EGDetailType", 500, false); };
 
 	backGround_m = std::make_shared<RollBackGround>(L"firstEnemiesBackGround", L"secondEnemiesBackGround");
 
 	ButtonManager::add(homeButton_m);
 	for (int i = 1; i <= KIND_OF_ENEMIES; ++i) {
-		std::shared_ptr<Drawable> icon;
+		
 		if (dataManager_m.getSaveData(i).isDefeated_m)
 		{
-			icon = std::make_shared<uhhyoi::DrawableTexture>(Format(L"Enemy", i), Point(iconX(i), iconY(i)), 0.1);
+			std::shared_ptr<TextureAssetButton> icon = std::make_shared<TextureAssetButton>(Vec2(iconX(i), iconY(i)), Format(L"Enemy", i), 0.1, jumpToDetail_m);
+			icons_m.push_back(icon);
+			ButtonManager::add(icon);
+			
 		}
 		else
 		{
-			icon = std::make_shared<uhhyoi::DrawableTexture>(Format(L"ShadowEnemy", i), Point(iconX(i), iconY(i)), 0.1);
-
+			std::shared_ptr<DrawableAssetTexture> icon = std::make_shared<DrawableAssetTexture>(Format(L"ShadowEnemy", i), Point(iconX(i), iconY(i)), 0.1);
+			shadows_m.add(icon, i);
 		}
-		icons_m.add(icon, i);
+		
 	}
 }
 
@@ -58,7 +62,8 @@ void EGListType::draw() const
 	graphics_m.drawAll();
 	title_m.draw(POS_HEADING);
 	homeButton_m->draw();
-	icons_m.drawAll();
+	shadows_m.drawAll();
+	std::for_each (icons_m.begin(), icons_m.end(), [](std::shared_ptr<TextureAssetButton> b) {b->draw(); });
 }
 
 double EGListType::iconX(int i)

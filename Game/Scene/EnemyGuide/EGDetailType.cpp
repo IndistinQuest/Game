@@ -32,7 +32,7 @@ void EGDetailType::init()
 	backGround_m = std::make_shared<RollBackGround>(L"firstEnemiesBackGround", L"secondEnemiesBackGround");
 	for (int i = 1; i <= KIND_OF_ENEMIES; ++i)
 	{
-		std::shared_ptr<uhhyoi::DrawableTexture> targetGraphic = std::make_shared<uhhyoi::DrawableTexture>(Format(L"Enemy", i), POS_TARGET, TARGET_SCALE);
+		std::shared_ptr<DrawableAssetTexture> targetGraphic = std::make_shared<DrawableAssetTexture>(Format(L"Enemy", i), POS_TARGET, TARGET_SCALE);
 		targetGraphics_m.add(targetGraphic, i);
 	}
 
@@ -42,10 +42,10 @@ void EGDetailType::init()
 	backToTitle_m = [this]() {(this->*&Scene::changeScene)(L"Title", 500, false); };
 
 
-	homeButton_m = std::make_shared<TextureButton>(Vec2(POS_HOME_BUTTON.x, POS_HOME_BUTTON.y), L"./Asset/title_button_resize.png", backToTitle_m);
-	nextButton_m = std::make_shared<TextureButton>(Vec2(POS_NEXT_BUTTON.x, POS_NEXT_BUTTON.y), L"./Asset/right_button_resize.png", goToNext_m);
-	previousButton_m = std::make_shared<TextureButton>(Vec2(POS_PREVIOUS_BUTTON.x, POS_PREVIOUS_BUTTON.y), L"./Asset/left_button_resize.png", backToPrevious_m);
-	backToListButton_m = std::make_shared<TextureButton>(Vec2(POS_LIST_BUTTON.x, POS_LIST_BUTTON.y), L"./Asset/back_button_resize.png", backToList_m);
+	homeButton_m = std::make_shared<TextureAssetButton>(Vec2(POS_HOME_BUTTON.x, POS_HOME_BUTTON.y), L"title_button", backToTitle_m);
+	nextButton_m = std::make_shared<TextureAssetButton>(Vec2(POS_NEXT_BUTTON.x, POS_NEXT_BUTTON.y), L"right_button", goToNext_m);
+	previousButton_m = std::make_shared<TextureAssetButton>(Vec2(POS_PREVIOUS_BUTTON.x, POS_PREVIOUS_BUTTON.y), L"left_button", backToPrevious_m);
+	backToListButton_m = std::make_shared<TextureAssetButton>(Vec2(POS_LIST_BUTTON.x, POS_LIST_BUTTON.y), L"back_button_resize", backToList_m);
 
 	ButtonManager::add(homeButton_m);
 	ButtonManager::add(nextButton_m);
