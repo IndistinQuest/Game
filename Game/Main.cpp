@@ -59,7 +59,7 @@ void Main()
 	manager.add<scene::battle::Battle>(L"Battle");
 	manager.add<TestScene>(L"Test");
 
-	manager.init(L"Battle");
+	manager.init(L"Title");
 
 	while (System::Update())
 	{
