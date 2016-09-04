@@ -1,19 +1,20 @@
 #include"Battle.h"
+
 #include"..\..\Drawable\Drawable.h"
+
 #include"..\..\Button\BasicButton.h"
 #include"../../Button/ButtonManager.h"
 
 #include"../../Data/DataManager.h"
+#include"..\..\Data\EnemyData.h"
 
-#include"AnswerManager.h"
+#include"..\..\TextView\TextView.h"
 
 using namespace std;
-using namespace scene;
-using namespace battle;
 
 namespace scene {
 	namespace battle {
-
+		
 		// 値を設定
 		namespace BattleSceneNums {
 
@@ -33,21 +34,47 @@ namespace scene {
 			// 敗北時のEnemyの最大拡大率
 			const double maxScale = 2.0;
 
-			// 次のシーン
-			const String nextScene = L"Result";
-
 			// 敗北時のメッセージ
 			const String loseMessage = L"にやられた！";
 
 			const String StartMes = L"準備はいいですか?\nStartを押すとゲームが始まります!";
 
-			// メッセージ表示速度
-			const int mesSpeed = 2;
-
 			// 間違えた時ボタンが押せなくなる時間
 			const int penaltyTime = 120;
 		}
 
+		// 状態
+		enum class BattleState { Start, EnemyEntry, Answer, CanNotAnswer, Incorect, Corect, ExitEnemy, TimeOver, GameOver, BackToTitle, GoToResult, CheckGameClear };
+
+		// アンサーマネージャ
+		enum Answers { correct, incorrect, not };
+		class AnswerManager {
+		private:
+			static String corectAnswer;
+			static Answers playersAnswer;
+			static bool isAnswered;
+		public:
+			static void init() {
+				isAnswered = false;
+			};
+			static void setCorectAnswer(String corect) {
+				corectAnswer = corect;
+				isAnswered = false;
+			};
+			static void answer(String ans) {
+				playersAnswer = (ans == corectAnswer) ? Answers::correct : Answers::incorrect;
+				isAnswered = true;
+			};
+			static Answers checkAnswer() {
+				if (isAnswered == false) { playersAnswer = Answers::not; }
+				return playersAnswer;
+			};
+		};
+		String AnswerManager::corectAnswer = L"";
+		Answers AnswerManager::playersAnswer = Answers::not;
+		bool AnswerManager::isAnswered = false;
+
+		// ステートマネージャ
 		class StateManager {
 		private:
 			static bool isGoTitle;
@@ -64,115 +91,114 @@ namespace scene {
 				curentState_m = BattleState::Start;
 			}
 
-			static void update() {
-
-				switch (curentState_m)
-				{
-				case BattleState::Start:
-					if (isImprove) {
-						curentState_m = BattleState::EnemyEntry;
-					}
-					break;
-
-					// 敵が登場するときの処理
-				case BattleState::EnemyEntry:
-					curentState_m = BattleState::Answer;
-					break;
-
-					// 回答
-				case BattleState::Answer:
-				{
-					auto ans = AnswerManager::checkAnswer();
-					// 正解時
-					if (ans == Answers::correct) {
-						curentState_m = BattleState::Corect;
-					}
-					// 不正解時
-					else if (ans == Answers::incorrect) {
-						curentState_m = BattleState::Incorect;
-					}
+		static void update() {
+			switch (curentState_m)
+			{
+			case BattleState::Start:
+				if (AnswerManager::checkAnswer() == Answers::correct) {
+					StateManager::goToNext();
+				}
+				if (isImprove) {
+					curentState_m = BattleState::EnemyEntry;
 				}
 				break;
 
-				// 不正解を選んで選択できなくなっている間の処理
-				case BattleState::CanNotAnswer:
-					if (isImprove) {
-						curentState_m = BattleState::Answer;
-					}
-					break;
+				// 敵が登場するときの処理
+			case BattleState::EnemyEntry:
+				curentState_m = BattleState::Answer;
+				break;
 
-					// 不正解を選んだ瞬間の処理
-				case BattleState::Incorect:
-					curentState_m = BattleState::CanNotAnswer;
-					break;
-
-					//正解を選んだ瞬間の処理
-				case BattleState::Corect:
-					curentState_m = BattleState::ExitEnemy;
-					break;
-
-					// 正解して敵が消えていく間の処理
-				case BattleState::ExitEnemy:
-					if (StateManager::isImprove) {
-						curentState_m = BattleState::CheckGameClear;
-					}
-					break;
-
-				case BattleState::CheckGameClear:
-					curentState_m = BattleState::EnemyEntry;
-					break;
-
-					// 時間切れになった瞬間の処理
-				case BattleState::TimeOver:
-					curentState_m = BattleState::GameOver;
-					break;
-
-					// ゲームオーバーになった時の処理
-				case BattleState::GameOver:
-					if (isImprove) {
-						curentState_m = BattleState::GoToResult;
-					}
-					break;
-
-				default:
-					break;
+				// 回答
+			case BattleState::Answer:
+			{
+				auto ans = AnswerManager::checkAnswer();
+				// 正解時
+				if (ans == Answers::correct) {
+					curentState_m = BattleState::Corect;
 				}
+				// 不正解時
+				else if (ans == Answers::incorrect) {
+					curentState_m = BattleState::Incorect;
+				}
+			}
+			break;
 
+			// 不正解を選んで選択できなくなっている間の処理
+			case BattleState::CanNotAnswer:
+				if (isImprove) {
+					curentState_m = BattleState::Answer;
+				}
+				AnswerManager::init();
+				break;
 
-				if (isTimeOver && curentState_m != BattleState::GameOver && curentState_m != BattleState::GoToResult) { curentState_m = BattleState::TimeOver; }
-				if (isGoTitle) { curentState_m = BattleState::BackToTitle; }
-				if (isGameClear) { curentState_m = BattleState::GoToResult; }
+				// 不正解を選んだ瞬間の処理
+			case BattleState::Incorect:
+				curentState_m = BattleState::CanNotAnswer;
+				break;
 
-				isImprove = false;
+				//正解を選んだ瞬間の処理
+			case BattleState::Corect:
+				curentState_m = BattleState::ExitEnemy;
+				break;
+
+				// 正解して敵が消えていく間の処理
+			case BattleState::ExitEnemy:
+				if (StateManager::isImprove) {
+					curentState_m = BattleState::CheckGameClear;
+				}
+				break;
+
+			case BattleState::CheckGameClear:
+				curentState_m = BattleState::EnemyEntry;
+				break;
+
+				// 時間切れになった瞬間の処理
+			case BattleState::TimeOver:
+				curentState_m = BattleState::GameOver;
+				break;
+
+				// ゲームオーバーになった時の処理
+			case BattleState::GameOver:
+				if (isImprove) {
+					curentState_m = BattleState::GoToResult;
+				}
+				break;
+
+			default:
+				break;
 			}
 
-			static BattleState getState() {
-				return curentState_m;
-			}
+			if (isTimeOver && curentState_m != BattleState::GameOver && curentState_m != BattleState::GoToResult) { curentState_m = BattleState::TimeOver; }
+			if (isGoTitle) { curentState_m = BattleState::BackToTitle; }
+			if (isGameClear) { curentState_m = BattleState::GoToResult; }
 
-			static void setNextState(BattleState next) {
-				curentState_m = next;
-			}
+			isImprove = false;
+		}
 
-			static void setBackToTitle() {
-				isGoTitle = true;
-			}
-			static void setTimeOver() {
-				isTimeOver = true;
-			}
-			static void setGameClear() {
-				isGameClear = true;
-			}
-			static void goToNext() {
-				isImprove = true;
-			}
-		};
+		static BattleState getState() {
+			return curentState_m;
+		}
+		static void setNextState(BattleState next) {
+			curentState_m = next;
+		}
+		static void setBackToTitle() {
+			isGoTitle = true;
+		}
+		static void setTimeOver() {
+			isTimeOver = true;
+		}
+		static void setGameClear() {
+			isGameClear = true;
+		}
+		static void goToNext() {
+			isImprove = true;
+		}
+	};
 		bool StateManager::isGoTitle = false;
 		bool StateManager::isGameClear = false;
 		bool StateManager::isTimeOver = false;
 		bool StateManager::isImprove = false;
 		BattleState StateManager::curentState_m = BattleState::Start;
-
 
 		// 基底クラス
 		class BattleSceneObject : public Drawable
@@ -206,11 +232,15 @@ namespace scene {
 		private:
 			int time_m;
 			int TIME_RECOVERY;
+			std::shared_ptr<GameData> data_m;
 		public:
 			Timer(Point center, String textureAssetName, Color c = Palette::Black) :WindowAndText(center, textureAssetName, c), TIME_RECOVERY(BattleSceneNums::timeRecovery)
 			{
 				time_m = BattleSceneNums::timeLimit;
 				setText(Format(Pad(time_m / 60, { 2, L'0' }), L".", Pad(time_m % 60, { 2, L'0' })));
+			}
+			~Timer() {
+				data_m->time = time_m;
 			}
 			void update() override {
 
@@ -235,7 +265,9 @@ namespace scene {
 			void recovery() {
 				time_m += TIME_RECOVERY;
 			}
-
+			void setGameData(std::shared_ptr<GameData> data) {
+				data_m = data;
+			}
 			int getTime() {
 				return time_m;
 			}
@@ -254,152 +286,27 @@ namespace scene {
 				round_m++;
 				setText(Format(round_m, L"戦目"));
 			}
-			void update()override {}
+			void update()override {
+				// 敵が登場するときの処理
+				switch (StateManager::getState()) {
+				case BattleState::EnemyEntry:
+					next();
+					break;
+				case BattleState::CheckGameClear:					
+					if (isGameClear()) {
+						round_m++;
+						StateManager::setGameClear();
+					}
+					break;
+				default:
+					break;					
+				}
+			}
 			bool isGameClear() {
 				return round_m >= 30;
 			}
 			int getRound() {
 				return round_m;
-			}
-		};
-
-		//メッセージ
-		class MessageWindow : public WindowAndText, public TextView {
-		private:
-			std::shared_ptr<EnemyData> enemy_m;
-			bool incorect_m;
-		public:
-			MessageWindow(Point center, String textureAssetName, Color c = Palette::Black)
-				: WindowAndText(center, textureAssetName, c)
-				, TextView(L"", Point(210, center.y - 60), 850, 3, Font(20), BattleSceneNums::mesSpeed, Palette::Black) {
-				setNewText(BattleSceneNums::StartMes);
-				incorect_m = false;
-			}
-			void update()override {
-				setIntervalIncrease((Input::MouseL.pressed) ? 0 : 3); //メッセージ速度変更
-
-				switch (StateManager::getState())
-				{
-				case BattleState::Answer:
-					if (incorect_m && isAllPoltAndOverTime()) {
-						setNewText(enemy_m->messages_m.onContact_m);
-						incorect_m = false;
-					}
-					break;
-				case BattleState::EnemyEntry:
-					setNewText(enemy_m->messages_m.onContact_m);
-					incorect_m = false;
-					break;
-				case BattleState::TimeOver:
-					setNewText(enemy_m->name_m + BattleSceneNums::loseMessage);
-					break;
-				case BattleState::Corect:
-					setNewText(enemy_m->messages_m.onPlayerWon_m);
-					break;
-				case BattleState::Incorect:
-					setNewText(enemy_m->messages_m.onPlayerLost_m);
-					incorect_m = true;
-					break;
-				default:
-					break;
-				}
-
-				TextView::update();
-			}
-			void draw()const override {
-				WindowAndText::draw();
-				TextView::draw();
-			}
-			void setEnemy(std::shared_ptr<EnemyData> e) {
-				enemy_m = e;
-			}
-		};
-
-		//ボタン
-		class BattleSceneButton : public BasicButton, public BattleSceneObject {
-		protected:
-			const Size size;
-			const Point pos;
-			const Point center;
-			String text_m;
-			const String textureAssetName_m;
-			Color color_m;	//文字色
-		public:
-			BattleSceneButton(Point pos, Size size, String textureAssetName, Color c = Palette::Black)
-				:BasicButton(Shape(Rect(pos, size))), size(size), pos(pos), center(pos + size / 2), textureAssetName_m(textureAssetName), color_m(c) {};
-			void draw() const
-			{
-				Point bPos = center;
-				double mag = 1.0;
-				switch (getState()) {
-				case State::MOUSE_OVER:
-					bPos.moveBy({ 0,-2 });
-					mag = 1.01;
-					break;
-				case State::LEFT:
-				case State::PRESSED:
-				case State::RELEASED:
-				default:
-					break;
-				}
-				TextureAsset(textureAssetName_m).scale(mag).drawAt(bPos);
-				FontAsset(L"BattleSceneFont").drawCenter(text_m, bPos, color_m);
-			}
-			void setText(String text){
-				text_m = text;
-			}
-			void onClicked()override {
-				// AnswerManager::answer(text_m);
-			}
-			void update()override {}
-			void setStrColor(Color c) {
-				color_m = c;
-			}
-		};
-
-		class AnswerButton : public BattleSceneButton {
-		public:
-			AnswerButton(Point pos, Size size, String textureAssetName, Color c = Palette::Black) :BattleSceneButton(pos, size, textureAssetName, c) {};
-			void onClicked()override {
-				AnswerManager::answer(text_m);
-			}
-		};
-
-		// タイトルへのボタン
-		class TitleButton : public BattleSceneButton {
-		public:
-			TitleButton(Point pos, Size size, String textureAssetName, Color c = Palette::Black) :BattleSceneButton(pos, size, textureAssetName, c) {
-				setText(L"タイトルにもどる");
-			};
-			void onClicked() override {
-				StateManager::setBackToTitle();
-			}
-		};
-
-		// 次へ進むボタン
-		class NextButton
-			: public BattleSceneButton {
-		public:
-			NextButton(Point pos, Size size, String textureAssetName, Color c = Palette::Black) :BattleSceneButton(pos, size, textureAssetName, c) {
-				setText(L"次にすすむ");
-				hide();
-				setStrColor(Palette::Blue);
-			};
-			void update()override {
-				switch (StateManager::getState())
-				{
-				case BattleState::ExitEnemy:
-				case BattleState::GameOver:
-					show();
-					break;
-				default:
-					hide();
-					break;
-				}
-
-			}
-			void onClicked() override {
-				StateManager::goToNext();
 			}
 		};
 
@@ -495,10 +402,12 @@ namespace scene {
 			}
 		};
 
+		// カットイン
 		class CutIn : public BattleSceneObject
 		{
 		private:
-			const Point END_POS = { 145,200 };
+			const Point END_POS = { 155,200 };
+			const double LAST_SCALE = 0.5;
 			double alpha_m;
 			double scale_m;
 			Point pos_m;
@@ -529,11 +438,11 @@ namespace scene {
 				switch (state_m)
 				{
 				case State::in:
-					if (scale_m > 1.0) {
+					if (scale_m > LAST_SCALE) {
 						scale_m -= 0.3;
 					}
 					else {
-						scale_m = 1.0;
+						scale_m = LAST_SCALE;
 						state_m = State::move;
 					}
 					break;
@@ -558,8 +467,6 @@ namespace scene {
 				default:
 					break;
 				}
-
-
 			};
 			void draw()const override {
 				if (!isHide) {
@@ -568,149 +475,26 @@ namespace scene {
 			}
 		};
 
-		// アセット登録
-		void assetRegistration() {
-
-			// フォントアセット登録
-			if (!FontAsset::IsRegistered(L"BattleSceneFont")) { FontAsset::Register(L"BattleSceneFont", 20); }
-
-			// テクスチャアセット登録
-			if (!TextureAsset::IsRegistered(L"mesWindow")) { TextureAsset::Register(L"mesWindow", L"/501"); }
-			if (!TextureAsset::IsRegistered(L"miniMesWindow")) { TextureAsset::Register(L"miniMesWindow", L"/502"); }
-			if (!TextureAsset::IsRegistered(L"battleButton")) { TextureAsset::Register(L"battleButton", L"/500"); }
-			if (!TextureAsset::IsRegistered(L"CutInEffect")) { TextureAsset::Register(L"CutInEffect", L"/503"); }
-			for (int i = 1; i <= 5; i++) {
-				TextureAsset::Register(Format(L"battleBack", i), Format(L"/", (510 + i)));
-			}
-
-			// サウンドアセット登録
-			SoundAsset::Register(L"battle_corect", L"/521");
-			SoundAsset::Register(L"battle_incorect", L"/522");
-			SoundAsset::Register(L"battle_bgm", L"/520");
-			SoundAsset::Register(L"bettle_GameOver", L"/523");
-			SoundAsset::Register(L"bettle_entry", L"/524");
-		}
-
-		// サウンド
-		class SoundPlayer : public BattleSceneObject {
-		public:
-			SoundPlayer() {
-				SoundAsset(L"battle_bgm").setLoop(true);
-				SoundAsset(L"battle_bgm").play();
-			}
-			~SoundPlayer() {
-				SoundAsset(L"battle_bgm").stop();
-			}
-			void update()override {
-				switch (StateManager::getState())
-				{
-					// 敵が登場するときの処理
-				case BattleState::EnemyEntry:
-					// 敵登場時の効果音再生
-					SoundAsset(L"bettle_entry").setSpeed(0.5);
-					SoundAsset(L"bettle_entry").play();
-					break;
-
-					// 不正解を選んだ瞬間の処理
-				case BattleState::Incorect:
-					SoundAsset(L"battle_incorect").playMulti();
-					break;
-
-					//正解を選んだ瞬間の処理
-				case BattleState::Corect:
-					SoundAsset(L"battle_corect").playMulti();
-					break;
-
-					// 時間切れになった瞬間の処理
-				case BattleState::TimeOver:
-					SoundAsset(L"bettle_GameOver").play();
-				default:
-					break;
-				}
-			}
-			void draw()const override {}
-		};
-
-		// 回答のボタン
-		class AnswerButtons : public BattleSceneObject {
-		private:
-			//std::shared_ptr<EnemyData> enemy_m;
-			std::shared_ptr<AnswerButton> buttons_m[9];
-			int penalty_m;
-		public:
-			AnswerButtons() {
-				const int tx = 5, ty = 5;
-				const int width = 420;
-				const int height = 60;
-				//const Array<String> buttonName = { L"weapon", L"magic",L"special" };
-				for (int i = 0; i < 3; i++) {
-					for (int j = 0; j < 3; j++) {
-						auto b = std::make_shared<AnswerButton>(AnswerButton({ Window::Width() / 2 - width / 2 + (width + tx) * (i - 1), Window::Height() - (height + ty) * (3 - j) }, Size(width, height), L"battleButton"));
-						b->setStrColor(Palette::Black);
-						b->setText(L"Start");
-						buttons_m[3 * i + j] = b;
-						ButtonManager::add(b);
-					}
-				}
-				AnswerManager::setCorectAnswer(L"Start");
-
-				penalty_m = 0;
-			}
-			void update()override {
-				switch (StateManager::getState())
-				{
-
-					// 不正解を選んで選択できなくなっている間の処理
-				case BattleState::CanNotAnswer:
-					penalty_m--;
-					if (penalty_m == 0) {
-						for (auto& b : buttons_m) { b->setStrColor(Palette::Black); }
-						StateManager::goToNext();
-					}
-					break;
-
-					// 不正解を選んだ瞬間の処理
-				case BattleState::Incorect:
-					penalty_m = BattleSceneNums::penaltyTime;
-					for (auto& b : buttons_m) { b->setStrColor(Palette::Red); }
-					break;
-				default:
-					break;
-				}
-			};
-			void draw()const override {
-				for (auto b : buttons_m) { b->draw(); }
-			}
-			void setAnswers(shared_ptr<EnemyData> enemy) {
-				// ボタンに選択しを設定
-				for (int i = 0; i < 3; i++) {
-					buttons_m[i]->setText(enemy->answers_m.weapon_m[i]);
-					buttons_m[i + 3]->setText(enemy->answers_m.magic_m[i]);
-					buttons_m[i + 6]->setText(enemy->answers_m.special_m[i]);
-				}
-			}
-		};
-
+		// エネミーマネージャ
 		class EnemyManager : public BattleSceneObject {
 		private:
 			std::shared_ptr<EnemyData> enemy_m;				// Enemyデータ
-			DataManager dataManager_m;						//
+			DataManager dataManager_m;						// データマネージャ
+			int enemyIdList_m[31];							// 登場順リスト
+			std::shared_ptr<GameData> data_m;				// ゲームデータ
+
 			std::shared_ptr<PictureObject> enemyPic_m;		// Enemy画像
-
-			int enemyIdList_m[31];		// 登場順リスト
-
 			std::shared_ptr<CutIn> cutIn_m;					// カットイン
 			std::shared_ptr<PictureObject> backPic_m;		// 背景画像
-			//std::shared_ptr<RoundCounter> round_m;			// 戦闘数
+			std::shared_ptr<RoundCounter> round_m;			// 戦闘数
 
 		public:
-			
 			EnemyManager() : dataManager_m()
 			{
 				initIdList();
 			}
 			~EnemyManager() {
-
+				writeGameDataAndSaveData(data_m);
 			}
 			using pic = std::shared_ptr<PictureObject>;
 			void setObjects(pic enemy, pic background, std::shared_ptr<CutIn> cutIn)
@@ -727,7 +511,10 @@ namespace scene {
 
 				switch (StateManager::getState())
 				{
-
+					// 敵が登場するときの処理
+				case BattleState::EnemyEntry:
+					newEnemy();
+					break;
 					//正解を選んだ瞬間の処理
 				case BattleState::Corect:
 					enemyPic_m->setFadeOut();
@@ -743,10 +530,9 @@ namespace scene {
 					break;
 				}
 			}
-			void draw()const override {
-				/*enemyPic_m->draw();
-				cutIn_m->draw();*/
-			}
+
+			void draw()const override {}
+
 			std::shared_ptr<EnemyData> getEnemy() {
 				return enemy_m;
 			}
@@ -755,9 +541,17 @@ namespace scene {
 				return (0 < round && round < 31) ? enemyIdList_m[round] : 0;
 			}
 
-			void newEnemy(int round) {
+			void setRoundCounter(std::shared_ptr<RoundCounter> r) {
+				round_m = r;
+			}
 
-				//int round = round;// round_m->getRound();
+			void setGameData(std::shared_ptr<GameData> data) {
+				data_m = data;
+			}
+
+			void newEnemy() {
+
+				int round = round_m->getRound();
 
 				// 次の敵のデータを取得
 				enemy_m = make_shared<EnemyData>(dataManager_m.getEnemy(getId(round)));
@@ -782,6 +576,15 @@ namespace scene {
 				if (id == 16 || id == 22 || id == 29) { cutIn_m->init(); }
 				else { cutIn_m->hide(); }
 			}
+
+			void writeGameDataAndSaveData(std::shared_ptr<GameData> data) {
+				for (int i = 1; i < round_m->getRound(); i++) {
+					data->addEnemy(getId(i));
+					dataManager_m.setSaveData(getId(i), true);
+				}
+				dataManager_m.writeSaveData();
+			}
+
 		private:
 			// 登場順リストを初期化する
 			void initIdList() {
@@ -840,7 +643,7 @@ namespace scene {
 				//攻撃失敗時のメッセージを設定
 				enemy_m->messages_m.onPlayerLost_m = Format(L"「この程度の問題を間違えるな」\n計算兵器カリキョンを倒しきれなかった！");//\n「", a, ope, b, L"は？」");
 
-				  //選択肢をランダムに用意
+				//選択肢をランダムに用意
 				int nums[9];
 				for (int i = 0; i < 9; i++) nums[i] = Random(1, 100);
 				nums[Random(8)] = ans + 10;		// 正解より10大きい選択肢を用意
@@ -854,22 +657,296 @@ namespace scene {
 
 			};
 		};
+
+		//メッセージ
+		class MessageWindow : public WindowAndText, public TextView {
+		private:
+			std::shared_ptr<EnemyManager> enemyManager_m;
+			bool incorect_m;
+		public:
+			MessageWindow(Point center, String textureAssetName, Color c = Palette::Black)
+				: WindowAndText(center, textureAssetName, c)
+				, TextView(L"", Point(210, center.y - 60), 850, 3, Font(20), 3, Palette::Black) {
+				setNewText(BattleSceneNums::StartMes);
+				incorect_m = false;
+			}
+			void update()override {
+				setIntervalIncrease((Input::MouseL.pressed) ? 0 : 3); //メッセージ速度変更
+
+				switch (StateManager::getState())
+				{
+				case BattleState::Answer:
+					if (incorect_m && isAllPoltAndOverTime()) {
+						setNewText(enemyManager_m->getEnemy()->messages_m.onContact_m);
+						incorect_m = false;
+					}
+					break;
+				case BattleState::EnemyEntry:
+					setNewText(enemyManager_m->getEnemy()->messages_m.onContact_m);
+					incorect_m = false;
+					break;
+				case BattleState::TimeOver:
+					setNewText(enemyManager_m->getEnemy()->name_m + BattleSceneNums::loseMessage);
+					break;
+				case BattleState::Corect:
+					setNewText(enemyManager_m->getEnemy()->messages_m.onPlayerWon_m);
+					break;
+				case BattleState::Incorect:
+					setNewText(enemyManager_m->getEnemy()->messages_m.onPlayerLost_m);
+					incorect_m = true;
+					break;
+				default:
+					break;
+				}
+
+				TextView::update();
+			}
+			void draw()const override {
+				WindowAndText::draw();
+				TextView::draw();
+			}
+			void setEnemyManager(std::shared_ptr<EnemyManager> e) {
+				enemyManager_m = e;
+			}
+		};
+
+		//ボタン
+		class BattleSceneButton : public BasicButton, public BattleSceneObject {
+		protected:
+			const Size size;
+			const Point pos;
+			const Point center;
+			String text_m;
+			const String textureAssetName_m;
+			Color color_m;	//文字色
+		public:
+			BattleSceneButton(Point pos, Size size, String textureAssetName, Color c = Palette::Black)
+				:BasicButton(Shape(Rect(pos, size))), size(size), pos(pos), center(pos + size / 2), textureAssetName_m(textureAssetName), color_m(c) {};
+			void draw() const
+			{
+				Point bPos = center;
+				double mag = 1.0;
+				switch (getState()) {
+				case State::MOUSE_OVER:
+					bPos.moveBy({ 0,-2 });
+					mag = 1.01;
+					break;
+				case State::LEFT:
+				case State::PRESSED:
+				case State::RELEASED:
+				default:
+					break;
+				}
+				TextureAsset(textureAssetName_m).scale(mag).drawAt(bPos);
+				FontAsset(L"BattleSceneFont").drawCenter(text_m, bPos, color_m);
+			}
+			void setText(String text){
+				text_m = text;
+			}
+			void onClicked() = 0;
+			void update()override {}
+			void setStrColor(Color c) {
+				color_m = c;
+			}
+		};
+
+		// 回答のボタン
+		class AnswerButton : public BattleSceneButton {
+		public:
+			AnswerButton(Point pos, Size size, String textureAssetName, Color c = Palette::Black) :BattleSceneButton(pos, size, textureAssetName, c) {};
+			void onClicked()override {
+				AnswerManager::answer(text_m);
+			}
+		};
+
+		// タイトルへのボタン
+		class TitleButton : public BattleSceneButton {
+		public:
+			TitleButton(Point pos, Size size, String textureAssetName, Color c = Palette::Black) :BattleSceneButton(pos, size, textureAssetName, c) {
+				setText(L"タイトルにもどる");
+			};
+			void onClicked() override {
+				StateManager::setBackToTitle();
+			}
+		};
+
+		// 次へ進むボタン
+		class NextButton
+			: public BattleSceneButton {
+		public:
+			NextButton(Point pos, Size size, String textureAssetName, Color c = Palette::Black) :BattleSceneButton(pos, size, textureAssetName, c) {
+				setText(L"次にすすむ");
+				hide();
+				setStrColor(Palette::Blue);
+			};
+			void update()override {
+				switch (StateManager::getState())
+				{
+				case BattleState::ExitEnemy:
+				case BattleState::GameOver:
+					show();
+					break;
+				default:
+					hide();
+					break;
+				}
+
+			}
+			void onClicked() override {
+				StateManager::goToNext();
+			}
+		};
+
+		// 回答のボタン郡
+		class AnswerButtons : public BattleSceneObject {
+		private:
+			std::shared_ptr<EnemyManager> enemyManager_m;
+			std::shared_ptr<AnswerButton> buttons_m[9];
+			int penalty_m;
+		public:
+			AnswerButtons() {
+				const int tx = 5, ty = 5;
+				const int width = 420;
+				const int height = 60;
+				for (int i = 0; i < 3; i++) {
+					for (int j = 0; j < 3; j++) {
+						auto b = std::make_shared<AnswerButton>(AnswerButton({ Window::Width() / 2 - width / 2 + (width + tx) * (i - 1), Window::Height() - (height + ty) * (3 - j) }, Size(width, height), L"battleButton"));
+						b->setStrColor(Palette::Black);
+						b->setText(L"Start");
+						buttons_m[3 * i + j] = b;
+						ButtonManager::add(b);
+					}
+				}
+				AnswerManager::setCorectAnswer(L"Start");
+
+				penalty_m = 0;
+			}
+			void update()override {
+				switch (StateManager::getState())
+				{
+					// 敵が登場するときの処理
+				case BattleState::EnemyEntry:
+					setAnswers();					
+					break;
+
+					// 不正解を選んで選択できなくなっている間の処理
+				case BattleState::CanNotAnswer:
+					penalty_m--;
+					if (penalty_m == 0) {
+						for (auto& b : buttons_m) { b->setStrColor(Palette::Black); }
+						StateManager::goToNext();
+					}
+					break;
+
+					// 不正解を選んだ瞬間の処理
+				case BattleState::Incorect:
+					penalty_m = BattleSceneNums::penaltyTime;
+					for (auto& b : buttons_m) { b->setStrColor(Palette::Red); }
+					break;
+				default:
+					break;
+				}
+			};
+			void draw()const override {
+				for (auto b : buttons_m) { b->draw(); }
+			}
+			void setAnswers() {
+				// ボタンに選択しを設定
+				for (int i = 0; i < 3; i++) {					
+					buttons_m[i]->setText(enemyManager_m->getEnemy()->answers_m.weapon_m[i]);
+					buttons_m[i + 3]->setText(enemyManager_m->getEnemy()->answers_m.magic_m[i]);
+					buttons_m[i + 6]->setText(enemyManager_m->getEnemy()->answers_m.special_m[i]);
+				}
+			}
+			void setEnemyManager(std::shared_ptr<EnemyManager> e) {
+				enemyManager_m = e;
+			}
+		};
+
+		// アセット登録
+		void assetRegistration() {
+
+			// フォントアセット登録
+			if (!FontAsset::IsRegistered(L"BattleSceneFont")) { FontAsset::Register(L"BattleSceneFont", 20); }
+
+			// テクスチャアセット登録
+			TextureAsset::Register(L"logo", L"/201");
+			if (!TextureAsset::IsRegistered(L"mesWindow")) { TextureAsset::Register(L"mesWindow", L"/501"); }
+			if (!TextureAsset::IsRegistered(L"miniMesWindow")) { TextureAsset::Register(L"miniMesWindow", L"/502"); }
+			if (!TextureAsset::IsRegistered(L"battleButton")) { TextureAsset::Register(L"battleButton", L"/500"); }
+			if (!TextureAsset::IsRegistered(L"CutInEffect")) { TextureAsset::Register(L"CutInEffect", L"/503"); }
+			for (int i = 1; i <= 5; i++) {
+				TextureAsset::Register(Format(L"battleBack", i), Format(L"/", (510 + i)));
+			}
+
+			// サウンドアセット登録
+			SoundAsset::Register(L"battle_corect", L"/521");
+			SoundAsset::Register(L"battle_incorect", L"/522");
+			SoundAsset::Register(L"battle_bgm", L"/520");
+			SoundAsset::Register(L"bettle_GameOver", L"/523");
+			SoundAsset::Register(L"bettle_entry", L"/524");
+		}
+
+		// サウンド
+		class SoundPlayer : public BattleSceneObject {
+		public:
+			SoundPlayer() {
+				// BGMをループ再生
+				SoundAsset(L"battle_bgm").setLoop(true);
+				SoundAsset(L"battle_bgm").play();
+			}
+			~SoundPlayer() {
+				SoundAsset(L"battle_bgm").stop();
+			}
+			void update()override {
+				switch (StateManager::getState())
+				{
+					// 敵が登場するときの処理
+				case BattleState::EnemyEntry:
+					// 敵登場時の効果音再生
+					SoundAsset(L"bettle_entry").setSpeed(0.5);
+					SoundAsset(L"bettle_entry").play();
+					break;
+
+					// 不正解を選んだ瞬間の処理
+				case BattleState::Incorect:
+					SoundAsset(L"battle_incorect").playMulti();
+					break;
+
+					//正解を選んだ瞬間の処理
+				case BattleState::Corect:
+					SoundAsset(L"battle_corect").playMulti();
+					break;
+
+					// 時間切れになった瞬間の処理
+				case BattleState::TimeOver:
+					SoundAsset(L"bettle_GameOver").play();
+				default:
+					break;
+				}
+			}
+			void draw()const override {}
+		};
+
 	};
 
 }
-/***********************************************************************************************************************/
+
+using namespace scene;
+using namespace battle;
 
 Battle::Battle(){};
 
 Battle::~Battle(){};
 
 void Battle::init(){
-	TextureAsset::Register(L"logo", L"/201");
 
 	//各種定数
 	const int tx = 5;
 	const int ty = 5;	
 	const int windowPosY = 80;
+	const int width = 420;			//ボタンの
+	const int height = 60;			//ぼたんの
 
 	// 背景色変更
 	Graphics::SetBackground(Palette::Lightslategray);
@@ -882,33 +959,53 @@ void Battle::init(){
 	m_data->resetEnemyList();
 	m_data->time = 0;
 
-	// アセット登録
-	assetRegistration();
-
-	// BGM再生
-	objects.push_back(std::make_shared<SoundPlayer>());
-	
 	// 各種初期化
 	AnswerManager::init();
 	StateManager::init();
 
-	// 戦闘数
-	roundCounter_m = make_shared<RoundCounter>(Point(100, windowPosY ), L"miniMesWindow");
-	addObject(roundCounter_m, 10);
+	// アセット登録
+	assetRegistration();
 
-	// メッセージ
-	message_m = make_shared<MessageWindow>(Point(Window::Width() / 2, windowPosY), L"mesWindow");
-	addObject(message_m, 10);
+	// BGM再生
+	addObject(std::make_shared<SoundPlayer>());	
+
+	// 戦闘数
+	auto roundCounter = make_shared<RoundCounter>(Point(100, windowPosY ), L"miniMesWindow");
+	addObject(roundCounter, 10,1);
 
 	// タイマー
-	timer_m = make_shared<Timer>(Point(Window::Width() - 100,windowPosY ), L"miniMesWindow");
-	addObject(timer_m, 10);
+	auto timer = make_shared<Timer>(Point(Window::Width() - 100, windowPosY), L"miniMesWindow");
+	timer->setGameData(m_data);
+	addObject(timer, 10);
+
+	// 背景画像
+	auto backPic = make_shared<PictureObject>(L"battleBack5", 1.0, Window::Center());
+	addObject(backPic, 1);
+
+	// カットイン
+	auto cutIn = make_shared<CutIn>();
+	addObject(cutIn, 15);
+
+	// エネミー画像
+	auto enemyPic = make_shared<PictureObject>(L"logo", BattleSceneNums::scale, Point(Window::Width() / 2, 330));
+	addObject(enemyPic, 5);
+
+	// エネミーマネージャ
+	auto enemyManger = make_shared<EnemyManager>();
+	enemyManger->setRoundCounter(roundCounter);
+	enemyManger->setGameData(m_data);
+	enemyManger->setObjects(enemyPic, backPic, cutIn);
+	addObject(enemyManger, 0, 2);
+
+	// メッセージ
+	auto message = make_shared<MessageWindow>(Point(Window::Width() / 2, windowPosY), L"mesWindow");
+	message->setEnemyManager(enemyManger);
+	addObject(message, 10,3);
 
 	// 回答のボタン
-	answerButtons = make_shared<AnswerButtons>();
-	addObject(answerButtons, 10);
-	const int width = 420;
-	const int height = 60;
+	auto answerButtons = make_shared<AnswerButtons>();
+	answerButtons->setEnemyManager(enemyManger);
+	addObject(answerButtons, 10,3);
 	
 	// タイトルボタン
 	auto titleButton = make_shared<TitleButton>(TitleButton({ Window::Width() / 2 - width / 2 + (width + tx), windowPosY*2 + ty }, Size(width, height), L"battleButton"));
@@ -918,96 +1015,27 @@ void Battle::init(){
 	// 次へボタン
 	auto nextButton = make_shared<NextButton>(Point(Window::Width() / 2 - width / 2, Window::Height() - height * 4 - tx * 4), Size(width, height), L"battleButton");
 	addObject(nextButton, 12);
-	ButtonManager::add(nextButton);
-
-	// 背景画像
-	auto backPic_m = make_shared<PictureObject>(L"battleBack5",1.0,Window::Center());
-	addObject(backPic_m, 1);
-
-	// カットイン
-	auto cutIn_m = make_shared<CutIn>();
-	addObject(cutIn_m, 15);
-
-	//enemyData
-	auto enemyPic_m = make_shared<PictureObject>(L"logo", BattleSceneNums::scale, Point(Window::Width() / 2, 330));
-	addObject(enemyPic_m, 5);
-
-	enemyManger_m = make_shared<EnemyManager>();
-	enemyManger_m->setObjects(enemyPic_m, backPic_m, cutIn_m);
-	objects.push_back(enemyManger_m);
+	ButtonManager::add(nextButton);	
 };
 
 void Battle::update(){
-	//ClearPrint();
-	for_each(objects.begin(), objects.end(), [](auto obj) {obj->update(); });
+	
+	for_each(objects.begin(), objects.end(), [](auto obj) { obj.second->update(); });
 
 	StateManager::update();	
 
 	switch (StateManager::getState())
 	{
-
-		// ゲーム開始時
-	case BattleState::Start:
-		if (AnswerManager::checkAnswer() == Answers::correct) {
-			StateManager::goToNext();
-		}
-		break;
-
-		// 敵が登場するときの処理
-	case BattleState::EnemyEntry:
-		roundCounter_m->next();
-		enemyManger_m->newEnemy(roundCounter_m->getRound());
-		answerButtons->setAnswers(enemyManger_m->getEnemy());
-		message_m->setEnemy(enemyManger_m->getEnemy());
-		break;
-
-		// 回答
-	case BattleState::Answer:
-		break;
-
-		// 不正解を選んで選択できなくなっている間の処理
-	case BattleState::CanNotAnswer:
-		AnswerManager::init();
-		break;
-
-		// 不正解を選んだ瞬間の処理
-	case BattleState::Incorect:
-		//AnswerManager::init();
-		break;
-
-		//正解を選んだ瞬間の処理
-	case BattleState::Corect:		
-		break;
-
-		// 正解して敵が消えていく間の処理
-	case BattleState::ExitEnemy:
-		break;
-
-		// 時間切れになった瞬間の処理
-	case BattleState::TimeOver:
-		break;
-
-		//// ゲームオーバーになった時の処理
-	case BattleState::GameOver:
-		break;
-
-	case BattleState::CheckGameClear:
-		if (roundCounter_m->isGameClear()){
-			StateManager::setGameClear();
-		}
-		break;
-
 	case BattleState::GoToResult:
-		nextScene(L"Test");
+		changeScene(L"Test");
 		break;
 
 	case BattleState::BackToTitle:
-		nextScene(L"Title");
+		changeScene(L"Title");
 		break;
 
 	default:
 		break;
-	
 	}
 };
 
@@ -1015,19 +1043,15 @@ void Battle::draw()const{
 	drawList_m.drawAll();
 };
 
-void Battle::addObject(std::shared_ptr<BattleSceneObject> obj, int layer) {
-	objects.push_back(obj);
-	drawList_m.add(obj, layer);
+void Battle::addObject(std::shared_ptr<BattleSceneObject> obj) {
+	objects.insert(std::make_pair(4, obj));
 }
 
-void Battle::nextScene(String sceneName) {
-	DataManager dataManager_m;
+void Battle::addObject(std::shared_ptr<BattleSceneObject> obj, int layer) {
+	addObject(obj, layer, 4);
+}
 
-	m_data->time = timer_m->getTime();
-	for (int i = 1; i < roundCounter_m->getRound(); i++) {
-		m_data->addEnemy(enemyManger_m->getId(i));
-		dataManager_m.setSaveData(enemyManger_m->getId(i), true);
-	}
-	dataManager_m.writeSaveData();
-	changeScene(sceneName);
+void Battle::addObject(std::shared_ptr<BattleSceneObject> obj, int layer,const int order) {
+	objects.insert(std::make_pair(order,obj));
+	drawList_m.add(obj, layer);
 }
