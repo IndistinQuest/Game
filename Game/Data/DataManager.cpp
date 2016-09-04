@@ -21,7 +21,7 @@ DataManager::~DataManager()
 void DataManager::initSaveData()
 {
 	saveDataWriter_m.open(CSVPath);
-	for (int i = 0; i < 30;++i) {
+	for (int i = 0; i <= 30;++i) {
 		saveDataWriter_m.writeRow(i, false);
 	}
 	saveDataWriter_m.close();
@@ -29,7 +29,7 @@ void DataManager::initSaveData()
 
 int DataManager::getNumOfEnemies()
 {
-	return enemies_m.size();
+	return static_cast<int>(enemies_m.size());
 }
 
 EnemyData const DataManager::getEnemy(int id)
