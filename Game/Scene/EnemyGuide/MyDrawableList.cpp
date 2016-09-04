@@ -27,5 +27,4 @@ void MyDrawableList::drawLayer(int layer) const
 	if (itr->second->isVisible()) {
 		itr->second->draw();
 	}
-	
 }

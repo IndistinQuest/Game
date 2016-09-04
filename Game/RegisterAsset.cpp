@@ -52,6 +52,37 @@ RegisterAsset::RegisterAsset()
 	TextureAsset::Register(L"Enemy29", L"/629");
 	TextureAsset::Register(L"Enemy30", L"/630");
 
+	TextureAsset::Register(L"ShadowEnemy1", L"/701");
+	TextureAsset::Register(L"ShadowEnemy2", L"/702");
+	TextureAsset::Register(L"ShadowEnemy3", L"/703");
+	TextureAsset::Register(L"ShadowEnemy4", L"/704");
+	TextureAsset::Register(L"ShadowEnemy5", L"/705");
+	TextureAsset::Register(L"ShadowEnemy6", L"/706");
+	TextureAsset::Register(L"ShadowEnemy7", L"/707");
+	TextureAsset::Register(L"ShadowEnemy8", L"/708");
+	TextureAsset::Register(L"ShadowEnemy9", L"/709");
+	TextureAsset::Register(L"ShadowEnemy10", L"/710");
+	TextureAsset::Register(L"ShadowEnemy11", L"/711");
+	TextureAsset::Register(L"ShadowEnemy12", L"/712");
+	TextureAsset::Register(L"ShadowEnemy13", L"/713");
+	TextureAsset::Register(L"ShadowEnemy14", L"/714");
+	TextureAsset::Register(L"ShadowEnemy15", L"/715");
+	TextureAsset::Register(L"ShadowEnemy16", L"/716");
+	TextureAsset::Register(L"ShadowEnemy17", L"/717");
+	TextureAsset::Register(L"ShadowEnemy18", L"/718");
+	TextureAsset::Register(L"ShadowEnemy19", L"/719");
+	TextureAsset::Register(L"ShadowEnemy20", L"/720");
+	TextureAsset::Register(L"ShadowEnemy21", L"/721");
+	TextureAsset::Register(L"ShadowEnemy22", L"/722");
+	TextureAsset::Register(L"ShadowEnemy23", L"/723");
+	TextureAsset::Register(L"ShadowEnemy24", L"/724");
+	TextureAsset::Register(L"ShadowEnemy25", L"/725");
+	TextureAsset::Register(L"ShadowEnemy26", L"/726");
+	TextureAsset::Register(L"ShadowEnemy27", L"/727");
+	TextureAsset::Register(L"ShadowEnemy28", L"/728");
+	TextureAsset::Register(L"ShadowEnemy29", L"/729");
+	TextureAsset::Register(L"ShadowEnemy30", L"/730");
+
 }
 
 RegisterAsset::~RegisterAsset()

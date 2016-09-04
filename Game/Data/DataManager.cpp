@@ -21,7 +21,7 @@ DataManager::~DataManager()
 void DataManager::initSaveData()
 {
 	saveDataWriter_m.open(CSVPath);
-	for (int i = 0; i < 30;++i) {
+	for (int i = 0; i <= 30;++i) {
 		saveDataWriter_m.writeRow(i, false);
 	}
 	saveDataWriter_m.close();

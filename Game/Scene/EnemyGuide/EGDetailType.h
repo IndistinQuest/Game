@@ -34,9 +34,6 @@ namespace scene {
 			static const Point POS_COLLECT_ANSWER;
 			static const Point POS_DESCRIPTION;
 
-
-			DataManager dataManager_m;
-
 			EnemyData target_m;
 
 			std::function<void(void)> goToNext_m;
