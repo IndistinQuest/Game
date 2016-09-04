@@ -13,38 +13,25 @@
 
 using Manager = SceneManager<String, GameData>;
 
-// GameDataの内容を確認するシーン
-// あとで消す
-class TestScene : public Manager::Scene {
-public:
-	void init() override {
-		Println(L"time", m_data->time);
-		for (int i : m_data->defeatedEnemyList) {
-			Print(i, L" ");
-		}
-	};
-	void update()override {
-		if (Input::MouseL.clicked) {
-			changeScene(L"Battle");
-			ClearPrint();
-		}
-	}
-	void draw()const override {}
-};
-
 void Main()
 {
-    // ウィンドウを設定
-    Window::SetStyle(WindowStyle::NonFrame);
-    Window::Resize({ 1280, 720 });
-    Window::Centering();
+	// ウィンドウを設定
+	Window::Centering();
+	Window::Resize({ 1280, 720 });
+	Window::SetStyle(WindowStyle::NonFrame);
 
 	// 展示の時はフルスクリーンがいいね
-	//Window::SetFullscreen(true, { 1280, 720 });
+	//Window::SetFullscreen(true, { 1280, 720 });	
+
+	// ロード画面を表示
+	System::Update();
+	Texture(L"Asset/img.png").draw();
+	System::Update();
 
 	// 各アセットの登録
 	RegisterAsset registerAsset;
 
+	// シーンマネージャーちゃん
 	Manager manager;
 
 	// フェードイン・アウト時の色
@@ -57,7 +44,6 @@ void Main()
 	manager.add<scene::title::Title>(L"Title");
 	manager.add<scene::result::Result>(L"Result");
 	manager.add<scene::battle::Battle>(L"Battle");
-	manager.add<TestScene>(L"Test");
 
 	manager.init(L"Title");
 

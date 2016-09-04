@@ -63,6 +63,9 @@ RegisterAsset::RegisterAsset()
 	TextureAsset::Register(L"Enemy29", L"/629");
 	TextureAsset::Register(L"Enemy30", L"/630");
 
+	//全てプリロード
+	TextureAsset::PreloadAll();
+	SoundAsset::PreloadAll();
 
 }
 
