@@ -21,15 +21,15 @@ DataManager::~DataManager()
 void DataManager::initSaveData()
 {
 	saveDataWriter_m.open(CSVPath);
-	for (auto data : enemies_m) {
-		saveDataWriter_m.writeRow(data.id_m, false);
+	for (int i = 0; i <= 30;++i) {
+		saveDataWriter_m.writeRow(i, false);
 	}
 	saveDataWriter_m.close();
 }
 
 int DataManager::getNumOfEnemies()
 {
-	return enemies_m.size();
+	return static_cast<int>(enemies_m.size());
 }
 
 EnemyData const DataManager::getEnemy(int id)
@@ -80,7 +80,7 @@ void DataManager::readEnemyData()
 		}
 
 		enemy.description_m = object.second[L"description"].get<String>();
-		enemy.class_m = object.second[L"class"].get<String>();
+		enemy.bgid_m = object.second[L"BGID"].get<int>();
 
 		enemies_m.push_back(enemy);
 	}

@@ -1,21 +1,13 @@
 #pragma once
 #include<Siv3D.hpp>
 #include<HamFramework.hpp>
-#include<memory>
-#include<map>
 #include"..\GameData.h"
-#include"..\..\Button\ButtonInterface.h"
 #include"..\..\Drawable\DrawableList.h"
-#include"..\..\TextView\TextView.h"
-#include"..\..\Data\EnemyData.h"
-#include"..\..\Data\DataManager.h"
 
 namespace scene{
 namespace battle{
 
 class BattleSceneObject;
-class BattleSceneButton;
-class PictureObject;
 
 class Battle : public SceneManager<String, GameData>::Scene {
 public:
@@ -26,34 +18,14 @@ public:
 	void draw()const override;
 
 private:
-	void Battle::addObject(std::shared_ptr<BattleSceneObject> obj, String  name, int layer);
-
-	void Battle::newEnemy();	
+	void Battle::addObject(std::shared_ptr<BattleSceneObject> obj);
+	void Battle::addObject(std::shared_ptr<BattleSceneObject> obj, int layer);
+	void Battle::addObject(std::shared_ptr<BattleSceneObject> obj, int layer, int order);
 
 private:
-	int round_m;
-	int time_m;
-
-	//enemy
-	EnemyData enemy_m;
-	DataManager dataManager_m;
-	std::shared_ptr<PictureObject> enemyPic_m;
-
-	// objects
-	std::multimap<String, std::shared_ptr<BattleSceneObject>> objects;
-	std::multimap<String, std::shared_ptr<BattleSceneButton>> buttons;
+	std::multimap<int,std::shared_ptr<BattleSceneObject>> objects;
 	DrawableList drawList_m;
-
-	std::shared_ptr<TextView> message_m;
-
-	const String assetPath = L"../../Asset/";
-
-	// state
-	enum BattleState { win, lose, select };
-	BattleState state_m;
 };
 
 };
-
 };
-

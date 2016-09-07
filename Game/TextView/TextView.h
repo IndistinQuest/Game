@@ -16,7 +16,7 @@ public:
 	/// <param name='lines'> 最大行数 </param>
 	/// <param name='font'> フォント </param>
 	/// <param name='Interval'> 文字を追加する間隔 </param>
-	TextView(const String& text, const Point& pos, const int width, const int lines, const Font& font, int IntervalIncrease=3);
+	TextView(const String& text, const Point& pos, const int width, const int lines, const Font& font, int IntervalIncrease=3,Color color = Palette::White);
 
 	~TextView();
 
@@ -58,6 +58,9 @@ public:
 	/// </summary>
 	void debugDraw()const;
 
+	void setAllPlotTime(unsigned time);
+	bool isAllPoltAndOverTime();
+
 private:
 	//１文字を追加
 	void addCharacter();
@@ -72,4 +75,7 @@ private:
 	unsigned count_m;				//現在の表示文字数
 	bool isAutomaticLineBreak;		//自動改行するか
 	unsigned IntervalIncrease_m;	//文字を増やす間隔(フレーム)
+	Color color_m;					//文字色
+	unsigned allPlotTime;				//全文字を表示する時間
+	unsigned curentAllPlotTime;			//全文字を表示してどれくらいたったか
 };

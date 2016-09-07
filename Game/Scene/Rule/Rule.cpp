@@ -1,33 +1,28 @@
 #include "Rule.h"
-#include "../../Drawable/DrawableTxture.h"
+#include "../../Drawable/DrawableAssetTexture.h"
 #include"../../Button/ButtonManager.h"
-#include"../../Button/RoundRectButton.h"
+#include"../../Button/TextureAssetButton.h"
 
 using namespace scene::rule;
-using namespace jumpaku;
 
 void Rule::init()
 {
-    drawables.add(std::make_shared<DrawableTxture>(L"/200", Window::Center()), 0);
+    ButtonManager::clearAll();
+    ButtonManager::update();
 
-    Point const center = Window::Center();
-    int const W = 300;
-    int const H = 80;
-    auto makeButton = [=](int deltaCenterY, String text, double colorH, std::function<void(void)> handler) {
-        return std::make_shared<RoundRectTextButton>(center.x - 150, center.y-40+deltaCenterY, W, H, colorH, text, handler);
-    };
+    drawables.add(std::make_shared<DrawableAssetTexture>(
+        L"title_graphicM", Window::Center()), 0);
+
     auto changeScene = [this](String sceneName) {
-        (this->*&Scene::changeScene)(sceneName, 1000, false);
+        (this->*&Scene::changeScene)(sceneName, 500, false);
         ButtonManager::clearAll();
     };
-    std::shared_ptr<RoundRectTextButton> button;
-
-    button = makeButton(40, L"Return to Title", 270, [this]() {
-        (this->*&Scene::changeScene)(L"Title", 500, false);
-        ButtonManager::clearAll();
+    
+    std::shared_ptr<TextureAssetButton> button = std::make_shared<TextureAssetButton>(Vec2{ 1000, 600 }, L"back_button_resize", [changeScene]() {
+        changeScene(L"Title");
     });
     ButtonManager::add(button);
-    drawables.add(button, 4);
+    drawables.add(button, 2);
 }
 
 void Rule::update()
