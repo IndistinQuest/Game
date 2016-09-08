@@ -10,6 +10,7 @@
 #include "../../Button/RoundRectButton.h"
 #include "EnemyGuide.h"
 #include "MyDrawableList.h"
+#include "EGDetailType.h"
 
 class GameData;
 

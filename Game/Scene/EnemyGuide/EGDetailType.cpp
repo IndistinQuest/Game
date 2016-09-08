@@ -17,12 +17,12 @@ const Point EGDetailType::POS_TARGET_MESSAGE = Point(POS_TARGET_NAME.x, POS_TARG
 const Point EGDetailType::POS_COLLECT_ANSWER = Point(POS_TARGET_NAME.x, POS_TARGET_MESSAGE.y + 120);
 const Point EGDetailType::POS_DESCRIPTION = Point(POS_TARGET_NAME.x, POS_COLLECT_ANSWER.y + 60);
 
+int EGDetailType::cursorID_m = 1;
+
 void EGDetailType::init() 
 {
 	ButtonManager::clearAll();
 	ButtonManager::update();
-
-	cursorID_m = 1;
 
 	targetNameFont_m = Font(FONT_SIZE);
 	targetMessageFont_m = Font(FONT_SIZE);
@@ -99,23 +99,39 @@ void EGDetailType::nextTarget()
 	cursorID_m = (cursorID_m >= 30) ? 1 : cursorID_m+1;
 	target_m = dataManager_m.getEnemy(cursorID_m);
 
-	nameTextView_m->setNewText(L"モンスター名\n" + target_m.name_m);
-	messageTextView_m->setNewText(L"倒れた時のセリフ\n" + target_m.messages_m.onPlayerWon_m);
-	answerTextView_m->setNewText(L"正解\n" + target_m.collectAnswer_m);
-	descriptionTextView_m->setNewText(L"モンスターの説明\n" + target_m.description_m);
+	if (dataManager_m.getSaveData(cursorID_m).isDefeated_m)
+	{
+		showData();
+	}
+	else
+	{
+		nextTarget();
+	}
 }
-
 void EGDetailType::previousTarget()
 {
 	cursorID_m = (cursorID_m <= 1) ? 30 : cursorID_m-1;
 	target_m = dataManager_m.getEnemy(cursorID_m);
-	nameTextView_m->setNewText(L"モンスター名\n" + target_m.name_m);
-	messageTextView_m->setNewText(L"倒れた時のセリフ\n" + target_m.messages_m.onPlayerWon_m);
-	answerTextView_m->setNewText(L"正解\n" + target_m.collectAnswer_m);
-	descriptionTextView_m->setNewText(L"モンスターの説明\n" + target_m.description_m);
+	
+	if(dataManager_m.getSaveData(cursorID_m).isDefeated_m)
+	{
+		showData();
+	}
+	else
+	{
+		previousTarget();
+	}
 }
 
 void EGDetailType::changeTarget(int ID)
 {
 	cursorID_m = ID;
+}
+
+void EGDetailType::showData()
+{
+	nameTextView_m->setNewText(L"モンスター名\n" + target_m.name_m);
+	messageTextView_m->setNewText(L"倒れた時のセリフ\n" + target_m.messages_m.onPlayerWon_m);
+	answerTextView_m->setNewText(L"正解\n" + target_m.collectAnswer_m);
+	descriptionTextView_m->setNewText(L"モンスターの説明\n" + target_m.description_m);
 }
