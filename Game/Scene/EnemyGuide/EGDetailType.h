@@ -35,6 +35,8 @@ namespace scene {
 			static const Point POS_COLLECT_ANSWER;
 			static const Point POS_DESCRIPTION;
 
+			static int cursorID_m;
+
 			EnemyData target_m;
 
 			std::function<void(void)> goToNext_m;
@@ -45,7 +47,7 @@ namespace scene {
 			std::shared_ptr<TextureAssetButton> previousButton_m;
 			std::shared_ptr<TextureAssetButton> backToListButton_m;
 
-			int cursorID_m;
+			
 
 			Font targetNameFont_m;
 			Font targetMessageFont_m;
@@ -59,13 +61,16 @@ namespace scene {
 			std::shared_ptr<TextView> answerTextView_m;
 			std::shared_ptr<TextView> descriptionTextView_m;
 
-			void changeTarget(int ID);
+			
 			void nextTarget();
 			void previousTarget();
+			void showData();
 		public:
 			void init() override;
 			void update() override;
 			void draw()const override;
+			
+			static void changeTarget(int ID);
 		};
 	}
 }

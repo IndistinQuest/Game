@@ -24,13 +24,13 @@ void EGListType::init()
 	
 	backToTitle_m = [this]() {(this->*&Scene::changeScene)(L"Title", 500, false); };
 	homeButton_m = std::make_shared<TextureAssetButton>(Vec2(POS_HOME_BUTTON.x, POS_HOME_BUTTON.y), L"title_button", backToTitle_m);
-	jumpToDetail_m = [this](){(this->*&Scene::changeScene)(L"EGDetailType", 500, false); };
+	
 
 	backGround_m = std::make_shared<RollBackGround>(L"firstEnemiesBackGround", L"secondEnemiesBackGround");
 
 	ButtonManager::add(homeButton_m);
 	for (int i = 1; i <= KIND_OF_ENEMIES; ++i) {
-		
+		jumpToDetail_m = [this, i]() {(this->*&Scene::changeScene)(L"EGDetailType", 500, false); EGDetailType::changeTarget(i); };
 		if (dataManager_m.getSaveData(i).isDefeated_m)
 		{
 			std::shared_ptr<TextureAssetButton> icon = std::make_shared<TextureAssetButton>(Vec2(iconX(i), iconY(i)), Format(L"Enemy", i), 0.1, jumpToDetail_m);

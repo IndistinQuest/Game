@@ -13,6 +13,7 @@
 
 using Manager = SceneManager<String, GameData>;
 
+
 // GameDataの内容を確認するシーン
 // あとで消す
 class TestScene : public Manager::Scene {
