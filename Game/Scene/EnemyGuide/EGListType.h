@@ -33,7 +33,6 @@ namespace scene {
 			static const double ICON_W;
 			static const double ICON_H;
 
-			Array<bool> defeatedList_m;
 			Array<std::shared_ptr<TextureAssetButton>> icons_m;
 			MyDrawableList shadows_m;
 

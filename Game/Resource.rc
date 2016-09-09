@@ -62,12 +62,18 @@
 207    FILE    "Asset/StartButtonL.png"
 208    FILE    "Asset/back_button_resize.png"
 
-// IndistinQuest
+// IndistinQuest_Enemies
+// Image
 300	   FILE    "Asset/title_button_resize.png"
 301    FILE    "Asset/left_button_resize.png"
 302    FILE    "Asset/right_button_resize.png"
 303    FILE    "Asset/enemies_graphic.jpg"
 304    FILE    "Asset/enemies_guide_logo.png"
+// Sound
+310    FILE    "Asset/EnemiesSound/bgm.mp3"
+311    FILE    "Asset/EnemiesSound/decide.mp3"
+312    FILE    "Asset/EnemiesSound/move.mp3"
+313    FILe    "Asset/EnemiesSound/return.mp3"
 
 // IndistinQuest_BattleScene
 // Image

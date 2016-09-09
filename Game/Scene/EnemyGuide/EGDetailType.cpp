@@ -36,10 +36,10 @@ void EGDetailType::init()
 		targetGraphics_m.add(targetGraphic, i);
 	}
 
-	goToNext_m = [this]() {this->nextTarget(); };
-	backToPrevious_m = [this]() {this->previousTarget(); };
-	backToList_m = [this]() {(this->*&Scene::changeScene)(L"EGListType", 500, false); };
-	backToTitle_m = [this]() {(this->*&Scene::changeScene)(L"Title", 500, false); };
+	goToNext_m = [this]() {this->nextTarget(); SoundAsset(L"enemies_move").play(); };
+	backToPrevious_m = [this]() {this->previousTarget(); SoundAsset(L"enemies_move").play(); };
+	backToList_m = [this]() {(this->*&Scene::changeScene)(L"EGListType", 500, false); SoundAsset(L"enemies_return").play(); };
+	backToTitle_m = [this]() {(this->*&Scene::changeScene)(L"Title", 500, false); SoundAsset(L"enemies_bgm").stop(); };
 
 
 	homeButton_m = std::make_shared<TextureAssetButton>(Vec2(POS_HOME_BUTTON.x, POS_HOME_BUTTON.y), L"title_button", backToTitle_m);
@@ -63,7 +63,6 @@ void EGDetailType::init()
 	messageTextView_m->setNewText(L"倒れた時のセリフ\n" + target_m.messages_m.onPlayerWon_m);
 	answerTextView_m->setNewText(L"正解\n" + target_m.collectAnswer_m);
 	descriptionTextView_m->setNewText(L"モンスターの説明\n" + target_m.description_m);
-
 
 }
 void EGDetailType::update()
