@@ -62,6 +62,9 @@ void Main()
 
 	manager.init(L"Title");
 
+	SoundAsset(L"enemies_bgm").setLoopBySec(true, 19.3s, 83.4s);
+
+
 	while (System::Update())
 	{
         ButtonManager::update();

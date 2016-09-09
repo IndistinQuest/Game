@@ -20,6 +20,10 @@ RegisterAsset::RegisterAsset()
 	TextureAsset::Register(L"firstEnemiesBackGround", L"/303");
 	TextureAsset::Register(L"secondEnemiesBackGround", L"/303");
 	TextureAsset::Register(L"enemies_logo", L"/304");
+	SoundAsset::Register(L"enemies_bgm", L"/310");
+	SoundAsset::Register(L"enemies_decide", L"/311");
+	SoundAsset::Register(L"enemies_move", L"/312");
+	SoundAsset::Register(L"enemies_return", L"/313");
 
 	FontAsset::Register(L"BattleSceneFont", 20);
 	TextureAsset::Register(L"mesWindow", L"/501");
