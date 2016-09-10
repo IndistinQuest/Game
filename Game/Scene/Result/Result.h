@@ -13,7 +13,7 @@ namespace scene
 namespace result
 {
 
-class Result : public Scene, public std::enable_shared_from_this<Result>
+class Result : public Scene
 {
 private:
     Stopwatch stopwatch_m;

@@ -13,11 +13,11 @@ private:
 private:
     const Vec2 beginPos_m;
     const Color color_m;
-    Rect texture_m;
+    Texture texture_m;
     Vec2 position_m;
     double alpha_m;
 public:
-    MonsterFadeInEffect();
+    MonsterFadeInEffect(Texture enemy);
     ~MonsterFadeInEffect() = default;
 public:
     bool update(double t) override;
