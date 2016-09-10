@@ -14,7 +14,7 @@ private:
     const String fontName_m;
     const Point position_m;
 public:
-    ResultText(const String text, const String fontName, const FontAssetData fontData, const Point position);
+    ResultText(const String text, const String fontName, const Point position);
     ~ResultText() = default;
 public:
     void draw() const override;
