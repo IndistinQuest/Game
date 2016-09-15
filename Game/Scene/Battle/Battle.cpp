@@ -231,46 +231,64 @@ namespace scene {
 		class Timer : public WindowAndText {
 		private:
 			int time_m;
-			int TIME_RECOVERY;
+			//int TIME_RECOVERY;
+			//Milliseconds time_m;
 			std::shared_ptr<GameData> data_m;
+			Stopwatch stopWatch_m;
 		public:
-			Timer(Point center, String textureAssetName, Color c = Palette::Black) :WindowAndText(center, textureAssetName, c), TIME_RECOVERY(BattleSceneNums::timeRecovery)
+			Timer(Point center, String textureAssetName, Color c = Palette::Black) 
+				:WindowAndText(center, textureAssetName, c)
+				//, TIME_RECOVERY(BattleSceneNums::timeRecovery)
 			{
-				time_m = BattleSceneNums::timeLimit;
-				setText(Format(Pad(time_m / 60, { 2, L'0' }), L".", Pad(time_m % 60, { 2, L'0' })));
+				
+				time_m = 30000;
+				setText(Format(Pad(time_m / 1000, { 2,L'0' }), L".", Pad(time_m % 1000, { 3,L'0' })));
+				stopWatch_m.reset();
+				stopWatch_m.start();
 			}
 			~Timer() {
-				data_m->time = time_m;
+				data_m->time = time_m - stopWatch_m.ms();
 			}
 			void update() override {
+				
 
 				switch (StateManager::getState()) {
 				case BattleState::Answer:
 				case BattleState::CanNotAnswer:
-					time_m--;
-					if (time_m <= 0) { StateManager::setTimeOver(); }	
-					SoundAsset(L"battle_bgm").changeTempo((time_m < 300) ? 1.5 : 1.0);
-					setText(Format(Pad(time_m / 60, { 2, L'0' }), L".", Pad(time_m % 60, { 2, L'0' })));
-					strColor_m = ((time_m < 300) ? Palette::Red : Palette::Black);
+					//time_m--;
+				{
+					stopWatch_m.start();
+					int curentTime = time_m - stopWatch_m.ms();
+					if (curentTime <= 0) { StateManager::setTimeOver(); }
+					SoundAsset(L"battle_bgm").changeTempo((curentTime < 5000) ? 1.5 : 1.0);
+					setText(Format(Pad(curentTime / 1000,{2,L'0'}), L".", Pad(curentTime % 1000, { 3,L'0' })));
+					//setText(Format(stopWatch_m.s(),L".",stopWatch_m.ms()));
+					//setText(Format(Pad(time_m / 60, { 2, L'0' }), L".", Pad(time_m % 60, { 2, L'0' })));
+					strColor_m = ((curentTime < 5000) ? Palette::Red : Palette::Black);
 					break;
+				}
 				case BattleState::Corect:
 					recovery();
 					break;
 				default:
+					stopWatch_m.pause();
 					break;
 
 				}
 				
 			}
 			void recovery() {
-				time_m += TIME_RECOVERY;
+				//time_m += TIME_RECOVERY;
+				//stopWatch_m.set(static_cast<Milliseconds>(stopWatch_m.ms() + 7000) );
+				time_m += 7000;
 			}
 			void setGameData(std::shared_ptr<GameData> data) {
 				data_m = data;
 			}
-			int getTime() {
-				return time_m;
-			}
+			//int getTime() {
+			//	//return time_m;
+			//	return stopWatch_m.ms();
+			//}
 		};
 
 		// êÌì¨êî
