@@ -14,8 +14,10 @@ scene::result::Result::Result()
 void Result::init()
 {
     auto changeScene = [this](String sceneName) {
+		SoundAsset(L"Result_ButtonSE").play();
         (this->*&Scene::changeScene)(sceneName, 500, false);
         ButtonManager::clearAll();
+		SoundAsset(L"Result_BGM").stop();
     };
     // ボタンの初期化
     ButtonManager::clearAll();
@@ -48,6 +50,8 @@ void Result::init()
     score_m->hide();
     // タイマー始動
     stopwatch_m.start();
+	// BGM再生
+	SoundAsset(L"Result_BGM").play();
 }
 
 void Result::update()

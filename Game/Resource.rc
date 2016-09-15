@@ -61,6 +61,10 @@
 1206    FILE    "Asset/QuitButtonM.png"
 1207    FILE    "Asset/StartButtonL.png"
 1208    FILE    "Asset/back_button_resize.png"
+1209    FILE    "Asset/Rule.png"
+1210    FILE    "Asset/right_button_resize.png"
+1211    FILE    "Asset/left_button_resize.png"
+1212    FILE    "Asset/title_button_resize.png"
 
 // IndistinQuest_Enemies
 // Image
@@ -163,3 +167,5 @@
 1802    FILE    "Asset/result_logo.png"
 1803    FILE    "Asset/retry_button_for_result.png"
 1804    FILE    "Asset/title_button_for_result.png"
+1811    FILE    "Asset/ResultBGM.mp3"
+1812    FILE    "Asset/ResultButtonSE.mp3"

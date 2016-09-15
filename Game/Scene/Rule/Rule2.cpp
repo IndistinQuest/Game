@@ -1,11 +1,11 @@
-#include "Rule.h"
+#include "Rule2.h"
 #include "../../Drawable/DrawableAssetTexture.h"
 #include"../../Button/ButtonManager.h"
 #include"../../Button/TextureAssetButton.h"
 
 using namespace scene::rule;
 
-void Rule::init()
+void Rule2::init()
 {
     ButtonManager::clearAll();
     ButtonManager::update();
@@ -20,8 +20,8 @@ void Rule::init()
     
     std::shared_ptr<TextureAssetButton> button;
 
-    button = std::make_shared<TextureAssetButton>(Vec2{ 1190, 360 }, L"right_button_resize", [changeScene]() {
-        changeScene(L"Rule2");
+    button = std::make_shared<TextureAssetButton>(Vec2{ 90, 360 }, L"left_button_resize", [changeScene]() {
+        changeScene(L"Rule");
     });
     ButtonManager::add(button);
     drawables.add(button, 1);
@@ -33,11 +33,11 @@ void Rule::init()
     drawables.add(button, 2);
 }
 
-void Rule::update()
+void Rule2::update()
 {
 }
 
-void Rule::draw() const
+void Rule2::draw() const
 {
     drawables.drawAll();
 }

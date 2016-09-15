@@ -13,6 +13,10 @@ RegisterAsset::RegisterAsset()
 	TextureAsset::Register(L"QuitButtonM", L"/1206");
 	TextureAsset::Register(L"StartButtonL", L"/1207");
 	TextureAsset::Register(L"back_button_resize", L"/1208");
+	TextureAsset::Register(L"Rule", L"/1209");
+	TextureAsset::Register(L"right_button_resize", L"/1210");
+	TextureAsset::Register(L"left_button_resize", L"/1211");
+	TextureAsset::Register(L"title_button_resize", L"/1212");
 
 	TextureAsset::Register(L"title_button", L"/1300");
 	TextureAsset::Register(L"left_button", L"/1301");
@@ -103,7 +107,9 @@ RegisterAsset::RegisterAsset()
     TextureAsset::Register(L"Result_Logo", L"/1802");
     TextureAsset::Register(L"Result_RetryButton", L"/1803");
     TextureAsset::Register(L"Result_TitleButton", L"/1804");
-    FontAsset::Register(L"Result_Font", FontAssetData(30, Typeface::Heavy, FontStyle::Outline));
+	SoundAsset::Register(L"Result_BGM", L"/1811");
+	SoundAsset::Register(L"Result_ButtonSE", L"/1812");
+	FontAsset::Register(L"Result_Font", FontAssetData(30, Typeface::Heavy, FontStyle::Outline));
     FontAsset(L"Result_Font").changeOutlineStyle(TextOutlineStyle(Palette::Black, Palette::White, 2.0));
 
 	//全てプリロード
