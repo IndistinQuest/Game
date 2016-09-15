@@ -2,14 +2,12 @@
 #include<Siv3D.hpp>
 #include<HamFramework.hpp>
 #include "Heading.h"
-#include "DrawableTexture.h"
 #include "Heading.h"
 #include "../../Drawable/DrawableList.h"
 #include "../../Drawable/DrawableTxture.h"
 #include "../../Button/ButtonManager.h"
 #include "../../Button/RoundRectButton.h"
-#include "../../Button/TextureButton.h"
-#include "DrawableTexture.h"
+#include "../../Button/TextureAssetButton.h"
 #include "RollBackGround.h"
 #include "../../Data/DataManager.h"
 
@@ -31,7 +29,7 @@ protected:
 
 	DrawableList graphics_m;
 	std::function<void(void)> backToTitle_m;
-	std::shared_ptr<TextureButton> homeButton_m;
+	std::shared_ptr<TextureAssetButton> homeButton_m;
 	std::shared_ptr<RollBackGround> backGround_m;
 public:
 	EnemyGuide();

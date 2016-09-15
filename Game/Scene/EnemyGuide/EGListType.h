@@ -5,11 +5,12 @@
 #include "../../Data/DataManager.h"
 #include "../../Drawable/DrawableList.h"
 #include "../../Drawable/DrawableTxture.h"
+#include "../../Drawable/DrawableAssetTexture.h"
 #include "../../Button/ButtonManager.h"
 #include "../../Button/RoundRectButton.h"
-#include "DrawableTexture.h"
 #include "EnemyGuide.h"
 #include "MyDrawableList.h"
+#include "EGDetailType.h"
 
 class GameData;
 
@@ -32,12 +33,13 @@ namespace scene {
 			static const double ICON_W;
 			static const double ICON_H;
 
-			Array<bool> defeatedList_m;
+			Array<std::shared_ptr<TextureAssetButton>> icons_m;
+			MyDrawableList shadows_m;
+
+			std::function<void(void)> jumpToDetail_m;
 
 			double iconX(int i);
 			double iconY(int i);
-
-			MyDrawableList icons_m;
 
 		public:
 			void init() override;

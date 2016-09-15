@@ -1,8 +1,9 @@
 #include "Result.h"
-#include "ResultButton.h"
 #include "ResultText.h"
 #include "MonsterFadeInEffect.h"
 #include "../../Button/ButtonManager.h"
+#include "../../Drawable/DrawableAssetTexture.h"
+#include "../../Button/TextureAssetButton.h"
 
 using namespace scene::result;
 
@@ -12,33 +13,39 @@ scene::result::Result::Result()
 
 void Result::init()
 {
+    auto changeScene = [this](String sceneName) {
+        (this->*&Scene::changeScene)(sceneName, 500, false);
+        ButtonManager::clearAll();
+    };
+    // ボタンの初期化
     ButtonManager::clearAll();
     ButtonManager::update();
-    // ボタンの初期化
-    std::shared_ptr<ResultButton> button;
-    button = std::make_shared<OneMoreGame>(shared_from_this());
+    std::shared_ptr<TextureAssetButton> button;
+    button = std::make_shared<TextureAssetButton>(Vec2(300, 610), L"Result_RetryButton", [changeScene]() {
+        changeScene(L"Battle");
+    });
     ButtonManager::add(button);
-    drawables_m.add(button, 1);
-    button = std::make_shared<GoToTitle>(shared_from_this());
+    drawables_m.add(button, 2);
+    button = std::make_shared<TextureAssetButton>(Vec2(980, 610), L"Result_TitleButton", [changeScene]() {
+        changeScene(L"Title");
+    });
     ButtonManager::add(button);
-    drawables_m.add(button, 1);
+    drawables_m.add(button, 2);
+    // 背景の設定
+    drawables_m.add(std::make_shared<DrawableAssetTexture>(L"Result_Background", Window::Center()), 0);
     // テキストの初期化
-    drawables_m.add(std::make_shared<ResultText>(
-        L"リザルト", L"MainFont", FontAssetData(50), Window::Center().moveBy(0, -250)), 3);
-    drawables_m.add(std::make_shared<ResultText>(
-        L"倒した敵: ", L"SubFont", FontAssetData(30), Window::Center().moveBy(-100, -100)), 3);
-    enemyNum_m = std::make_shared<ResultText>(
-        Format(12), L"SubFont", FontAssetData(30), Window::Center().moveBy(100, -100));
+    int numOfdefeatedEnemy = static_cast<int>(m_data->defeatedEnemyList.size());
+    int remainingTime = static_cast<int>(m_data->time);
+    drawables_m.add(std::make_shared<DrawableAssetTexture>(L"Result_Logo", Window::Center().moveBy(0, -230), 0.7), 3);
+    drawables_m.add(std::make_shared<ResultText>(L"倒した敵: ", L"Result_Font", Window::Center().moveBy(-50, -80)), 3);
+    enemyNum_m = std::make_shared<ResultText>(Format(numOfdefeatedEnemy), L"Result_Font", Window::Center().moveBy(150, -80));
     drawables_m.add(enemyNum_m, 3);
     enemyNum_m->hide();
-    score_m = std::make_shared<ResultText>(
-        Format(12, L" + ", 1234, L" = ", 12 + 1234), L"SubFont", FontAssetData(30), Window::Center().moveBy(0, 100));
+    drawables_m.add(std::make_shared<ResultText>(L"残り時間: ", L"Result_Font", Window::Center().moveBy(-50, 20)), 3);
+    drawables_m.add(std::make_shared<ResultText>(Format(remainingTime), L"Result_Font", Window::Center().moveBy(150, 20)), 3);
+    score_m = std::make_shared<ResultText>(Format(numOfdefeatedEnemy, L" × 100 + ", remainingTime, L" = ", numOfdefeatedEnemy * 100 + remainingTime), L"Result_Font", Window::Center().moveBy(0, 120));
     drawables_m.add(score_m, 3);
     score_m->hide();
-    drawables_m.add(std::make_shared<ResultText>(
-        L"残り時間: ", L"SubFont", FontAssetData(30), Window::Center().moveBy(-100, 0)), 3);
-    drawables_m.add(std::make_shared<ResultText>(
-        Format(1234), L"SubFont", FontAssetData(30), Window::Center().moveBy(100, 0)), 3);
     // タイマー始動
     stopwatch_m.start();
 }
@@ -47,11 +54,10 @@ void Result::update()
 {
     static int counter = 0;
     // エフェクト
-    if(counter < 12) {
-        if(stopwatch_m.elapsed() >= 100ms) {
-            effect_m.add<MonsterFadeInEffect>();
-            stopwatch_m.reset();
-            stopwatch_m.start();
+    if(counter < m_data->defeatedEnemyList.size()) {
+        if(stopwatch_m.elapsed() >= 150ms) {
+            effect_m.add<MonsterFadeInEffect>(TextureAsset(Format(L"Enemy", m_data->defeatedEnemyList[counter])));
+            stopwatch_m.restart();
             ++counter;
         }
     }
@@ -59,12 +65,14 @@ void Result::update()
         if(effect_m.num_effects == 0) {
             enemyNum_m->show();
             score_m->show();
+            stopwatch_m.reset();
+            counter = 0;
         }
     }
-    effect_m.update();
 }
 
 void Result::draw() const
 {
     drawables_m.drawAll();
+    effect_m.update();
 }

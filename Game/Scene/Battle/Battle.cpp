@@ -1000,7 +1000,7 @@ void Battle::update(){
 	switch (StateManager::getState())
 	{
 	case BattleState::GoToResult:
-		changeScene(L"Test");
+		changeScene(L"Result");
 		break;
 
 	case BattleState::BackToTitle:

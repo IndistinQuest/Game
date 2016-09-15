@@ -3,7 +3,9 @@
 
 
 GameData::GameData()
-{}
+{
+    time = 0;
+}
 
 
 GameData::~GameData()
