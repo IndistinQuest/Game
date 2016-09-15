@@ -13,6 +13,10 @@ RegisterAsset::RegisterAsset()
 	TextureAsset::Register(L"QuitButtonM", L"/1206");
 	TextureAsset::Register(L"StartButtonL", L"/1207");
 	TextureAsset::Register(L"back_button_resize", L"/1208");
+	TextureAsset::Register(L"Rule", L"/1209");
+	TextureAsset::Register(L"right_button_resize", L"/1210");
+	TextureAsset::Register(L"left_button_resize", L"/1211");
+	TextureAsset::Register(L"title_button_resize", L"/1212");
 
 	TextureAsset::Register(L"title_button", L"/1300");
 	TextureAsset::Register(L"left_button", L"/1301");
