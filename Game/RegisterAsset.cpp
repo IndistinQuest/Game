@@ -100,8 +100,8 @@ RegisterAsset::RegisterAsset()
 	TextureAsset::Register(L"ShadowEnemy30", L"/730");
 
 	//全てプリロード
-	TextureAsset::PreloadAll();
-	SoundAsset::PreloadAll();
+	//TextureAsset::PreloadAll();
+	//SoundAsset::PreloadAll();
 }
 
 RegisterAsset::~RegisterAsset()

@@ -865,16 +865,45 @@ namespace scene {
 
 		// サウンド
 		class SoundPlayer : public BattleSceneObject {
+			struct Pare {
+				String name;
+				double volume;
+				Pare(String n) :name(n), volume(1.0) {};
+			};
+			std::vector<Pare> volumes;
 		public:
 			SoundPlayer() {
 				// BGMをループ再生
 				SoundAsset(L"battle_bgm").setLoop(true);
-				SoundAsset(L"battle_bgm").play();;
+				SoundAsset(L"battle_bgm").play();
+
+				volumes.push_back(Pare(L"battle_corect"));			
+				volumes.push_back(Pare(L"battle_incorect"));
+				volumes.push_back(Pare(L"battle_enter"));
+				volumes.push_back(Pare(L"battle_GameOver"));
+				volumes.push_back(Pare(L"battle_bgm"));
 			}
 			~SoundPlayer() {
 				SoundAsset(L"battle_bgm").stop();
 			}
-			void update()override {
+			void update()override {				
+				
+				/*********************************************************************************************/
+				// 後で消す
+				volumes[0].volume += (Input::KeyQ.clicked - Input::KeyA.clicked)*0.1;
+				volumes[1].volume += (Input::KeyW.clicked - Input::KeyS.clicked)*0.1;
+				volumes[2].volume += (Input::KeyE.clicked - Input::KeyD.clicked)*0.1;
+				volumes[3].volume += (Input::KeyR.clicked - Input::KeyF.clicked)*0.1;
+				volumes[4].volume += (Input::KeyT.clicked - Input::KeyG.clicked)*0.1;
+				MasterVoice::SetVolume(MasterVoice::GetVolume() + (Input::KeyY.clicked - Input::KeyH.clicked)*0.1);
+				Println(L"Master : ",MasterVoice::GetVolume());
+				for (int i = 0; i < volumes.size(); i++) {
+					Clamp(volumes[i].volume, 0.0, 1.0);
+					Println(volumes[i].name, L" : ", volumes[i].volume);
+					SoundAsset(volumes[i].name).setVolume(volumes[i].volume);
+				}
+				/*************************************************************************************************/
+
 				switch (StateManager::getState())
 				{
 					// 敵が登場するときの処理
@@ -886,6 +915,7 @@ namespace scene {
 
 					// 不正解を選んだ瞬間の処理
 				case BattleState::Incorect:
+
 					SoundAsset(L"battle_incorect").playMulti();
 					break;
 
@@ -960,7 +990,7 @@ void Battle::init(){
 	addObject(cutIn, 15);
 
 	// エネミー画像
-	auto enemyPic = make_shared<PictureObject>(L"title_logo", BattleSceneNums::scale, Point(Window::Width() / 2, 330));
+	auto enemyPic = make_shared<PictureObject>(L"title_logo2M", BattleSceneNums::scale, Point(Window::Width() / 2, 330));
 	addObject(enemyPic, 5);
 
 	// エネミーマネージャ
@@ -992,6 +1022,8 @@ void Battle::init(){
 };
 
 void Battle::update(){
+
+	ClearPrint();
 	
 	for_each(objects.begin(), objects.end(), [](auto obj) { obj.second->update(); });
 
