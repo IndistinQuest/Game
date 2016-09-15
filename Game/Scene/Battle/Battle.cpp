@@ -19,10 +19,10 @@ namespace scene {
 		namespace BattleSceneNums {
 
 			// §ŒÀŽžŠÔ‚Ì‰Šú’l
-			const int timeLimit = 1800;
+			const int timeLimit = 30000;
 
 			// ³‰ð‚µ‚½Žž‚Ì§ŒÀŽžŠÔ‚Ì‘‰Á—Ê
-			const int timeRecovery = 420;
+			const int timeRecovery = 7000;
 
 			// Enemy‰æ‘œ‚ÌŠg‘å—¦
 			const double scale = 0.4;
@@ -241,10 +241,10 @@ namespace scene {
 				//, TIME_RECOVERY(BattleSceneNums::timeRecovery)
 			{
 				
-				time_m = 30000;
-				setText(Format(Pad(time_m / 1000, { 2,L'0' }), L".", Pad(time_m % 1000, { 3,L'0' })));
+				time_m = BattleSceneNums::timeLimit;
+				//setText(Format(Pad(time_m / 1000, { 2,L'0' }), L".", Pad(time_m % 1000, { 3,L'0' })));
 				stopWatch_m.reset();
-				stopWatch_m.start();
+				timeShow();			
 			}
 			~Timer() {
 				data_m->time = time_m - stopWatch_m.ms();
@@ -261,7 +261,7 @@ namespace scene {
 					int curentTime = time_m - stopWatch_m.ms();
 					if (curentTime <= 0) { StateManager::setTimeOver(); }
 					SoundAsset(L"battle_bgm").changeTempo((curentTime < 5000) ? 1.5 : 1.0);
-					setText(Format(Pad(curentTime / 1000,{2,L'0'}), L".", Pad(curentTime % 1000, { 3,L'0' })));
+					timeShow();
 					//setText(Format(stopWatch_m.s(),L".",stopWatch_m.ms()));
 					//setText(Format(Pad(time_m / 60, { 2, L'0' }), L".", Pad(time_m % 60, { 2, L'0' })));
 					strColor_m = ((curentTime < 5000) ? Palette::Red : Palette::Black);
@@ -269,6 +269,7 @@ namespace scene {
 				}
 				case BattleState::Corect:
 					recovery();
+					timeShow();
 					break;
 				default:
 					stopWatch_m.pause();
@@ -280,10 +281,14 @@ namespace scene {
 			void recovery() {
 				//time_m += TIME_RECOVERY;
 				//stopWatch_m.set(static_cast<Milliseconds>(stopWatch_m.ms() + 7000) );
-				time_m += 7000;
+				time_m += BattleSceneNums::timeRecovery;
 			}
 			void setGameData(std::shared_ptr<GameData> data) {
 				data_m = data;
+			}
+			void timeShow(){
+				int curentTime = time_m - stopWatch_m.ms();
+				setText(Format(Pad(curentTime / 1000, { 2,L'0' }), L".", Pad(curentTime % 1000, { 3,L'0' })));
 			}
 			//int getTime() {
 			//	//return time_m;
