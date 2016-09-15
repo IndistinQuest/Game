@@ -157,3 +157,5 @@
 1802    FILE    "Asset/result_logo.png"
 1803    FILE    "Asset/retry_button_for_result.png"
 1804    FILE    "Asset/title_button_for_result.png"
+1811    FILE    "Asset/ResultBGM.mp3"
+1812    FILE    "Asset/ResultButtonSE.mp3"
