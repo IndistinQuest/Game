@@ -890,7 +890,7 @@ namespace scene {
 				
 				/*********************************************************************************************/
 				// å„Ç≈è¡Ç∑
-				volumes[0].volume += (Input::KeyQ.clicked - Input::KeyA.clicked)*0.1;
+				/*volumes[0].volume += (Input::KeyQ.clicked - Input::KeyA.clicked)*0.1;
 				volumes[1].volume += (Input::KeyW.clicked - Input::KeyS.clicked)*0.1;
 				volumes[2].volume += (Input::KeyE.clicked - Input::KeyD.clicked)*0.1;
 				volumes[3].volume += (Input::KeyR.clicked - Input::KeyF.clicked)*0.1;
@@ -901,7 +901,7 @@ namespace scene {
 					Clamp(volumes[i].volume, 0.0, 1.0);
 					Println(volumes[i].name, L" : ", volumes[i].volume);
 					SoundAsset(volumes[i].name).setVolume(volumes[i].volume);
-				}
+				}*/
 				/*************************************************************************************************/
 
 				switch (StateManager::getState())

@@ -3,11 +3,11 @@
 class GameData
 {
 public:
+	std::vector<int> defeatedEnemyList;
     GameData();
     ~GameData();
-	std::vector<int> defeatedEnemyList;
 	void addEnemy(int id);
-	void resetEnemyList();
+    void resetEnemyList();
 	int time;
 };
 
