@@ -3,19 +3,29 @@ using namespace scene::enemyGuide;
 
 const int EGDetailType::TARGET_INFORMATION_WIDTH = static_cast<const int>(0.6*W);
 
-const double EGDetailType::TARGET_SCALE = 0.25;
+const double EGDetailType::TARGET_SCALE = 0.35;
 const int EGDetailType::FONT_SIZE = 16;
 
 const int EGDetailType::TEXT_SPEED = 1;
 
-const Point EGDetailType::POS_NEXT_BUTTON = Point(W - 150, 0.5*H);
-const Point EGDetailType::POS_PREVIOUS_BUTTON = Point(150, 0.5*H);
+const Point EGDetailType::POS_NEXT_BUTTON = Point(W - 100, 0.5*H);
+const Point EGDetailType::POS_PREVIOUS_BUTTON = Point(100, 0.5*H);
 const Point EGDetailType::POS_LIST_BUTTON = Point(POS_HOME_BUTTON.x, POS_HOME_BUTTON.y - 150);
-const Point EGDetailType::POS_TARGET = Point(0.2*W, 0.22*H);
-const Point EGDetailType::POS_TARGET_NAME = Point(POS_PREVIOUS_BUTTON.x + 100, POS_PREVIOUS_BUTTON.y - 60);
+const Point EGDetailType::POS_TARGET = Point(0.2*W, 0.3*H);
+
+const Point EGDetailType::POS_TARGET_NAME = Point(POS_PREVIOUS_BUTTON.x + 360, POS_PREVIOUS_BUTTON.y - 50);
+const Point EGDetailType::POS_TARGET_NAME_CONTENT = Point(POS_TARGET_NAME.x - 60, POS_TARGET_NAME.y - 30);
+
 const Point EGDetailType::POS_TARGET_MESSAGE = Point(POS_TARGET_NAME.x, POS_TARGET_NAME.y + 60);
+const Point EGDetailType::POS_TARGET_MESSAGE_CONTENT = Point(POS_TARGET_MESSAGE.x - 60, POS_TARGET_MESSAGE.y - 30);
+
 const Point EGDetailType::POS_COLLECT_ANSWER = Point(POS_TARGET_NAME.x, POS_TARGET_MESSAGE.y + 120);
+const Point EGDetailType::POS_COLLECT_ANSWER_CONTENT = Point(POS_COLLECT_ANSWER.x - 60, POS_COLLECT_ANSWER.y - 30);
+
 const Point EGDetailType::POS_DESCRIPTION = Point(POS_TARGET_NAME.x, POS_COLLECT_ANSWER.y + 60);
+const Point EGDetailType::POS_DESCRIPTION_CONTENT = Point(POS_DESCRIPTION.x - 60, POS_DESCRIPTION.y - 30);
+
+const Color EGDetailType::CONTENT_COLOR = Palette::Black;
 
 int EGDetailType::cursorID_m = 1;
 
@@ -23,6 +33,11 @@ void EGDetailType::init()
 {
 	ButtonManager::clearAll();
 	ButtonManager::update();
+
+	targetNameContentFont_m = Font(FONT_SIZE, Typeface::Bold);
+	targetMessageContentFont_m = Font(FONT_SIZE, Typeface::Bold);
+	collectAnswerContentFont_m = Font(FONT_SIZE, Typeface::Bold);
+	descriptionContentFont_m = Font(FONT_SIZE, Typeface::Bold);
 
 	targetNameFont_m = Font(FONT_SIZE);
 	targetMessageFont_m = Font(FONT_SIZE);
@@ -59,11 +74,8 @@ void EGDetailType::init()
 
 	target_m = dataManager_m.getEnemy(cursorID_m);
 
-	nameTextView_m->setNewText(L"モンスター名\n" + target_m.name_m);
-	messageTextView_m->setNewText(L"倒れた時のセリフ\n" + target_m.messages_m.onPlayerWon_m);
-	answerTextView_m->setNewText(L"正解\n" + target_m.collectAnswer_m);
-	descriptionTextView_m->setNewText(L"モンスターの説明\n" + target_m.description_m);
 
+	showData();
 }
 void EGDetailType::update()
 {
@@ -87,9 +99,13 @@ void EGDetailType::draw() const
 
 	targetGraphics_m.drawLayer(cursorID_m);
 	
+	targetNameContentFont_m(L"モンスター名").draw(POS_TARGET_NAME_CONTENT, CONTENT_COLOR);
 	nameTextView_m->draw();
+	targetMessageContentFont_m(L"倒れた時のメッセージ").draw(POS_TARGET_MESSAGE_CONTENT, CONTENT_COLOR);
 	messageTextView_m->draw();
+	collectAnswerContentFont_m(L"弱点").draw(POS_COLLECT_ANSWER_CONTENT, CONTENT_COLOR);
 	answerTextView_m->draw();
+	descriptionContentFont_m(L"説明").draw(POS_DESCRIPTION_CONTENT, CONTENT_COLOR);
 	descriptionTextView_m->draw();
 }
 
@@ -129,8 +145,8 @@ void EGDetailType::changeTarget(int ID)
 
 void EGDetailType::showData()
 {
-	nameTextView_m->setNewText(L"モンスター名\n" + target_m.name_m);
-	messageTextView_m->setNewText(L"倒れた時のセリフ\n" + target_m.messages_m.onPlayerWon_m);
-	answerTextView_m->setNewText(L"正解\n" + target_m.collectAnswer_m);
-	descriptionTextView_m->setNewText(L"モンスターの説明\n" + target_m.description_m);
+	nameTextView_m->setNewText(target_m.name_m);
+	messageTextView_m->setNewText(target_m.messages_m.onPlayerWon_m);
+	answerTextView_m->setNewText(target_m.collectAnswer_m);
+	descriptionTextView_m->setNewText(target_m.description_m);
 }
