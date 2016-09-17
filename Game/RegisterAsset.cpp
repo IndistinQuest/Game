@@ -118,6 +118,7 @@ RegisterAsset::RegisterAsset()
 	TextureAsset::PreloadAll();
 	SoundAsset::PreloadAll();
     FontAsset::PreloadAll();
+
 }
 
 RegisterAsset::~RegisterAsset()

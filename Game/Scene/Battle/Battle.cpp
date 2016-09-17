@@ -19,10 +19,10 @@ namespace scene {
 		namespace BattleSceneNums {
 
 			// 制限時間の初期値
-			const int timeLimit = 1800;
+			const int timeLimit = 30000;
 
 			// 正解した時の制限時間の増加量
-			const int timeRecovery = 420;
+			const int timeRecovery = 7000;
 
 			// Enemy画像の拡大率
 			const double scale = 0.4;
@@ -231,46 +231,69 @@ namespace scene {
 		class Timer : public WindowAndText {
 		private:
 			int time_m;
-			int TIME_RECOVERY;
+			//int TIME_RECOVERY;
+			//Milliseconds time_m;
 			std::shared_ptr<GameData> data_m;
+			Stopwatch stopWatch_m;
 		public:
-			Timer(Point center, String textureAssetName, Color c = Palette::Black) :WindowAndText(center, textureAssetName, c), TIME_RECOVERY(BattleSceneNums::timeRecovery)
+			Timer(Point center, String textureAssetName, Color c = Palette::Black) 
+				:WindowAndText(center, textureAssetName, c)
+				//, TIME_RECOVERY(BattleSceneNums::timeRecovery)
 			{
+				
 				time_m = BattleSceneNums::timeLimit;
-				setText(Format(Pad(time_m / 60, { 2, L'0' }), L".", Pad(time_m % 60, { 2, L'0' })));
+				//setText(Format(Pad(time_m / 1000, { 2,L'0' }), L".", Pad(time_m % 1000, { 3,L'0' })));
+				stopWatch_m.reset();
+				timeShow();			
 			}
 			~Timer() {
-				data_m->time = time_m;
+				data_m->time = time_m - stopWatch_m.ms();
 			}
 			void update() override {
+				
 
 				switch (StateManager::getState()) {
 				case BattleState::Answer:
 				case BattleState::CanNotAnswer:
-					time_m--;
-					if (time_m <= 0) { StateManager::setTimeOver(); }	
-					SoundAsset(L"battle_bgm").changeTempo((time_m < 300) ? 1.5 : 1.0);
-					setText(Format(Pad(time_m / 60, { 2, L'0' }), L".", Pad(time_m % 60, { 2, L'0' })));
-					strColor_m = ((time_m < 300) ? Palette::Red : Palette::Black);
+					//time_m--;
+				{
+					stopWatch_m.start();
+					int curentTime = time_m - stopWatch_m.ms();
+					if (curentTime <= 0) { StateManager::setTimeOver(); }
+					SoundAsset(L"battle_bgm").changeTempo((curentTime < 5000) ? 1.5 : 1.0);
+					timeShow();
+					//setText(Format(stopWatch_m.s(),L".",stopWatch_m.ms()));
+					//setText(Format(Pad(time_m / 60, { 2, L'0' }), L".", Pad(time_m % 60, { 2, L'0' })));
+					strColor_m = ((curentTime < 5000) ? Palette::Red : Palette::Black);
 					break;
+				}
 				case BattleState::Corect:
 					recovery();
+					timeShow();
 					break;
 				default:
+					stopWatch_m.pause();
 					break;
 
 				}
 				
 			}
 			void recovery() {
-				time_m += TIME_RECOVERY;
+				//time_m += TIME_RECOVERY;
+				//stopWatch_m.set(static_cast<Milliseconds>(stopWatch_m.ms() + 7000) );
+				time_m += BattleSceneNums::timeRecovery;
 			}
 			void setGameData(std::shared_ptr<GameData> data) {
 				data_m = data;
 			}
-			int getTime() {
-				return time_m;
+			void timeShow(){
+				int curentTime = time_m - stopWatch_m.ms();
+				setText(Format(Pad(curentTime / 1000, { 2,L'0' }), L".", Pad(curentTime % 1000, { 3,L'0' })));
 			}
+			//int getTime() {
+			//	//return time_m;
+			//	return stopWatch_m.ms();
+			//}
 		};
 
 		// 戦闘数
@@ -865,16 +888,45 @@ namespace scene {
 
 		// サウンド
 		class SoundPlayer : public BattleSceneObject {
+			struct Pare {
+				String name;
+				double volume;
+				Pare(String n) :name(n), volume(1.0) {};
+			};
+			std::vector<Pare> volumes;
 		public:
 			SoundPlayer() {
 				// BGMをループ再生
 				SoundAsset(L"battle_bgm").setLoop(true);
-				SoundAsset(L"battle_bgm").play();;
+				SoundAsset(L"battle_bgm").play();
+
+				volumes.push_back(Pare(L"battle_corect"));			
+				volumes.push_back(Pare(L"battle_incorect"));
+				volumes.push_back(Pare(L"battle_enter"));
+				volumes.push_back(Pare(L"battle_GameOver"));
+				volumes.push_back(Pare(L"battle_bgm"));
 			}
 			~SoundPlayer() {
 				SoundAsset(L"battle_bgm").stop();
 			}
-			void update()override {
+			void update()override {				
+				
+				/*********************************************************************************************/
+				// 後で消す
+				/*volumes[0].volume += (Input::KeyQ.clicked - Input::KeyA.clicked)*0.1;
+				volumes[1].volume += (Input::KeyW.clicked - Input::KeyS.clicked)*0.1;
+				volumes[2].volume += (Input::KeyE.clicked - Input::KeyD.clicked)*0.1;
+				volumes[3].volume += (Input::KeyR.clicked - Input::KeyF.clicked)*0.1;
+				volumes[4].volume += (Input::KeyT.clicked - Input::KeyG.clicked)*0.1;
+				MasterVoice::SetVolume(MasterVoice::GetVolume() + (Input::KeyY.clicked - Input::KeyH.clicked)*0.1);
+				Println(L"Master : ",MasterVoice::GetVolume());
+				for (int i = 0; i < volumes.size(); i++) {
+					Clamp(volumes[i].volume, 0.0, 1.0);
+					Println(volumes[i].name, L" : ", volumes[i].volume);
+					SoundAsset(volumes[i].name).setVolume(volumes[i].volume);
+				}*/
+				/*************************************************************************************************/
+
 				switch (StateManager::getState())
 				{
 					// 敵が登場するときの処理
@@ -886,6 +938,7 @@ namespace scene {
 
 					// 不正解を選んだ瞬間の処理
 				case BattleState::Incorect:
+
 					SoundAsset(L"battle_incorect").playMulti();
 					break;
 
@@ -960,7 +1013,7 @@ void Battle::init(){
 	addObject(cutIn, 15);
 
 	// エネミー画像
-	auto enemyPic = make_shared<PictureObject>(L"title_logo", BattleSceneNums::scale, Point(Window::Width() / 2, 330));
+	auto enemyPic = make_shared<PictureObject>(L"title_logo2M", BattleSceneNums::scale, Point(Window::Width() / 2, 330));
 	addObject(enemyPic, 5);
 
 	// エネミーマネージャ
@@ -992,6 +1045,8 @@ void Battle::init(){
 };
 
 void Battle::update(){
+
+	ClearPrint();
 	
 	for_each(objects.begin(), objects.end(), [](auto obj) { obj.second->update(); });
 

@@ -92,11 +92,11 @@
 1512    FILE    "Asset/BattleScene/battle_graphic2.jpg"
 1513    FILE    "Asset/BattleScene/battle_graphic3.jpg"
 1514    FILE    "Asset/BattleScene/battle_graphic4.jpg"
-1515    FILE    "Asset/BattleScene/battle_graphic5.jpg"
-// Sound
-1520    FILE    "Asset/BattleScene/bgm_maoudamashii_neorock49.ogg"
-1521    FILE    "Asset/BattleScene/crrect_answer3.mp3"
-1522    FILE    "Asset/BattleScene/powerdown07.mp3"
+1515    FILE    "Asset/BattleScene/battle_graphic5.jpg"// Sound
+
+1520    FILE    "Asset/BattleScene/battle1.mp3"
+1521    FILE    "Asset/BattleScene/atk1.mp3"
+1522    FILE    "Asset/BattleScene/miss1.mp3"
 1523    FILE    "Asset/BattleScene/damage7.mp3"
 1524    FILE    "Asset/BattleScene/jump10.mp3"
 
