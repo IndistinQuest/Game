@@ -910,7 +910,7 @@ namespace scene {
 
 				SoundAsset(L"battle_corect").setVolume(1.0);
 				SoundAsset(L"battle_incorect").setVolume(0.7);
-				SoundAsset(L"battle_enter").setVolume(0.7);
+				SoundAsset(L"battle_enter").setVolume(0.9);
 				SoundAsset(L"battle_GameOver").setVolume(0.7);
 				SoundAsset(bgmName_m).setVolume(0.7);
 				
