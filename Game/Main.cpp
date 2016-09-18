@@ -27,7 +27,7 @@ void Main()
 
 	// ロード画面を表示
 	System::Update();
-	Texture(L"Asset/img.png").draw();
+	Texture(L"/1100").draw();
 	System::Update();
 
 	// 各アセットの登録
@@ -52,7 +52,6 @@ void Main()
 	manager.init(L"Title");
 
 	SoundAsset(L"enemies_bgm").setLoopBySec(true, 19.3s, 83.4s);
-
 
 	while (System::Update())
 	{
