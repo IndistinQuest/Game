@@ -92,11 +92,15 @@
 1514    FILE    "Asset/BattleScene/battle_graphic4.jpg"
 1515    FILE    "Asset/BattleScene/battle_graphic5.jpg"// Sound
 
-1520    FILE    "Asset/BattleScene/battle1.mp3"
-1521    FILE    "Asset/BattleScene/atk1.mp3"
+//1520    FILE    "Asset/BattleScene/battle1.mp3"
+1521    FILE    "Asset/BattleScene/atk2.wav"
 1522    FILE    "Asset/BattleScene/miss1.mp3"
 1523    FILE    "Asset/BattleScene/damage7.mp3"
 1524    FILE    "Asset/BattleScene/jump10.mp3"
+1525    FILE    "Asset/BattleScene/battle1.mp3"
+1526    FILE    "Asset/BattleScene/battle2.mp3"
+1527    FILE    "Asset/BattleScene/battle3.mp3"
+1528    FILE    "Asset/BattleScene/battle4.mp3"
 
 // IndistinQuest_EnemyGraphic
 1601    FILE    "Asset/EnemyGraphics/1.png"

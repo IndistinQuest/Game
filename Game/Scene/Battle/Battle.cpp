@@ -22,7 +22,7 @@ namespace scene {
 			const int timeLimit = 30000;
 
 			// 正解した時の制限時間の増加量
-			const int timeRecovery = 7000;
+			const int timeRecovery = 9000;
 
 			// Enemy画像の拡大率
 			const double scale = 0.4;
@@ -127,13 +127,13 @@ namespace scene {
 			case BattleState::CanNotAnswer:
 				if (isImprove) {
 					curentState_m = BattleState::Answer;
-				}
+				}				
 				AnswerManager::init();
 				break;
 
 				// 不正解を選んだ瞬間の処理
 			case BattleState::Incorect:
-				curentState_m = BattleState::CanNotAnswer;
+				curentState_m = BattleState::CanNotAnswer;				
 				break;
 
 				//正解を選んだ瞬間の処理
@@ -247,35 +247,31 @@ namespace scene {
 				timeShow();			
 			}
 			~Timer() {
-				data_m->time = time_m - stopWatch_m.ms();
+				data_m->time = Max(0, time_m - stopWatch_m.ms() );
 			}
 			void update() override {
-				
-
+				int curentTime = getCurentTime();
+				strColor_m = ((curentTime < 10000) ? Palette::Red : Palette::Black);
+				for (int i = 0; i < 4; i++) { SoundAsset(Format(L"battle_bgm",i)).changeTempo((curentTime < 10000) ? 1.2 : 1.0); }
 				switch (StateManager::getState()) {
 				case BattleState::Answer:
 				case BattleState::CanNotAnswer:
 					//time_m--;
 				{
-					stopWatch_m.start();
-					int curentTime = time_m - stopWatch_m.ms();
+					stopWatch_m.start();					
 					if (curentTime <= 0) { StateManager::setTimeOver(); }
-					SoundAsset(L"battle_bgm").changeTempo((curentTime < 5000) ? 1.5 : 1.0);
-					timeShow();
-					//setText(Format(stopWatch_m.s(),L".",stopWatch_m.ms()));
-					//setText(Format(Pad(time_m / 60, { 2, L'0' }), L".", Pad(time_m % 60, { 2, L'0' })));
-					strColor_m = ((curentTime < 5000) ? Palette::Red : Palette::Black);
+		
 					break;
 				}
 				case BattleState::Corect:
 					recovery();
-					timeShow();
 					break;
 				default:
 					stopWatch_m.pause();
 					break;
 
 				}
+				timeShow();
 				
 			}
 			void recovery() {
@@ -287,9 +283,13 @@ namespace scene {
 				data_m = data;
 			}
 			void timeShow(){
-				int curentTime = time_m - stopWatch_m.ms();
+				int curentTime = getCurentTime();
 				setText(Format(Pad(curentTime / 1000, { 2,L'0' }), L".", Pad(curentTime % 1000, { 3,L'0' })));
 			}
+			int getCurentTime() {
+				return Max(0, time_m - stopWatch_m.ms());
+			}
+
 			//int getTime() {
 			//	//return time_m;
 			//	return stopWatch_m.ms();
@@ -689,12 +689,12 @@ namespace scene {
 		public:
 			MessageWindow(Point center, String textureAssetName, Color c = Palette::Black)
 				: WindowAndText(center, textureAssetName, c)
-				, TextView(L"", Point(210, center.y - 60), 850, 3, Font(20), 3, Palette::Black) {
+				, TextView(L"", Point(210, center.y - 60), 850, 3, Font(20), 1, Palette::Black) {
 				setNewText(BattleSceneNums::StartMes);
 				incorect_m = false;
 			}
 			void update()override {
-				setIntervalIncrease((Input::MouseL.pressed) ? 0 : 3); //メッセージ速度変更
+				//setIntervalIncrease((Input::MouseL.pressed) ? 0 : 3); //メッセージ速度変更
 
 				switch (StateManager::getState())
 				{
@@ -852,6 +852,10 @@ namespace scene {
 					setAnswers();					
 					break;
 
+				case BattleState::Answer:
+					for (auto& b : buttons_m) { b->setStrColor(Palette::Black); }
+					break;
+
 					// 不正解を選んで選択できなくなっている間の処理
 				case BattleState::CanNotAnswer:
 					penalty_m--;
@@ -888,26 +892,36 @@ namespace scene {
 
 		// サウンド
 		class SoundPlayer : public BattleSceneObject {
-			struct Pare {
+			/*struct Pare {
 				String name;
 				double volume;
 				Pare(String n) :name(n), volume(1.0) {};
 			};
-			std::vector<Pare> volumes;
+			std::vector<Pare> volumes;*/
+			String bgmName_m;
 		public:
 			SoundPlayer() {
 				// BGMをループ再生
-				SoundAsset(L"battle_bgm").setLoop(true);
-				SoundAsset(L"battle_bgm").play();
 
-				volumes.push_back(Pare(L"battle_corect"));			
+				bgmName_m = Format(L"battle_bgm", Random<int>(3));
+
+				SoundAsset(bgmName_m).setLoop(true);
+				SoundAsset(bgmName_m).play();
+
+				SoundAsset(L"battle_corect").setVolume(1.0);
+				SoundAsset(L"battle_incorect").setVolume(0.7);
+				SoundAsset(L"battle_enter").setVolume(0.7);
+				SoundAsset(L"battle_GameOver").setVolume(0.7);
+				SoundAsset(bgmName_m).setVolume(0.7);
+				
+				/*volumes.push_back(Pare(L"battle_corect"));			
 				volumes.push_back(Pare(L"battle_incorect"));
 				volumes.push_back(Pare(L"battle_enter"));
 				volumes.push_back(Pare(L"battle_GameOver"));
-				volumes.push_back(Pare(L"battle_bgm"));
+				volumes.push_back(Pare(L"battle_bgm"));*/
 			}
 			~SoundPlayer() {
-				SoundAsset(L"battle_bgm").stop();
+				SoundAsset(bgmName_m).stop();
 			}
 			void update()override {				
 				
