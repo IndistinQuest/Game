@@ -284,7 +284,7 @@ namespace scene {
 			}
 			void timeShow(){
 				int curentTime = getCurentTime();
-				setText(Format(Pad(curentTime / 1000, { 2,L'0' }), L".", Pad(curentTime % 1000, { 3,L'0' })));
+				setText(Format(Pad(curentTime / 1000, { 2,L'0' }), L".", Pad((curentTime % 1000)/10, { 2,L'0' })));
 			}
 			int getCurentTime() {
 				return Max(0, time_m - stopWatch_m.ms());

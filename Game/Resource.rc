@@ -53,6 +53,7 @@
 
 // IndistinQuest_Load
 1100	FILE	"Asset/load.png"
+1101	FILE	"JSONData/Enemy.json"
 
 // IndistinQuest
 1200    FILE    "Asset/title_graphicM.png"

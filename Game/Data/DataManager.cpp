@@ -1,7 +1,7 @@
 #include "DataManager.h"
 
-const String DataManager::JSONPath = L"../JSONData/Enemy.json";
-const String DataManager::CSVPath = L"../CSVData/SaveData.csv";
+const String DataManager::JSONPath = L"/1101";//L"JSONData / Enemy.json";
+const String DataManager::CSVPath = L"CSVData/SaveData.csv";
 
 const int DataManager::KIND_OF_ENEMY = 30;
 
