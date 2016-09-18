@@ -25,6 +25,7 @@ namespace scene {
 			static const double H;
 			static const Point POS_HEADING;
 			static const Point POS_HOME_BUTTON;
+			static const Point POS_TERMINATE_BUTTON;
 			static const int KIND_OF_ENEMIES;
 			static const double LIST_MARGIN;
 			static const double LIST_BORDER;
@@ -34,6 +35,7 @@ namespace scene {
 			static const double ICON_H;
 
 			Array<std::shared_ptr<TextureAssetButton>> icons_m;
+			std::shared_ptr < RoundRectTextButton > terminateButton_m;
 			MyDrawableList shadows_m;
 
 			std::function<void(void)> jumpToDetail_m;

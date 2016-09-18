@@ -6,6 +6,7 @@ const double EGListType::W = 1280;
 const double EGListType::H = 720;
 const Point EGListType::POS_HEADING = Point(0.45*W, 0.2*H);
 const Point EGListType::POS_HOME_BUTTON = Point(0.8*W, 0.2*H);
+const Point EGListType::POS_TERMINATE_BUTTON = Point(0.1*W, 0.1*W);
 const int EGListType::KIND_OF_ENEMIES = 30;
 const double EGListType::LIST_MARGIN = 20;
 const double EGListType::LIST_BORDER = 0.3*H;
@@ -22,11 +23,12 @@ void EGListType::init()
 	
 	backToTitle_m = [this]() {(this->*&Scene::changeScene)(L"Title", 500, false); SoundAsset(L"enemies_bgm").stop();};
 	homeButton_m = std::make_shared<TextureAssetButton>(Vec2(POS_HOME_BUTTON.x, POS_HOME_BUTTON.y), L"title_button", backToTitle_m);
-	
+	terminateButton_m = std::make_shared<RoundRectTextButton>(POS_TERMINATE_BUTTON.x, POS_TERMINATE_BUTTON.y, 30, 30, 122,  L"a", [this]() {dataManager_m.clearSaveDate(); });
 
 	backGround_m = std::make_shared<RollBackGround>(L"firstEnemiesBackGround", L"secondEnemiesBackGround");
 
 	ButtonManager::add(homeButton_m);
+	ButtonManager::add(terminateButton_m);
 	for (int i = 1; i <= KIND_OF_ENEMIES; ++i) {
 		jumpToDetail_m = [this, i]() {(this->*&Scene::changeScene)(L"EGDetailType", 500, false); EGDetailType::changeTarget(i); SoundAsset(L"enemies_decide").play(); };
 		if (dataManager_m.getSaveData(i).isDefeated_m)
@@ -57,6 +59,7 @@ void EGListType::draw() const
 	graphics_m.drawAll();
 	title_m.draw(POS_HEADING);
 	homeButton_m->draw();
+	terminateButton_m->draw();
 	shadows_m.drawAll();
 	std::for_each (icons_m.begin(), icons_m.end(), [](std::shared_ptr<TextureAssetButton> b) {b->draw(); });
 }

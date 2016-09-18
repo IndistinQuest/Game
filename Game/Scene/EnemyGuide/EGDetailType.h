@@ -20,8 +20,8 @@ namespace scene {
 		{
 		private:
 			static const int TARGET_INFORMATION_WIDTH;
-			
-			static const double TARGET_SCALE ;
+
+			static const double TARGET_SCALE;
 			static const int FONT_SIZE;
 
 			static const int TEXT_SPEED;
@@ -30,10 +30,17 @@ namespace scene {
 			static const Point POS_PREVIOUS_BUTTON;
 			static const Point POS_LIST_BUTTON;
 			static const Point POS_TARGET;
+
+			static const Point POS_TARGET_NAME_CONTENT;
 			static const Point POS_TARGET_NAME;
+			static const Point POS_TARGET_MESSAGE_CONTENT;
 			static const Point POS_TARGET_MESSAGE;
+			static const Point POS_COLLECT_ANSWER_CONTENT;
 			static const Point POS_COLLECT_ANSWER;
+			static const Point POS_DESCRIPTION_CONTENT;
 			static const Point POS_DESCRIPTION;
+
+			static const Color CONTENT_COLOR;
 
 			static int cursorID_m;
 
@@ -47,7 +54,10 @@ namespace scene {
 			std::shared_ptr<TextureAssetButton> previousButton_m;
 			std::shared_ptr<TextureAssetButton> backToListButton_m;
 
-			
+			Font targetNameContentFont_m;
+			Font targetMessageContentFont_m;
+			Font collectAnswerContentFont_m;
+			Font descriptionContentFont_m;
 
 			Font targetNameFont_m;
 			Font targetMessageFont_m;

@@ -9,6 +9,7 @@ class DataManager
 private:
 	static const String JSONPath;
 	static const String CSVPath;
+	static const int KIND_OF_ENEMY;
 private:
 	void initSaveData();
 public:
@@ -32,5 +33,6 @@ private:
 	void readSaveData();
 public:
 	void writeSaveData();
+	void clearSaveDate();
 };
 
