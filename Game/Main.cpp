@@ -17,22 +17,24 @@ using Manager = SceneManager<String, GameData>;
 
 void Main()
 {
-	// ウィンドウを設定
-	Window::Centering();
+	// 各アセットの登録
+	RegisterAsset registerAsset;
+
+	// ウィンドウを設定	
 	Window::Resize({ 1280, 720 });
 	Window::SetStyle(WindowStyle::NonFrame);
+	Window::Centering();
+
+	System::Update();	//これがないとTitleの背景がずれる
 
 	// 展示の時はフルスクリーンがいいね
 	//Window::SetFullscreen(true, { 1280, 720 });	
 
 	// ロード画面を表示
-	System::Update();
-	Texture(L"Asset/img.png").draw();
-	System::Update();
-
-	// 各アセットの登録
-	RegisterAsset registerAsset;
-
+	/*System::Update();
+	Texture(L"/1100").draw();
+	System::Update();*/
+	
 	// シーンマネージャーちゃん
 	Manager manager;
 
@@ -52,7 +54,6 @@ void Main()
 	manager.init(L"Title");
 
 	SoundAsset(L"enemies_bgm").setLoopBySec(true, 19.3s, 83.4s);
-
 
 	while (System::Update())
 	{

@@ -51,6 +51,10 @@
 100		ICON	"Icon.ico"
 101		FILE	"Engine/Splash.png"
 
+// IndistinQuest_Load
+1100	FILE	"Asset/load.png"
+1101	FILE	"JSONData/Enemy.json"
+
 // IndistinQuest
 1200    FILE    "Asset/title_graphicM.png"
 1201    FILE    "Asset/title_logo2M.png"
@@ -95,13 +99,16 @@
 1512    FILE    "Asset/BattleScene/battle_graphic2.jpg"
 1513    FILE    "Asset/BattleScene/battle_graphic3.jpg"
 1514    FILE    "Asset/BattleScene/battle_graphic4.jpg"
-1515    FILE    "Asset/BattleScene/battle_graphic5.jpg"// Sound
-
-1520    FILE    "Asset/BattleScene/battle1.mp3"
-1521    FILE    "Asset/BattleScene/atk1.mp3"
+1515    FILE    "Asset/BattleScene/battle_graphic5.jpg"
+// Sound
+1521    FILE    "Asset/BattleScene/atk2.wav"
 1522    FILE    "Asset/BattleScene/miss1.mp3"
 1523    FILE    "Asset/BattleScene/damage7.mp3"
 1524    FILE    "Asset/BattleScene/jump10.mp3"
+1525    FILE    "Asset/BattleScene/battle1.mp3"
+1526    FILE    "Asset/BattleScene/battle2.mp3"
+1527    FILE    "Asset/BattleScene/battle3.mp3"
+1528    FILE    "Asset/BattleScene/battle4.mp3"
 
 // IndistinQuest_EnemyGraphic
 1601    FILE    "Asset/EnemyGraphics/1.png"

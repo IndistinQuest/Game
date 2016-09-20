@@ -1,7 +1,9 @@
 #include "DataManager.h"
 
-const String DataManager::JSONPath = L"../JSONData/Enemy.json";
-const String DataManager::CSVPath = L"../CSVData/SaveData.csv";
+const String DataManager::JSONPath = L"/1101";//L"JSONData / Enemy.json";
+const String DataManager::CSVPath = L"CSVData/SaveData.csv";
+
+const int DataManager::KIND_OF_ENEMY = 30;
 
 DataManager::DataManager()
 {
@@ -106,6 +108,16 @@ void DataManager::writeSaveData()
 	for (auto data : saveData_m)
 	{
 		saveDataWriter_m.writeRow(data.id_m, data.isDefeated_m);
+	}
+	saveDataWriter_m.close();
+}
+
+void DataManager::clearSaveDate()
+{
+	saveDataWriter_m.open(CSVPath);
+	for (int i = 1; i <= KIND_OF_ENEMY; ++i)
+	{
+		saveDataWriter_m.writeRow(i, false);
 	}
 	saveDataWriter_m.close();
 }
