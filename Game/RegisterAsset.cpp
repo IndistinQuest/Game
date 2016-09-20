@@ -21,8 +21,11 @@ RegisterAsset::RegisterAsset()
 	TextureAsset::Register(L"title_button_resize", L"/1212");
     SoundAsset::Register(L"タイトル6", L"/1213");
     SoundAsset::Register(L"タイトルボタン2", L"/1214");
+	TextureAsset::Register(L"スライド1", L"/1215");
+	TextureAsset::Register(L"スライド2", L"/1216");
+	TextureAsset::Register(L"スライド3", L"/1217");
 
-	TextureAsset::Register(L"title_button", L"/1300");
+    TextureAsset::Register(L"title_button", L"/1300");
 	TextureAsset::Register(L"left_button", L"/1301");
 	TextureAsset::Register(L"right_button", L"/1302");
 	TextureAsset::Register(L"firstEnemiesBackGround", L"/1303");

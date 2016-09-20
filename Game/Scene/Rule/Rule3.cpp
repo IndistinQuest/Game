@@ -11,7 +11,7 @@ void Rule3::init()
     ButtonManager::update();
 
     drawables.add(std::make_shared<DrawableAssetTexture>(
-        L"Rule", Window::Center()), 0);
+        L"スライド3", Window::Center()), 0);
 
     SoundAsset(L"タイトル6").play();
     auto changeScene = [this](String sceneName) {
