@@ -13,10 +13,12 @@ void Title::init()
     drawables.add(std::make_shared<DrawableAssetTexture>(L"title_graphicM", Window::Center()), 0);
     drawables.add(std::make_shared<DrawableAssetTexture>(L"title_logo2M", Window::Center().movedBy(0, -160)), 0);
 
-    SoundAsset(L"タイトル6").play();
+    if (!SoundAsset(L"タイトル6").isPlaying()) {
+        SoundAsset(L"タイトル6").setLoop(true);
+        SoundAsset(L"タイトル6").play();
+    }
     auto changeScene = [this](String sceneName) {
         SoundAsset(L"タイトルボタン2").playMulti();
-        SoundAsset(L"タイトル6").stop();
         (this->*&Scene::changeScene)(sceneName, 500, false);
         ButtonManager::clearAll();
     };
@@ -30,12 +32,14 @@ void Title::init()
     drawables.add(button, 2);
     
     button = std::make_shared<TextureAssetButton>(Vec2{ 220, 510 }, L"EnemiesButtonM", [changeScene]() {
+        SoundAsset(L"タイトル6").stop();
         changeScene(L"EGListType");
     });
     ButtonManager::add(button);
     drawables.add(button, 3);
     
     button = std::make_shared<TextureAssetButton>(Vec2{ 240, 590 }, L"CreditButtonM", [changeScene]() {
+        //SoundAsset(L"タイトル6").stop();
         //changeScene(L"Creddit");
     });
     ButtonManager::add(button);
@@ -48,6 +52,7 @@ void Title::init()
     drawables.add(button, 5);
 
     button = std::make_shared<TextureAssetButton>(Vec2{640, 550}, L"StartButtonL", [changeScene]() {
+        SoundAsset(L"タイトル6").stop();
         changeScene(L"Battle");
     });
     ButtonManager::add(button);
