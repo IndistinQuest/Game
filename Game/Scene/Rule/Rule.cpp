@@ -13,10 +13,8 @@ void Rule::init()
     drawables.add(std::make_shared<DrawableAssetTexture>(
         L"スライド1", Window::Center()), 0);
 
-    SoundAsset(L"タイトル6").play();
     auto changeScene = [this](String sceneName) {
         SoundAsset(L"タイトルボタン2").playMulti();
-        SoundAsset(L"タイトル6").stop();
         (this->*&Scene::changeScene)(sceneName, 500, false);
         ButtonManager::clearAll();
     };
