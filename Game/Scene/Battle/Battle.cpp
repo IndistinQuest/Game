@@ -22,7 +22,7 @@ namespace scene {
 			const int timeLimit = 30000;
 
 			// ³‰ð‚µ‚½Žž‚Ì§ŒÀŽžŠÔ‚Ì‘‰Á—Ê
-			const int timeRecovery = 9000;
+			const int timeRecovery = 8000;
 
 			// Enemy‰æ‘œ‚ÌŠg‘å—¦
 			const double scale = 0.4;
@@ -247,7 +247,7 @@ namespace scene {
 				timeShow();			
 			}
 			~Timer() {
-				data_m->time = Max(0, time_m - stopWatch_m.ms() );
+				data_m->time = Max(0, time_m - stopWatch_m.ms() ) / 10;
 			}
 			void update() override {
 				int curentTime = getCurentTime();
