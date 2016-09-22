@@ -8,6 +8,7 @@
 #include"Scene\Rule\Rule.h"
 #include"Scene\Rule\Rule2.h"
 #include"Scene\Rule\Rule3.h"
+#include"Scene\Rule\Credit.h"
 #include"Scene\EnemyGuide\EGListType.h"
 #include"Scene\EnemyGuide\EGDetailType.h"
 #include"Scene\Result\Result.h"
@@ -47,6 +48,7 @@ void Main()
     manager.add<scene::rule::Rule>(L"Rule");
     manager.add<scene::rule::Rule2>(L"Rule2");
     manager.add<scene::rule::Rule3>(L"Rule3");
+    manager.add<scene::rule::Credit>(L"Credit");
 	manager.add<scene::title::Title>(L"Title");
 	manager.add<scene::result::Result>(L"Result");
 	manager.add<scene::battle::Battle>(L"Battle");
