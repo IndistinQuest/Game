@@ -102,7 +102,7 @@
 1514    FILE    "Asset/BattleScene/battle_graphic4.jpg"
 1515    FILE    "Asset/BattleScene/battle_graphic5.jpg"
 // Sound
-1521    FILE    "Asset/BattleScene/atk2.wav"
+1521    FILE    "Asset/BattleScene/atk2.ogg"
 1522    FILE    "Asset/BattleScene/miss1.ogg"
 1523    FILE    "Asset/BattleScene/damage7.ogg"
 1524    FILE    "Asset/BattleScene/jump10.ogg"

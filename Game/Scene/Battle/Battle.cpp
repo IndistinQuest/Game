@@ -19,7 +19,7 @@ namespace scene {
 		namespace BattleSceneNums {
 
 			// §ŒÀŠÔ‚Ì‰Šú’l
-			const int timeLimit = 3000;
+			const int timeLimit = 30000;
 
 			// ³‰ğ‚µ‚½‚Ì§ŒÀŠÔ‚Ì‘‰Á—Ê
 			const int timeRecovery = 8000;
