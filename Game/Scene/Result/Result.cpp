@@ -44,7 +44,7 @@ void Result::init()
     drawables_m.add(enemyNum_m, 3);
     enemyNum_m->hide();
     drawables_m.add(std::make_shared<ResultText>(L"Žc‚èŽžŠÔ: ", L"Result_Font", Window::Center().moveBy(-50, 20)), 3);
-	drawables_m.add(std::make_shared<ResultText>(Format(remainingTime / 100, ".", Pad(remainingTime % 100, {2, L"0"})), L"Result_Font", Window::Center().moveBy(150, 20)), 3);
+	drawables_m.add(std::make_shared<ResultText>(Format(remainingTime / 100, L".", Pad(remainingTime % 100, {2, L'0'})), L"Result_Font", Window::Center().moveBy(150, 20)), 3);
     score_m = std::make_shared<ResultText>(Format(numOfdefeatedEnemy, L" ~ 100 + ", remainingTime / 10, L" = ", numOfdefeatedEnemy * 100 + remainingTime), L"Result_Font", Window::Center().moveBy(0, 120));
     drawables_m.add(score_m, 3);
     score_m->hide();
