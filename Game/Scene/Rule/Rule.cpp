@@ -27,7 +27,7 @@ void Rule::init()
     ButtonManager::add(button);
     drawables.add(button, 1);
 
-    button = std::make_shared<TextureAssetButton>(Vec2{ 1150, 600 }, L"title_button_resize", [changeScene]() {
+    button = std::make_shared<TextureAssetButton>(Vec2{ 1100, 600 }, L"rule_button", [changeScene]() {
         changeScene(L"Title");
     });
     ButtonManager::add(button);

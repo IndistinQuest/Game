@@ -1,16 +1,20 @@
-#include "Rule2.h"
+#include "Credit.h"
+
+
+
 #include "../../Drawable/DrawableAssetTexture.h"
 #include"../../Button/ButtonManager.h"
 #include"../../Button/TextureAssetButton.h"
 
 using namespace scene::rule;
 
-void Rule2::init()
+void Credit::init()
 {
     ButtonManager::clearAll();
     ButtonManager::update();
 
-    drawables.add(std::make_shared<DrawableAssetTexture>(L"スライド2", Window::Center()), 0);
+    drawables.add(std::make_shared<DrawableAssetTexture>(
+        L"クレジット", Window::Center()), 0);
 
     auto changeScene = [this](String sceneName) {
         SoundAsset(L"タイトルボタン2").playMulti();
@@ -20,18 +24,6 @@ void Rule2::init()
     
     std::shared_ptr<TextureAssetButton> button;
 
-    button = std::make_shared<TextureAssetButton>(Vec2{ 90, 360 }, L"left_button_resize", [changeScene]() {
-        changeScene(L"Rule");
-    });
-    ButtonManager::add(button);    
-    drawables.add(button, 1);
-
-    button = std::make_shared<TextureAssetButton>(Vec2{ 1190, 360 }, L"right_button_resize", [changeScene]() {
-        changeScene(L"Rule3");
-    });
-    ButtonManager::add(button);
-    drawables.add(button, 1);
-
     button = std::make_shared<TextureAssetButton>(Vec2{ 1100, 600 }, L"rule_button", [changeScene]() {
         changeScene(L"Title");
     });
@@ -39,11 +31,11 @@ void Rule2::init()
     drawables.add(button, 2);
 }
 
-void Rule2::update()
+void Credit::update()
 {
 }
 
-void Rule2::draw() const
+void Credit::draw() const
 {
     drawables.drawAll();
 }

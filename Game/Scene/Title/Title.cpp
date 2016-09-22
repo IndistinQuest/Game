@@ -39,8 +39,7 @@ void Title::init()
     drawables.add(button, 3);
     
     button = std::make_shared<TextureAssetButton>(Vec2{ 240, 590 }, L"CreditButtonM", [changeScene]() {
-        //SoundAsset(L"ƒ^ƒCƒgƒ‹6").stop();
-        //changeScene(L"Creddit");
+        changeScene(L"Credit");
     });
     ButtonManager::add(button);
     drawables.add(button, 4);
