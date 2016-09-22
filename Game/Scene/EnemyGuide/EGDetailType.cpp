@@ -1,7 +1,7 @@
 #include "EGDetailType.h"
 using namespace scene::enemyGuide;
 
-const int EGDetailType::TARGET_INFORMATION_WIDTH = static_cast<const int>(0.6*W);
+const int EGDetailType::TARGET_INFORMATION_WIDTH = static_cast<const int>(0.5*W);
 
 const double EGDetailType::TARGET_SCALE = 0.35;
 const int EGDetailType::FONT_SIZE = 16;

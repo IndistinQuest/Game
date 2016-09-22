@@ -52,7 +52,7 @@
 101		FILE	"Engine/Splash.png"
 
 // IndistinQuest_Load
-1100	FILE	"Asset/load.png"
+//1100	FILE	"Asset/load.png"
 1101	FILE	"JSONData/Enemy.json"
 
 // IndistinQuest
@@ -65,12 +65,11 @@
 1206    FILE    "Asset/QuitButtonM.png"
 1207    FILE    "Asset/StartButtonL.png"
 1208    FILE    "Asset/back_button_resize.png"
-1209    FILE    "Asset/Rule.png"
 1210    FILE    "Asset/right_button_resize.png"
 1211    FILE    "Asset/left_button_resize.png"
 1212    FILE    "Asset/rule_button.png"
-1213    FILE    "Asset/タイトル6.mp3"
-1214    FILE    "Asset/タイトルボタン2.mp3"
+1213    FILE    "Asset/タイトル6.ogg"
+1214    FILE    "Asset/タイトルボタン2.ogg"
 1215    FILE    "Asset/スライド1.JPG"
 1216    FILE    "Asset/スライド2.JPG"
 1217    FILE    "Asset/スライド3.JPG"
@@ -83,11 +82,12 @@
 1302    FILE    "Asset/right_button_resize.png"
 1303    FILE    "Asset/enemies_graphic.jpg"
 1304    FILE    "Asset/enemies_guide_logo.png"
+1305    FILE    "Asset/data_clear_resize.png"
 // Sound
-1310    FILE    "Asset/EnemiesSound/bgm.mp3"
-1311    FILE    "Asset/EnemiesSound/decide.mp3"
-1312    FILE    "Asset/EnemiesSound/move.mp3"
-1313    FILE    "Asset/EnemiesSound/return.mp3"
+1310    FILE    "Asset/EnemiesSound/bgm.ogg"
+1311    FILE    "Asset/EnemiesSound/decide.ogg"
+1312    FILE    "Asset/EnemiesSound/move.ogg"
+1313    FILE    "Asset/EnemiesSound/return.ogg"
 
 // IndistinQuest_BattleScene
 // Image
@@ -102,14 +102,14 @@
 1514    FILE    "Asset/BattleScene/battle_graphic4.jpg"
 1515    FILE    "Asset/BattleScene/battle_graphic5.jpg"
 // Sound
-1521    FILE    "Asset/BattleScene/atk2.wav"
-1522    FILE    "Asset/BattleScene/miss1.mp3"
-1523    FILE    "Asset/BattleScene/damage7.mp3"
-1524    FILE    "Asset/BattleScene/jump10.mp3"
-1525    FILE    "Asset/BattleScene/battle1.mp3"
-1526    FILE    "Asset/BattleScene/battle2.mp3"
-1527    FILE    "Asset/BattleScene/battle3.mp3"
-1528    FILE    "Asset/BattleScene/battle4.mp3"
+1521    FILE    "Asset/BattleScene/atk2.ogg"
+1522    FILE    "Asset/BattleScene/miss1.ogg"
+1523    FILE    "Asset/BattleScene/damage7.ogg"
+1524    FILE    "Asset/BattleScene/jump10.ogg"
+1525    FILE    "Asset/BattleScene/battle1.ogg"
+1526    FILE    "Asset/BattleScene/battle2.ogg"
+1527    FILE    "Asset/BattleScene/battle3.ogg"
+1528    FILE    "Asset/BattleScene/battle4.ogg"
 
 // IndistinQuest_EnemyGraphic
 1601    FILE    "Asset/EnemyGraphics/1.png"
@@ -180,5 +180,5 @@
 1802    FILE    "Asset/result_logo.png"
 1803    FILE    "Asset/retry_button_for_result.png"
 1804    FILE    "Asset/title_button_for_result.png"
-1811    FILE    "Asset/ResultBGM.mp3"
-1812    FILE    "Asset/ResultButtonSE.mp3"
+1811    FILE    "Asset/ResultBGM.ogg"
+1812    FILE    "Asset/ResultButtonSE.ogg"

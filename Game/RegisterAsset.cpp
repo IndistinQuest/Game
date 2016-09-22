@@ -32,6 +32,8 @@ RegisterAsset::RegisterAsset()
 	TextureAsset::Register(L"firstEnemiesBackGround", L"/1303");
 	TextureAsset::Register(L"secondEnemiesBackGround", L"/1303");
 	TextureAsset::Register(L"enemies_logo", L"/1304");
+	TextureAsset::Register(L"data_clear_button", L"/1305");
+
 	SoundAsset::Register(L"enemies_bgm", L"/1310");
 	SoundAsset::Register(L"enemies_decide", L"/1311");
 	SoundAsset::Register(L"enemies_move", L"/1312");

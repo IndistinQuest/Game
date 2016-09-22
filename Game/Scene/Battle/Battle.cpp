@@ -22,17 +22,17 @@ namespace scene {
 			const int timeLimit = 30000;
 
 			// 正解した時の制限時間の増加量
-			const int timeRecovery = 9000;
+			const int timeRecovery = 8000;
 
 			// Enemy画像の拡大率
-			const double scale = 0.4;
+			const double scale = 1.0;
 
 			// Enemyのフェードイン/アウトの早さ
-			const double fadeIn = 6;
-			double fadeOut = 2;
+			const double fadeIn = 15;
+			double fadeOut = 5;
 
 			// 敗北時のEnemyの最大拡大率
-			const double maxScale = 2.0;
+			const double maxScale = scale * 5;
 
 			// 敗北時のメッセージ
 			const String loseMessage = L"にやられた！";
@@ -247,7 +247,7 @@ namespace scene {
 				timeShow();			
 			}
 			~Timer() {
-				data_m->time = Max(0, time_m - stopWatch_m.ms() );
+				data_m->time = Max(0, time_m - stopWatch_m.ms() ) / 10;
 			}
 			void update() override {
 				int curentTime = getCurentTime();
@@ -375,7 +375,7 @@ namespace scene {
 					}
 				}
 				if (isExpansion && scale <= BattleSceneNums::maxScale) {
-					scale += 0.1;
+					scale += (BattleSceneNums::maxScale - BattleSceneNums::scale) / 10;
 					if (scale > BattleSceneNums::maxScale) { scale = BattleSceneNums::maxScale; }
 				}
 			}
@@ -530,7 +530,7 @@ namespace scene {
 			void update()override {
 
 				//マウス押しでフェードアウトの早さを調節
-				BattleSceneNums::fadeOut = (Input::MouseL.pressed) ? 4 : 2;
+				//BattleSceneNums::fadeOut = (Input::MouseL.pressed) ? 4 : 2;
 
 				switch (StateManager::getState())
 				{
