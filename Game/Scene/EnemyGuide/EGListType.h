@@ -36,7 +36,7 @@ namespace scene {
 			static const double ICON_MAGNIFICATION;
 
 			Array<std::shared_ptr<TextureAssetButton>> icons_m;
-			std::shared_ptr < RoundRectTextButton > terminateButton_m;
+			std::shared_ptr <TextureAssetButton> terminateButton_m;
 			MyDrawableList shadows_m;
 
 			std::function<void(void)> jumpToDetail_m;

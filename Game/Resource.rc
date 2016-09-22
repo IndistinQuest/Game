@@ -83,6 +83,7 @@
 1302    FILE    "Asset/right_button_resize.png"
 1303    FILE    "Asset/enemies_graphic.jpg"
 1304    FILE    "Asset/enemies_guide_logo.png"
+1305    FILE    "Asset/data_clear_resize.png"
 // Sound
 1310    FILE    "Asset/EnemiesSound/bgm.ogg"
 1311    FILE    "Asset/EnemiesSound/decide.ogg"

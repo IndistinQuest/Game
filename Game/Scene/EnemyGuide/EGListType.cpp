@@ -4,9 +4,9 @@ using namespace scene::enemyGuide;
 
 const double EGListType::W = 1280;
 const double EGListType::H = 720;
-const Point EGListType::POS_HEADING = Point(0.45*W, 0.2*H);
+const Point EGListType::POS_HEADING = Point(0.5*W, 0.2*H);
 const Point EGListType::POS_HOME_BUTTON = Point(0.85*W, 0.2*H);
-const Point EGListType::POS_TERMINATE_BUTTON = Point(0.1*W, 0.15*H);
+const Point EGListType::POS_TERMINATE_BUTTON = Point(0.15*W, 0.2*H);
 const int EGListType::KIND_OF_ENEMIES = 30;
 const double EGListType::LIST_MARGIN = 20;
 const double EGListType::LIST_BORDER = 0.3*H;
@@ -26,7 +26,7 @@ void EGListType::init()
 	terminateAll_m = [this]() {dataManager_m.clearSaveDate(); SoundAsset(L"enemies_decide").play(); };
 
 	homeButton_m = std::make_shared<TextureAssetButton>(Vec2(POS_HOME_BUTTON.x, POS_HOME_BUTTON.y), L"title_button", backToTitle_m);
-	terminateButton_m = std::make_shared<RoundRectTextButton>(POS_TERMINATE_BUTTON.x, POS_TERMINATE_BUTTON.y, 30, 30, 122,  L"a", terminateAll_m);
+	terminateButton_m = std::make_shared<TextureAssetButton>(Vec2(POS_TERMINATE_BUTTON.x, POS_TERMINATE_BUTTON.y), L"data_clear_button", terminateAll_m);
 
 	backGround_m = std::make_shared<RollBackGround>(L"firstEnemiesBackGround", L"secondEnemiesBackGround");
 
@@ -43,7 +43,7 @@ void EGListType::init()
 		}
 		else
 		{
-			std::shared_ptr<DrawableAssetTexture> icon = std::make_shared<DrawableAssetTexture>(Format(L"ShadowEnemy", i), Point(iconX(i), iconY(i)), 0.1);
+			std::shared_ptr<DrawableAssetTexture> icon = std::make_shared<DrawableAssetTexture>(Format(L"ShadowEnemy", i), Point(iconX(i), iconY(i)), ICON_MAGNIFICATION);
 			shadows_m.add(icon, i);
 		}
 		
