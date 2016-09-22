@@ -19,6 +19,6 @@ bool MonsterFadeInEffect::update(double t)
     if(0.15 < t)  return false;
     position_m = Easing::EaseOut<Vec2>(beginPos_m, END_POS, Easing::Expo, t);
     alpha_m = -4 * Pow(t - 0.5, 2) + 1;
-    texture_m.scale(0.2).drawAt(position_m.asPoint()/*, AlphaF(alpha_m)*/);
+    texture_m.scale(0.4).drawAt(position_m.asPoint()/*, AlphaF(alpha_m)*/);
     return true;
 }
