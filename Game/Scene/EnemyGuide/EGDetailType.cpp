@@ -3,7 +3,7 @@ using namespace scene::enemyGuide;
 
 const int EGDetailType::TARGET_INFORMATION_WIDTH = static_cast<const int>(0.5*W);
 
-const double EGDetailType::TARGET_SCALE = 0.35;
+const double EGDetailType::TARGET_SCALE = 0.7;
 const int EGDetailType::FONT_SIZE = 16;
 
 const int EGDetailType::TEXT_SPEED = 1;
@@ -11,7 +11,7 @@ const int EGDetailType::TEXT_SPEED = 1;
 const Point EGDetailType::POS_NEXT_BUTTON = Point(W - 100, 0.5*H);
 const Point EGDetailType::POS_PREVIOUS_BUTTON = Point(100, 0.5*H);
 const Point EGDetailType::POS_LIST_BUTTON = Point(POS_HOME_BUTTON.x, POS_HOME_BUTTON.y - 150);
-const Point EGDetailType::POS_TARGET = Point(0.2*W, 0.3*H);
+const Point EGDetailType::POS_TARGET = Point(0.15*W, 0.25*H);
 
 const Point EGDetailType::POS_TARGET_NAME = Point(POS_PREVIOUS_BUTTON.x + 360, POS_PREVIOUS_BUTTON.y - 50);
 const Point EGDetailType::POS_TARGET_NAME_CONTENT = Point(POS_TARGET_NAME.x - 60, POS_TARGET_NAME.y - 30);
