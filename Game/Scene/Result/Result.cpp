@@ -37,15 +37,15 @@ void Result::init()
     drawables_m.add(std::make_shared<DrawableAssetTexture>(L"Result_Background", Window::Center()), 0);
     // テキストの初期化
     int numOfdefeatedEnemy = static_cast<int>(m_data->defeatedEnemyList.size());
-    int remainingTime = static_cast<int>(m_data->time);
+    int remainingTime = m_data->time;
     drawables_m.add(std::make_shared<DrawableAssetTexture>(L"Result_Logo", Window::Center().moveBy(0, -230), 0.7), 3);
     drawables_m.add(std::make_shared<ResultText>(L"倒した敵: ", L"Result_Font", Window::Center().moveBy(-50, -80)), 3);
     enemyNum_m = std::make_shared<ResultText>(Format(numOfdefeatedEnemy), L"Result_Font", Window::Center().moveBy(150, -80));
     drawables_m.add(enemyNum_m, 3);
     enemyNum_m->hide();
     drawables_m.add(std::make_shared<ResultText>(L"残り時間: ", L"Result_Font", Window::Center().moveBy(-50, 20)), 3);
-    drawables_m.add(std::make_shared<ResultText>(Format(remainingTime), L"Result_Font", Window::Center().moveBy(150, 20)), 3);
-    score_m = std::make_shared<ResultText>(Format(numOfdefeatedEnemy, L" × 100 + ", remainingTime, L" = ", numOfdefeatedEnemy * 100 + remainingTime), L"Result_Font", Window::Center().moveBy(0, 120));
+	drawables_m.add(std::make_shared<ResultText>(Format(remainingTime / 100, L".", Pad(remainingTime % 100, {2, L'0'})), L"Result_Font", Window::Center().moveBy(150, 20)), 3);
+    score_m = std::make_shared<ResultText>(Format(numOfdefeatedEnemy, L" × 100 + ", remainingTime , L" = ", numOfdefeatedEnemy * 100 + remainingTime), L"Result_Font", Window::Center().moveBy(0, 120));
     drawables_m.add(score_m, 3);
     score_m->hide();
     // タイマー始動
