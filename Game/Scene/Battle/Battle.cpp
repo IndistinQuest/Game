@@ -22,7 +22,7 @@ namespace scene {
 			const int timeLimit = 30000;
 
 			// ³‰ğ‚µ‚½‚Ì§ŒÀŠÔ‚Ì‘‰Á—Ê
-			const int timeRecovery = 8000;
+			const int timeRecovery = 7000;
 
 			// Enemy‰æ‘œ‚ÌŠg‘å—¦
 			const double scale = 1.0;

@@ -23,7 +23,7 @@ void EGListType::init()
 	ButtonManager::update();
 	
 	backToTitle_m = [this]() {(this->*&Scene::changeScene)(L"Title", 500, false); SoundAsset(L"enemies_bgm").stop();};
-	terminateAll_m = [this]() {dataManager_m.clearSaveDate(); SoundAsset(L"enemies_decide").play(); };
+	terminateAll_m = [this]() {dataManager_m.clearSaveDate(); SoundAsset(L"enemies_decide").play(); (this->*&Scene::changeScene)(L"EGListType", 500, false); };
 
 	homeButton_m = std::make_shared<TextureAssetButton>(Vec2(POS_HOME_BUTTON.x, POS_HOME_BUTTON.y), L"title_button", backToTitle_m);
 	terminateButton_m = std::make_shared<TextureAssetButton>(Vec2(POS_TERMINATE_BUTTON.x, POS_TERMINATE_BUTTON.y), L"data_clear_button", terminateAll_m);
