@@ -69,6 +69,7 @@ artifacts/
 *.svclog
 *.scc
 
+
 # Chutzpah Test files
 _Chutzpah*
 
@@ -250,3 +251,13 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# User
+*/Engine/*
+*.vcxproj
+*.vcxproj.filters
+*_log.html
+*.sln
+*/stdafx.*
+CSVData/SaveData.csv
+
