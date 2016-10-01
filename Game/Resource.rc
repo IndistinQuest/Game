@@ -65,16 +65,15 @@
 1206    FILE    "Asset/QuitButtonM.png"
 1207    FILE    "Asset/StartButtonL.png"
 1208    FILE    "Asset/back_button_resize.png"
-//1209    FILE    "Asset/Rule.png"
 1210    FILE    "Asset/right_button_resize.png"
 1211    FILE    "Asset/left_button_resize.png"
-//1212    FILE    "Asset/title_button_resize.png"
-1212    FILE    "Asset/rule_button_resize.png"
+1212    FILE    "Asset/rule_button.png"
 1213    FILE    "Asset/タイトル6.ogg"
 1214    FILE    "Asset/タイトルボタン2.ogg"
 1215    FILE    "Asset/スライド1.JPG"
 1216    FILE    "Asset/スライド2.JPG"
 1217    FILE    "Asset/スライド3.JPG"
+1218    FILE    "Asset/クレジット.png"
 
 // IndistinQuest_Enemies
 // Image
