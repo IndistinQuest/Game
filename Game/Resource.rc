@@ -38,14 +38,14 @@
 64825	FILE	"Engine/Shaders/D3D11/FXAA_Q39.ps"
 
 // Optional
-64040	FILE	"Engine/Objdetect/facePhoto.zip"
-64041	FILE	"Engine/Objdetect/faceAnime.zip"
-64601	FILE	"Engine/Fonts/mplus-1p-thin.zip"
-64602	FILE	"Engine/Fonts/mplus-1p-light.zip"
+//64040	FILE	"Engine/Objdetect/facePhoto.zip"
+//64041	FILE	"Engine/Objdetect/faceAnime.zip"
+//64601	FILE	"Engine/Fonts/mplus-1p-thin.zip"
+//64602	FILE	"Engine/Fonts/mplus-1p-light.zip"
 64603	FILE	"Engine/Fonts/mplus-1p-regular.zip"
 64605	FILE	"Engine/Fonts/mplus-1p-bold.zip"
 64606	FILE	"Engine/Fonts/mplus-1p-heavy.zip"
-64607	FILE	"Engine/Fonts/mplus-1p-black.zip"
+//64607	FILE	"Engine/Fonts/mplus-1p-black.zip"
 
 // App Resource
 100		ICON	"Icon.ico"
@@ -68,12 +68,12 @@
 1210    FILE    "Asset/right_button_resize.png"
 1211    FILE    "Asset/left_button_resize.png"
 1212    FILE    "Asset/rule_button.png"
-1213    FILE    "Asset/タイトル6.ogg"
-1214    FILE    "Asset/タイトルボタン2.ogg"
-1215    FILE    "Asset/スライド1.JPG"
-1216    FILE    "Asset/スライド2.JPG"
-1217    FILE    "Asset/スライド3.JPG"
-1218    FILE    "Asset/クレジット.png"
+1213    FILE    "Asset/TitleBGM.ogg"
+1214    FILE    "Asset/TitleButtonSE.ogg"
+1215    FILE    "Asset/Slide1.JPG"
+1216    FILE    "Asset/Slide2.JPG"
+1217    FILE    "Asset/Slide3.JPG"
+1218    FILE    "Asset/Credit.png"
 
 // IndistinQuest_Enemies
 // Image
