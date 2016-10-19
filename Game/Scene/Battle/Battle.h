@@ -18,9 +18,8 @@ public:
 	void draw()const override;
 
 private:
-	void Battle::addObject(std::shared_ptr<BattleSceneObject> obj);
-	void Battle::addObject(std::shared_ptr<BattleSceneObject> obj, int layer);
-	void Battle::addObject(std::shared_ptr<BattleSceneObject> obj, int layer, int order);
+	void Battle::addObject(std::shared_ptr<BattleSceneObject> obj);								//描画しないオブジェクトの追加
+	void Battle::addObject(std::shared_ptr<BattleSceneObject> obj, int layer, int order = 4);	//描画レイヤーと処理順を指定してオブジェクトを追加
 
 private:
 	std::multimap<int,std::shared_ptr<BattleSceneObject>> objects;

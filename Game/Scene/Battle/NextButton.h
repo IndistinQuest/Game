@@ -1,0 +1,14 @@
+#pragma once
+#include"BattleSceneButton.h"
+namespace scene {
+	namespace battle {
+		// éüÇ÷êiÇﬁÉ{É^Éì
+		class NextButton
+			: public BattleSceneButton {
+		public:
+			NextButton(Point pos, Size size, String textureAssetName, Color c = Palette::Black);
+			void update()override;
+			void onClicked() override;
+		};
+	}
+}
